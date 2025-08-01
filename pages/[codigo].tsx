@@ -1,4 +1,3 @@
-// pages/[codigo].tsx
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import AnimatedBars from '../components/AnimatedBars/AnimatedBars';
@@ -10,11 +9,18 @@ import ImageSlider from '../components/ImageSlider/ImageSlider';
 import BackgroundSlider from '../components/BackgroundSlider/BackgroundSlider';
 import Masonry from '../components/Masonry/Masonry';
 
+// ✅ Define el tipo de datos esperados
+type DataResponse = {
+  exists: boolean;
+  estado?: string;
+  confirmaciones?: number;
+};
+
 export default function ConfirmacionPage() {
   const router = useRouter();
   const { codigo } = router.query;
   const [numero, setNumero] = useState<string | null>(null);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<DataResponse | null>(null); // ✅ Usa el tipo aquí
 
   useEffect(() => {
     if (!codigo) return;
@@ -24,7 +30,7 @@ export default function ConfirmacionPage() {
     fetch(`/api/invitaciones/${encodeURIComponent(decoded)}`)
       .then(res => res.json())
       .then(setData)
-      .catch(() => setData({ exists: false }));
+      .catch(() => setData({ exists: false })); // ✅ Ya no lanza error
   }, [codigo]);
 
   if (!data) return <p>Cargando...</p>;
@@ -39,7 +45,7 @@ export default function ConfirmacionPage() {
       <NoiseAnimation />
       <BackgroundSlider />
       <DeckComponent />
-      {data.confirmaciones < 2 && <Formulario numero={numero} />}
+      {data.confirmaciones! < 2 && <Formulario numero={numero} />}
     </>
   );
 }
