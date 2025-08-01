@@ -13,7 +13,7 @@ import Masonry from '../components/Masonry/Masonry';
 export default function ConfirmacionPage() {
   const router = useRouter();
   const { codigo } = router.query;
-  const [numero, setNumero] = useState(null);
+  const [numero, setNumero] = useState<string | null>(null);
   const [data, setData] = useState(null);
 
   useEffect(() => {
