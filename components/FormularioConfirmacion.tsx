@@ -25,9 +25,12 @@ type Invitado = {
   id: string;
   nombre: string;
 };
+type ConfirmInvitationProps = {
+  numero?: string | null;
+};
 
-export default function ConfirmInvitation() {
-  const [numero, setNumero] = useState('');
+export default function ConfirmInvitation({ numero: numeroProp }: ConfirmInvitationProps) {
+  const [numero, setNumero] = useState(numeroProp || '');
   const [invitados, setInvitados] = useState<Invitado[]>([]);
   const [confirmaciones, setConfirmaciones] = useState(0);
   const [seleccionados, setSeleccionados] = useState<string[]>([]);
