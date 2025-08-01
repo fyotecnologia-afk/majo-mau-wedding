@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Button, List, Typography } from 'antd';
 
@@ -5,10 +7,16 @@ export default function ListaInvitaciones() {
   const [urls, setUrls] = useState<string[]>([]);
 
   const obtenerLista = async () => {
-    const res = await fetch('/api/invitaciones/lista');
-    if (res.ok) {
-      const json = await res.json();
-      setUrls(json.urls);
+    try {
+      const res = await fetch('/api/invitaciones/lista');
+      if (res.ok) {
+        const json = await res.json();
+        setUrls(json.urls);
+      } else {
+        console.error('Error al obtener URLs:', res.status);
+      }
+    } catch (error) {
+      console.error('Error en la petición:', error);
     }
   };
 
@@ -22,7 +30,11 @@ export default function ListaInvitaciones() {
           header={<Typography.Title level={4}>URLs de Invitación</Typography.Title>}
           bordered
           dataSource={urls}
-          renderItem={(url) => <List.Item><a href={url}>{url}</a></List.Item>}
+          renderItem={(url) => (
+            <List.Item>
+              <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
+            </List.Item>
+          )}
           style={{ marginTop: 16 }}
         />
       )}
