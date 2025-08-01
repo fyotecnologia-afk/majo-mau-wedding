@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Estado {
+  ACTIVO
+  INACTIVO
+}
+
+model Invitacion {
+  id            Int             @id @default(autoincrement())
+  numero        String          @unique
+  estado        Estado          @default(ACTIVO)
+  invitados     Invitado[]
+  confirmaciones Confirmacion[]
+}
+
+model Confirmacion {
+  id            Int         @id @default(autoincrement())
+  dedicatoria   String
+  createdAt     DateTime    @default(now())
+  invitacion    Invitacion  @relation(fields: [invitacionId], references: [id])
+  invitacionId  Int
+  asistentes    Invitado[]  @relation("Confirmados")
+}
+
+model Invitado {
+  id             Int           @id @default(autoincrement())
+  nombre         String
+  estado         Estado        @default(ACTIVO)
+  invitacion     Invitacion    @relation(fields: [invitacionId], references: [id])
+  invitacionId   Int
+  confirmaciones Confirmacion[] @relation("Confirmados")
+}
