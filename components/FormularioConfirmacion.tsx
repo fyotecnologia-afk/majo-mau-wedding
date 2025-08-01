@@ -17,6 +17,10 @@ import { UserOutlined, MailOutlined, CheckCircleOutlined } from '@ant-design/ico
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 const { Step } = Steps;
+type Mensaje = {
+  tipo: 'success' | 'error' | 'info' | 'warning';
+  texto: string;
+};
 
 export default function ConfirmInvitation() {
   const [numero, setNumero] = useState('');
@@ -25,7 +29,7 @@ export default function ConfirmInvitation() {
   const [seleccionados, setSeleccionados] = useState([]);
   const [dedicatoria, setDedicatoria] = useState('');
   const [enviando, setEnviando] = useState(false);
-  const [mensaje, setMensaje] = useState(null);
+  const [mensaje, setMensaje] = useState<Mensaje | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
 
   // Buscar invitación
