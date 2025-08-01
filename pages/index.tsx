@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Input, Button, Typography, Alert, Space } from 'antd';
+import '@/styles/globals.css'; // ruta según tu estructura
 
 const { Title } = Typography;
 
