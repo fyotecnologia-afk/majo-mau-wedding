@@ -36,7 +36,7 @@ function Deck() {
 
   const bind = useDrag(
     ({ args: [index], down, movement: [mx], direction: [xDir], velocity }) => {
-      const trigger = velocity > 0.2
+      const trigger = velocity[0] > 0.2
       const dir = xDir < 0 ? -1 : 1
 
       if (!down && trigger) gone.add(index)
@@ -45,7 +45,7 @@ function Deck() {
         if (i !== index) return
         const isGone = gone.has(index)
         const x = isGone ? (200 + window.innerWidth) * dir : down ? mx : 0
-        const rot = mx / 100 + (isGone ? dir * 10 * velocity : 0)
+        const rot = mx / 100 + (isGone ? dir * 10 * velocity[0] : 0)
         const scale = down ? 1.1 : 1
         return {
           x,

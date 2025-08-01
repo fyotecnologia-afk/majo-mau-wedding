@@ -38,7 +38,7 @@ export default function ConfirmacionPage() {
       <TrailAnimation />
       <NoiseAnimation />
       <BackgroundSlider />
-      {/* <DeckComponent /> */}
+      <DeckComponent />
       {data.confirmaciones < 2 && <Formulario numero={numero} />}
     </>
   );
