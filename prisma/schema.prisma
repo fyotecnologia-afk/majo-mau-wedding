@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
@@ -13,27 +13,41 @@ enum Estado {
 }
 
 model Invitacion {
-  id            Int             @id @default(autoincrement())
-  numero        String          @unique
-  estado        Estado          @default(ACTIVO)
-  invitados     Invitado[]
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  numero         String          @unique
+  estado         Estado          @default(ACTIVO)
+  invitados      Invitado[]
   confirmaciones Confirmacion[]
 }
 
 model Confirmacion {
-  id            Int         @id @default(autoincrement())
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
   dedicatoria   String
-  createdAt     DateTime    @default(now())
-  invitacion    Invitacion  @relation(fields: [invitacionId], references: [id])
-  invitacionId  Int
-  asistentes    Invitado[]  @relation("Confirmados")
+  createdAt     DateTime     @default(now())
+  invitacionId  String
+  invitacion    Invitacion?  @relation(fields: [invitacionId], references: [id])
+
+  confirmacionInvitados ConfirmacionInvitado[]
 }
 
 model Invitado {
-  id             Int           @id @default(autoincrement())
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
   nombre         String
-  estado         Estado        @default(ACTIVO)
-  invitacion     Invitacion    @relation(fields: [invitacionId], references: [id])
-  invitacionId   Int
-  confirmaciones Confirmacion[] @relation("Confirmados")
+  estado         Estado       @default(ACTIVO)
+  invitacionId   String
+  invitacion     Invitacion?  @relation(fields: [invitacionId], references: [id])
+
+  confirmacionInvitados ConfirmacionInvitado[]
+}
+
+model ConfirmacionInvitado {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+
+  confirmacionId String
+  confirmacion   Confirmacion @relation(fields: [confirmacionId], references: [id])
+
+  invitadoId     String
+  invitado       Invitado     @relation(fields: [invitadoId], references: [id])
+
+  @@unique([confirmacionId, invitadoId])
 }
