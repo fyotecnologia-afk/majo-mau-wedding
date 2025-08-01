@@ -1,34 +1,33 @@
-import { PrismaClient, Estado } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
-async function main() {
-  // Crear invitación activa con invitados activos e inactivos
-  const invitacion = await prisma.invitacion.create({
-    data: {
-      numero: "1234ABCD",
-      estado: Estado.ACTIVO,
-      invitados: {
-        create: [
-          { nombre: "Juan Pérez", estado: Estado.ACTIVO },
-          { nombre: "María López", estado: Estado.ACTIVO },
-          { nombre: "Carlos Gómez", estado: Estado.INACTIVO },
-        ],
-      },
+const invitacion = await prisma.invitacion.create({
+  data: {
+    numero: "1234ABCD",
+    estado: Estado.ACTIVO,
+    invitados: {
+      create: [
+        { nombre: "Juan Pérez", estado: Estado.ACTIVO },
+        { nombre: "María López", estado: Estado.ACTIVO },
+        { nombre: "Carlos Gómez", estado: Estado.INACTIVO },
+      ],
     },
-    include: {
-      invitados: true,
+  },
+  include: { invitados: true },
+});
+
+const confirmacion = await prisma.confirmacion.create({
+  data: {
+    dedicatoria: "Confirmamos con gusto",
+    invitacionId: invitacion.id,
+    confirmacionInvitados: {
+      create: [
+        {
+          invitadoId: invitacion.invitados[0].id,
+        },
+        {
+          invitadoId: invitacion.invitados[1].id,
+        },
+      ],
     },
-  });
+  },
+});
 
-  console.log("Invitación creada:", invitacion);
-}
-
-main()
-  .catch(e => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+console.log("✅ Confirmación creada:", confirmacion.id);
