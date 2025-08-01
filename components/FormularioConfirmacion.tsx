@@ -21,12 +21,16 @@ type Mensaje = {
   tipo: 'success' | 'error' | 'info' | 'warning';
   texto: string;
 };
+type Invitado = {
+  id: string;
+  nombre: string;
+};
 
 export default function ConfirmInvitation() {
   const [numero, setNumero] = useState('');
-  const [invitados, setInvitados] = useState([]);
+  const [invitados, setInvitados] = useState<Invitado[]>([]);
   const [confirmaciones, setConfirmaciones] = useState(0);
-  const [seleccionados, setSeleccionados] = useState([]);
+  const [seleccionados, setSeleccionados] = useState<string[]>([]);
   const [dedicatoria, setDedicatoria] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [mensaje, setMensaje] = useState<Mensaje | null>(null);
