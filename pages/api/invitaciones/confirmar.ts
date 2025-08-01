@@ -18,15 +18,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    await db.confirmacion.create({
+    // 1. Crear la confirmación
+    const confirmacion = await db.confirmacion.create({
       data: {
-        invitacionId: invitacion.id,
         dedicatoria,
-        asistentes: {
-          connect: asistentes.map((id: number) => ({ id })),
-        },
+        invitacionId: invitacion.id,
       },
     });
+
+    // 2. Asociar los invitados a través de ConfirmacionInvitado
+    await Promise.all(
+      asistentes.map((invitadoId: string) =>
+        db.confirmacionInvitado.create({
+          data: {
+            confirmacionId: confirmacion.id,
+            invitadoId,
+          },
+        })
+      )
+    );
+
     res.status(200).json({ success: true });
   } catch (error) {
     console.error(error);
