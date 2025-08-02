@@ -38,16 +38,25 @@ export default function ConfirmacionPage() {
   if (!data.exists || data.estado !== 'ACTIVO') return <p>No válido.</p>;
 
   return (
-    <>
-      {/* <AnimatedBars /> */}
+    <main style={{ position: 'relative', overflow: 'hidden' }}>
       <Masonry />
       <ImageSlider />
       <TrailAnimation />
       <NoiseAnimation />
       <BackgroundSlider />
       <DeckComponent />
-      <Viewpages />
-      {data.confirmaciones! < 2 && <Formulario numero={numero} />}
-    </>
+
+      {/* Viewpager necesita estar contenido */}
+      <div style={{ position: 'relative', height: '100vh' }}>
+        <Viewpages />
+      </div>
+
+      {/* Formulario debe estar fuera del área absoluta del Viewpager */}
+      {data.confirmaciones! < 2 && (
+        <div style={{ position: 'relative', zIndex: 2, marginTop: '2rem' }}>
+          <Formulario numero={numero} />
+        </div>
+      )}
+    </main>
   );
 }
