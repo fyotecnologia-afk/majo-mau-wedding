@@ -8,6 +8,7 @@ import TrailAnimation from '../components/TrailAnimation/TrailAnimation';
 import ImageSlider from '../components/ImageSlider/ImageSlider';
 import BackgroundSlider from '../components/BackgroundSlider/BackgroundSlider';
 import Masonry from '../components/Masonry/Masonry';
+import Viewpages from '../components/Viewpager/Viewpages';
 
 // ✅ Define el tipo de datos esperados
 type DataResponse = {
@@ -45,6 +46,7 @@ export default function ConfirmacionPage() {
       <NoiseAnimation />
       <BackgroundSlider />
       <DeckComponent />
+      <Viewpages />
       {data.confirmaciones! < 2 && <Formulario numero={numero} />}
     </>
   );
