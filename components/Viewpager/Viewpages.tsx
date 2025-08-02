@@ -5,7 +5,7 @@ import { useSprings, animated } from '@react-spring/web';
 import useMeasure from 'react-use-measure';
 import { useDrag } from '@use-gesture/react';
 import clamp from 'lodash/clamp';
-import styles from './Viewpager.module.css';
+import styles from './styles.module.css';
 
 const pages: string[] = [
   'https://images.pexels.com/photos/62689/pexels-photo-62689.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
