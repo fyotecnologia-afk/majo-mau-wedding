@@ -106,7 +106,17 @@ export default function ConfirmInvitation({ numero: numeroProp }: ConfirmInvitat
     <div style={{ maxWidth: 600, margin: '2rem auto', padding: '1rem' }}>
       <Card
         title={
-          <Title level={3} style={{ marginBottom: 0, textAlign: 'center' }}>
+          <Title
+          level={3}
+          style={{
+            marginBottom: 0,
+            textAlign: 'center',
+            fontSize: 'clamp(1.2rem, 5vw, 2rem)', // 👈 clave responsiva
+            wordBreak: 'break-word',
+            whiteSpace: 'normal',
+            lineHeight: 1.3,
+          }} 
+          >
             🎟 Confirmación de Invitación
           </Title>
         }
