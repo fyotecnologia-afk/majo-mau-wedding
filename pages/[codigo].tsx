@@ -9,7 +9,7 @@ import ImageSlider from "../components/ImageSlider/ImageSlider";
 import BackgroundSlider from "../components/BackgroundSlider/BackgroundSlider";
 import Masonry from "../components/Masonry/Masonry";
 import Viewpages from "../components/Viewpager/Viewpages";
-import Envelope from "../components/Envelope/Envelope";
+import FuriosaPoster from "../components/Envelope/Envelope";
 
 // ✅ Define el tipo de datos esperados
 type DataResponse = {
@@ -23,6 +23,7 @@ export default function ConfirmacionPage() {
   const { codigo } = router.query;
   const [numero, setNumero] = useState<string | null>(null);
   const [data, setData] = useState<DataResponse | null>(null); // ✅ Usa el tipo aquí
+  const [showPoster, setShowPoster] = useState(true);
 
   useEffect(() => {
     if (!codigo) return;
@@ -38,11 +39,11 @@ export default function ConfirmacionPage() {
   if (!data) return <p>Cargando...</p>;
   if (!data.exists || data.estado !== "ACTIVO") return <p>No válido.</p>;
 
+  if (showPoster) {
+    return <FuriosaPoster onFinish={() => setShowPoster(false)} />;
+  }
   return (
     <main style={{ position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "relative", height: "100vh" }}>
-        <Envelope />
-      </div>
       <div style={{ position: "relative", height: "100vh" }}>
         <Masonry />
       </div>

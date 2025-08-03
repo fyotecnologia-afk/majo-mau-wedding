@@ -1,43 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles.module.scss";
 
-const FuriosaPoster: React.FC = () => {
+interface Props {
+  onFinish: () => void;
+}
+
+const FuriosaIntro: React.FC<Props> = ({ onFinish }) => {
+  const [hide, setHide] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setHide(true);
+      setTimeout(onFinish, 1000); // tiempo para la animación de salida
+    }, 5000); // mostrar 5s
+
+    return () => clearTimeout(timeout);
+  }, [onFinish]);
+
   return (
-    <>
-      <main className={styles.main}>
-        <article className={styles.furiosaPoster}>
-          <header className={styles.furiosaPosterHeader}>
-            <h1 className={styles.furiosaPosterTitle} data-title="FURIOSA">
-              FURIOSA
-            </h1>
-          </header>
-          <p className={styles.anya}>Anya Taylor-Joy</p>
-          <p className={styles.chris}>Chris Hemsworth</p>
-          <p className={styles.george}>
-            From mastermind <strong>George Miller</strong>
-          </p>
-          <p className={styles.madMaxSaga}>
-            <span data-title="A Mad">A Mad</span>
-            <span data-title="Max Saga">Max Saga</span>
-          </p>
-          <img
-            className={styles.frontImage}
-            src="https://cdn.jsdelivr.net/gh/olivier3lanc/cinematics-resources@master/furiosa/medias/furiosa_front.webp"
-            alt="Furiosa Front image"
-          />
-        </article>
-      </main>
-      <nav className={styles.nav}>
-        <a
-          href="https://www.furiosaamadmaxsaga.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Official page
-        </a>
-      </nav>
-    </>
+    <div className={`${styles.introWrapper} ${hide ? styles.hide : ""}`}>
+      <div className={styles.poster}>
+        <h1 data-title="FURIOSA">FURIOSA</h1>
+        <p className={styles.subtitle}>Anya Taylor-Joy & Chris Hemsworth</p>
+        <img
+          src="https://cdn.jsdelivr.net/gh/olivier3lanc/cinematics-resources@master/furiosa/medias/furiosa_front.webp"
+          alt="Furiosa"
+        />
+        <p className={styles.saga}>A Mad Max Saga</p>
+      </div>
+    </div>
   );
 };
 
-export default FuriosaPoster;
+export default FuriosaIntro;
