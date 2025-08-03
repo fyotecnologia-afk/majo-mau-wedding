@@ -1,6 +1,6 @@
 // components/Envelope/Envelope.tsx
 import React, { useEffect } from "react";
-import "./Envelope.scss";
+import "./styles.module.scss";
 import { gsap } from "gsap";
 import { CSSRulePlugin } from "gsap/CSSRulePlugin";
 
