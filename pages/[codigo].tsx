@@ -1,4 +1,4 @@
-// pages/[codigo].tsx
+// pages/[codigo].tsx o donde lo uses
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import AnimatedBars from "../components/AnimatedBars/AnimatedBars";
@@ -10,7 +10,7 @@ import ImageSlider from "../components/ImageSlider/ImageSlider";
 import BackgroundSlider from "../components/BackgroundSlider/BackgroundSlider";
 import Masonry from "../components/Masonry/Masonry";
 import Viewpages from "../components/Viewpager/Viewpages";
-import Envelope from "../components/Envelope/Envelope"; // ✅
+import Envelope from "../components/Envelope/Envelope";
 
 type DataResponse = {
   exists: boolean;
@@ -23,6 +23,9 @@ export default function ConfirmacionPage() {
   const { codigo } = router.query;
   const [numero, setNumero] = useState<string | null>(null);
   const [data, setData] = useState<DataResponse | null>(null);
+
+  // Estado para controlar si el sobre ya fue abierto
+  const [envelopeOpened, setEnvelopeOpened] = useState(false);
 
   useEffect(() => {
     if (!codigo) return;
@@ -40,43 +43,46 @@ export default function ConfirmacionPage() {
 
   return (
     <main style={{ position: "relative", overflow: "hidden" }}>
-      {/* ✅ SOBRE ANIMADO */}
-      <div style={{ position: "relative", zIndex: 9999 }}>
-        <Envelope />
-      </div>
+      {/* Mostrar el sobre solo si NO se ha abierto */}
+      {!envelopeOpened && <Envelope onOpen={() => setEnvelopeOpened(true)} />}
 
-      <div style={{ position: "relative", height: "100vh" }}>
-        <Masonry />
-      </div>
+      {/* Mostrar los demás componentes SOLO si el sobre fue abierto */}
+      {envelopeOpened && (
+        <>
+          <div style={{ position: "relative", height: "100vh" }}>
+            <Masonry />
+          </div>
 
-      <div style={{ position: "relative", height: "100vh" }}>
-        <AnimatedBars />
-      </div>
+          <div style={{ position: "relative", height: "100vh" }}>
+            <AnimatedBars />
+          </div>
 
-      <div style={{ position: "relative", height: "100vh" }}>
-        <ImageSlider />
-      </div>
+          <div style={{ position: "relative", height: "100vh" }}>
+            <ImageSlider />
+          </div>
 
-      <div style={{ position: "relative", height: "100vh" }}>
-        <TrailAnimation />
-      </div>
+          <div style={{ position: "relative", height: "100vh" }}>
+            <TrailAnimation />
+          </div>
 
-      <div style={{ position: "relative", height: "100vh" }}>
-        <BackgroundSlider />
-      </div>
+          <div style={{ position: "relative", height: "100vh" }}>
+            <BackgroundSlider />
+          </div>
 
-      <div style={{ position: "relative", height: "100vh" }}>
-        <DeckComponent />
-      </div>
+          <div style={{ position: "relative", height: "100vh" }}>
+            <DeckComponent />
+          </div>
 
-      <div style={{ position: "relative", height: "100vh" }}>
-        <Viewpages />
-      </div>
+          <div style={{ position: "relative", height: "100vh" }}>
+            <Viewpages />
+          </div>
 
-      {data.confirmaciones! < 2 && (
-        <div style={{ position: "relative", zIndex: 2, marginTop: "2rem" }}>
-          <Formulario numero={numero} />
-        </div>
+          {data.confirmaciones! < 2 && (
+            <div style={{ position: "relative", zIndex: 2, marginTop: "2rem" }}>
+              <Formulario numero={numero} />
+            </div>
+          )}
+        </>
       )}
     </main>
   );

@@ -1,10 +1,8 @@
-// components/Envelope/Envelope.scss
-.container {
+.envelope-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 0;
-  transition: padding 0.4s ease;
+  background: rgba(255, 255, 255, 0.9); // Fondo blanco semitransparente
 }
 
 .content {
@@ -15,10 +13,10 @@
   width: 200px;
   height: 120px;
   background-color: #e0c9a6;
-  margin: 0 auto;
-  position: relative;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 100000;
 }
 
 .envelope::before {
@@ -33,24 +31,4 @@
   transform: rotateX(0deg);
   transition: all 0.3s ease;
   z-index: 20;
-}
-
-.letter {
-  width: 200px;
-  background: white;
-  padding: 2rem;
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 1;
-  transition: all 0.4s ease;
-  z-index: 10;
-  border-radius: 8px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-.body {
-  opacity: 0;
-  transition: opacity 0.3s ease;
 }

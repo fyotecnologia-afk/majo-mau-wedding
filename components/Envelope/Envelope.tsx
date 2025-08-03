@@ -1,15 +1,22 @@
 // components/Envelope/Envelope.tsx
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.module.scss";
 import { gsap } from "gsap";
 import { CSSRulePlugin } from "gsap/CSSRulePlugin";
 
-const Envelope = () => {
+const Envelope = ({ onOpen }: { onOpen: () => void }) => {
   gsap.registerPlugin(CSSRulePlugin);
+
+  // Control local de animación para evitar que se re-cree timeline en cada render
+  let tl: GSAPTimeline | null = null;
 
   const openCard = () => {
     const flap = CSSRulePlugin.getRule(".envelope:before");
-    const tl = gsap.timeline();
+    tl = gsap.timeline({
+      onComplete: () => {
+        onOpen(); // Notifica al padre que el sobre se abrió
+      },
+    });
 
     tl.to(flap, {
       duration: 0.5,
@@ -22,79 +29,34 @@ const Envelope = () => {
           zIndex: 10,
         },
       })
-      .to(".letter", {
-        translateY: -180,
-        duration: 0.7,
-        ease: "back.inOut(1.0)",
-      })
-      .set(".letter", {
-        zIndex: 40,
-        ease: "back.inOut(0.8)",
-      })
       .to(".envelope", {
         duration: 0.4,
         opacity: 0,
         display: "none",
         ease: "back.inOut(0.6)",
       })
-      .to(".letter", {
-        duration: 0.4,
-        ease: "back.out(1.0)",
-        translateY: -5,
-        width: "90vw",
-        height: "unset",
-        overflow: "unset",
-        position: "relative",
-      })
       .to(".container", {
         paddingTop: "40px",
         duration: 0.4,
         ease: "back.inOut(0.6)",
-      })
-      .to(".body", {
-        opacity: 1,
-        duration: 0.3,
-        ease: "back.inOut(0.4)",
       });
   };
 
-  const closeCard = () => {
-    gsap.to(".container", { paddingTop: "0px" });
-    gsap.to(".body", { opacity: 0 });
-    gsap.to(".letter", {
-      translateY: 0,
-      duration: 0.5,
-      onComplete: () => {
-        gsap.set(".letter", { zIndex: 0 });
-        gsap.set(".envelope", { display: "block", opacity: 1 });
-        gsap.set(CSSRulePlugin.getRule(".envelope:before"), {
-          rotateX: 0,
-        });
-      },
-    });
-  };
-
   return (
-    <div className="container" style={{ position: "relative", zIndex: 9999 }}>
+    <div
+      className="container envelope-container"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        zIndex: 99999,
+      }}
+    >
       <div className="content">
         <div className="envelope" onClick={openCard}></div>
-        <div className="letter">
-          <div className="body">
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <h2>Este es el título de la carta</h2>
-              <p>
-                Aquí va el contenido de la invitación o el mensaje especial.
-              </p>
-              <p>
-                Puedes poner información más extensa aquí si es necesario,
-                incluyendo enlaces, datos de contacto o cualquier otro detalle.
-              </p>
-              <button onClick={closeCard} style={{ marginTop: "1rem" }}>
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Se elimina la carta y texto interno porque no quieres mostrarlo */}
       </div>
     </div>
   );
