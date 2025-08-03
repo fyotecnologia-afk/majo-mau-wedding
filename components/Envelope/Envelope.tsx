@@ -1,111 +1,103 @@
-// components/FuriosaPoster.tsx
-"use client";
+// components/Envelope/Envelope.tsx
+import React, { useEffect } from "react";
+import "./Envelope.scss";
+import { gsap } from "gsap";
+import { CSSRulePlugin } from "gsap/CSSRulePlugin";
 
-import { useRef } from "react";
-import { useSpring, animated, to } from "@react-spring/web";
+const Envelope = () => {
+  gsap.registerPlugin(CSSRulePlugin);
 
-const IMAGE =
-  "https://cdn.jsdelivr.net/gh/olivier3lanc/cinematics-resources@master/furiosa/medias/rust.jpg";
+  const openCard = () => {
+    const flap = CSSRulePlugin.getRule(".envelope:before");
+    const tl = gsap.timeline();
 
-export default function FuriosaPoster() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [style, api] = useSpring(() => ({
-    rotateX: 0,
-    rotateY: 0,
-    config: { mass: 5, tension: 350, friction: 40 },
-  }));
-
-  const onMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-    const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-    api.start({ rotateX: -y * 10, rotateY: x * 10 });
+    tl.to(flap, {
+      duration: 0.5,
+      cssRule: {
+        rotateX: 180,
+      },
+    })
+      .set(flap, {
+        cssRule: {
+          zIndex: 10,
+        },
+      })
+      .to(".letter", {
+        translateY: -180,
+        duration: 0.7,
+        ease: "back.inOut(1.0)",
+      })
+      .set(".letter", {
+        zIndex: 40,
+        ease: "back.inOut(0.8)",
+      })
+      .to(".envelope", {
+        duration: 0.4,
+        opacity: 0,
+        display: "none",
+        ease: "back.inOut(0.6)",
+      })
+      .to(".letter", {
+        duration: 0.4,
+        ease: "back.out(1.0)",
+        translateY: -5,
+        width: "90vw",
+        height: "unset",
+        overflow: "unset",
+        position: "relative",
+      })
+      .to(".container", {
+        paddingTop: "40px",
+        duration: 0.4,
+        ease: "back.inOut(0.6)",
+      })
+      .to(".body", {
+        opacity: 1,
+        duration: 0.3,
+        ease: "back.inOut(0.4)",
+      });
   };
 
-  const onLeave = () => api.start({ rotateX: 0, rotateY: 0 });
+  const closeCard = () => {
+    gsap.to(".container", { paddingTop: "0px" });
+    gsap.to(".body", { opacity: 0 });
+    gsap.to(".letter", {
+      translateY: 0,
+      duration: 0.5,
+      onComplete: () => {
+        gsap.set(".letter", { zIndex: 0 });
+        gsap.set(".envelope", { display: "block", opacity: 1 });
+        gsap.set(CSSRulePlugin.getRule(".envelope:before"), {
+          rotateX: 0,
+        });
+      },
+    });
+  };
 
   return (
-    <div
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      style={{ perspective: "100vmin" }}
-    >
-      <animated.figure
-        ref={ref}
-        style={{
-          width: "60vmin",
-          height: "80vmin",
-          margin: "auto",
-          transform: to(
-            [style.rotateX, style.rotateY],
-            (x, y) => `rotateX(${x}deg) rotateY(${y}deg)`
-          ),
-        }}
-      >
-        <span className="title" data-title="MAD MAX SAGA">
-          FURIOSA
-        </span>
-      </animated.figure>
-
-      <style jsx>{`
-        figure {
-          display: block;
-        }
-        .title {
-          display: block;
-          width: 100%;
-          height: 100%;
-          font-family: "Agency FB Black", sans-serif;
-          font-size: 30vmin;
-          line-height: 80vmin;
-          text-transform: uppercase;
-          position: relative;
-          user-select: none;
-          color: transparent;
-          background-image: url("${IMAGE}");
-          background-size: cover;
-          background-position: center;
-          -webkit-text-fill-color: transparent;
-          -webkit-background-clip: text;
-        }
-
-        .title::before {
-          content: attr(data-title);
-          position: absolute;
-          left: 0;
-          top: 0;
-          color: #ffc61c5e;
-          mix-blend-mode: overlay;
-          text-shadow: 0px 0px 4vmin rgba(0, 0, 0, 0.4), 1px 1px #bf4528;
-        }
-
-        nav {
-          position: fixed;
-          bottom: 0;
-          right: 0;
-        }
-
-        nav a {
-          font-size: 16px;
-          color: #ffc61c;
-          font-family: "Agency FB Black", sans-serif;
-          font-weight: 900;
-          text-transform: uppercase;
-          text-decoration-style: dashed;
-          padding: 2em;
-        }
-      `}</style>
-
-      <nav>
-        <a
-          href="https://codepen.io/olivier3lanc/pen/zYXxyEj"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          source
-        </a>
-      </nav>
+    <div className="container" style={{ position: "relative", zIndex: 9999 }}>
+      <div className="content">
+        <div className="envelope" onClick={openCard}></div>
+        <div className="letter">
+          <div className="body">
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <h2>Este es el título de la carta</h2>
+              <p>
+                Aquí va el contenido de la invitación o el mensaje especial.
+              </p>
+              <p>
+                Puedes poner información más extensa aquí si es necesario,
+                incluyendo enlaces, datos de contacto o cualquier otro detalle.
+              </p>
+              <button onClick={closeCard} style={{ marginTop: "1rem" }}>
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default Envelope;
