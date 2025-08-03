@@ -1,47 +1,43 @@
-// components/EnvelopeAnimated.tsx
-import React, { useState } from "react";
-import { useSpring, animated, config } from "@react-spring/web";
-import styles from "./styles.module.css";
+import React from "react";
+import styles from "./styles.module.scss";
 
-const EnvelopeAnimated: React.FC = () => {
-  const [open, setOpen] = useState(false);
-
-  const flap = useSpring({
-    transform: open ? "rotateX(180deg)" : "rotateX(0deg)",
-    config: config.stiff,
-  });
-  const letter = useSpring({
-    transform: open ? "translateY(-80px)" : "translateY(0px)",
-    config: { ...config.default, duration: 400, delay: open ? 200 : 0 },
-  });
-  const hearts = useSpring({
-    opacity: open ? 1 : 0,
-    transform: open ? "translateY(-200px)" : "translateY(0px)",
-    config: { duration: 2000 },
-    delay: open ? 400 : 0,
-  });
-
+const FuriosaPoster: React.FC = () => {
   return (
-    <div
-      className={styles.wrapper}
-      onClick={() => setOpen((o) => !o)}
-      role="button"
-      tabIndex={0}
-    >
-      <div className={styles.envelope}>
-        <animated.div className={styles.flap} style={flap} />
-        <div className={styles.pocket} />
-        <animated.div className={styles.letter} style={letter}>
-          <p className={styles.text}>¡Hola!</p>
-        </animated.div>
-        <animated.div className={styles.hearts} style={hearts}>
-          <div className={`${styles.heart} ${styles.a1}`} />
-          <div className={`${styles.heart} ${styles.a2}`} />
-          <div className={`${styles.heart} ${styles.a3}`} />
-        </animated.div>
-      </div>
-    </div>
+    <>
+      <main className={styles.main}>
+        <article className={styles.furiosaPoster}>
+          <header className={styles.furiosaPosterHeader}>
+            <h1 className={styles.furiosaPosterTitle} data-title="FURIOSA">
+              FURIOSA
+            </h1>
+          </header>
+          <p className={styles.anya}>Anya Taylor-Joy</p>
+          <p className={styles.chris}>Chris Hemsworth</p>
+          <p className={styles.george}>
+            From mastermind <strong>George Miller</strong>
+          </p>
+          <p className={styles.madMaxSaga}>
+            <span data-title="A Mad">A Mad</span>
+            <span data-title="Max Saga">Max Saga</span>
+          </p>
+          <img
+            className={styles.frontImage}
+            src="https://cdn.jsdelivr.net/gh/olivier3lanc/cinematics-resources@master/furiosa/medias/furiosa_front.webp"
+            alt="Furiosa Front image"
+          />
+        </article>
+      </main>
+      <nav className={styles.nav}>
+        <a
+          href="https://www.furiosaamadmaxsaga.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Official page
+        </a>
+      </nav>
+    </>
   );
 };
 
-export default EnvelopeAnimated;
+export default FuriosaPoster;
