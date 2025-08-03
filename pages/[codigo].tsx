@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import AnimatedBars from "../components/AnimatedBars/AnimatedBars";
 import Formulario from "../components/FormularioConfirmacion";
 import DeckComponent from "../components/Deck/Deck";
-import NoiseAnimation from "../components/NoiseAnimation/NoiseAnimation";
 import TrailAnimation from "../components/TrailAnimation/TrailAnimation";
 import ImageSlider from "../components/ImageSlider/ImageSlider";
 import BackgroundSlider from "../components/BackgroundSlider/BackgroundSlider";
