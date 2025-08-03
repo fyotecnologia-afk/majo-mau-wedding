@@ -1,0 +1,72 @@
+.wrapper {
+  perspective: 600px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  cursor: pointer;
+}
+.envelope {
+  position: relative;
+  width: 280px;
+  height: 180px;
+  background-color: #005f99;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+.flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0; height: 0;
+  border-left: 140px solid transparent;
+  border-right: 140px solid transparent;
+  border-top: 98px solid #0077B2;
+  transform-origin: top;
+  z-index: 3;
+}
+.pocket {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0; height: 0;
+  border-left: 140px solid #003f66;
+  border-right: 140px solid #003f66;
+  border-bottom: 90px solid #004d88;
+  border-top: 0 solid transparent;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.letter {
+  position: absolute;
+  top: 45px;
+  left: 10%;
+  width: 80%; height: 60%;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 26px rgba(0,0,0,0.12);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.text { font-size: 1.1rem; color: #333; }
+.hearts {
+  position: absolute;
+  top: 90px;
+  left: 0; right: 0;
+}
+.heart {
+  position: absolute;
+  width: 50px; height: 50px;
+  background: red;
+  clip-path: polygon(50% 0%, 100% 35%, 75% 100%, 50% 80%, 25% 100%, 0% 35%);
+}
+.a1 { left: 20%; animation: sway 2s infinite alternate; }
+.a2 { left: 50%; animation: sway 2s 1s infinite alternate; }
+.a3 { left: 80%; animation: sway 2s 2s infinite alternate; }
+
+@keyframes sway {
+  0% { transform: translateX(0) translateY(0); }
+  100% { transform: translateX(20px) translateY(-200px); }
+}

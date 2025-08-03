@@ -1,122 +1,47 @@
-// components/Envelope.tsx
-import React, { ReactNode, useState } from "react";
-import { useSpring, animated } from "@react-spring/web";
+// components/EnvelopeAnimated.tsx
+import React, { useState } from "react";
+import { useSpring, animated, config } from "@react-spring/web";
+import styles from "./styles.module.css";
 
-interface EnvelopeProps {
-  children: ReactNode;
-}
+const EnvelopeAnimated: React.FC = () => {
+  const [open, setOpen] = useState(false);
 
-const Envelope: React.FC<EnvelopeProps> = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const flapStyles = useSpring({
-    transform: isOpen ? "rotateX(-180deg)" : "rotateX(0deg)",
-    config: { mass: 1, tension: 280, friction: 30 },
+  const flap = useSpring({
+    transform: open ? "rotateX(180deg)" : "rotateX(0deg)",
+    config: config.stiff,
   });
-
-  const contentStyles = useSpring({
-    opacity: isOpen ? 1 : 0,
-    transform: isOpen ? "translateY(0%)" : "translateY(20%)",
-    config: { tension: 220, friction: 20 },
+  const letter = useSpring({
+    transform: open ? "translateY(-80px)" : "translateY(0px)",
+    config: { ...config.default, duration: 400, delay: open ? 200 : 0 },
+  });
+  const hearts = useSpring({
+    opacity: open ? 1 : 0,
+    transform: open ? "translateY(-200px)" : "translateY(0px)",
+    config: { duration: 2000 },
+    delay: open ? 400 : 0,
   });
 
   return (
     <div
-      style={{
-        perspective: 600,
-        width: 300,
-        margin: "40px auto",
-        cursor: "pointer",
-      }}
-      onClick={() => setIsOpen(!isOpen)}
+      className={styles.wrapper}
+      onClick={() => setOpen((o) => !o)}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          setIsOpen(!isOpen);
-        }
-      }}
-      aria-expanded={isOpen}
-      aria-label={isOpen ? "Cerrar invitación" : "Abrir invitación"}
     >
-      <div
-        style={{
-          position: "relative",
-          width: 300,
-          height: 200,
-          backgroundColor: "#c1440e",
-          borderRadius: 12,
-          boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
-          userSelect: "none",
-        }}
-      >
-        {/* Ala (tapa) que rota */}
-        <animated.div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "50%",
-            backgroundColor: "#9c2e04",
-            borderTopLeftRadius: 12,
-            borderTopRightRadius: 12,
-            transformOrigin: "bottom center",
-            ...flapStyles,
-            boxShadow: "inset 0 5px 10px rgba(0,0,0,0.2)",
-            zIndex: 2,
-          }}
-        />
-
-        {/* Parte inferior del sobre */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            width: "100%",
-            height: "50%",
-            backgroundColor: "#d35400",
-            borderBottomLeftRadius: 12,
-            borderBottomRightRadius: 12,
-            boxShadow: "inset 0 -5px 10px rgba(0,0,0,0.2)",
-            zIndex: 1,
-          }}
-        />
-
-        {/* Contenido de la invitación */}
-        <animated.div
-          style={{
-            position: "absolute",
-            top: "55%",
-            left: 0,
-            width: "100%",
-            height: "45%",
-            padding: 15,
-            backgroundColor: "white",
-            borderBottomLeftRadius: 12,
-            borderBottomRightRadius: 12,
-            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-            ...contentStyles,
-            pointerEvents: isOpen ? "auto" : "none",
-            color: "#333",
-          }}
-        >
-          {children}
+      <div className={styles.envelope}>
+        <animated.div className={styles.flap} style={flap} />
+        <div className={styles.pocket} />
+        <animated.div className={styles.letter} style={letter}>
+          <p className={styles.text}>¡Hola!</p>
+        </animated.div>
+        <animated.div className={styles.hearts} style={hearts}>
+          <div className={`${styles.heart} ${styles.a1}`} />
+          <div className={`${styles.heart} ${styles.a2}`} />
+          <div className={`${styles.heart} ${styles.a3}`} />
         </animated.div>
       </div>
-      <p
-        style={{
-          textAlign: "center",
-          marginTop: 12,
-          userSelect: "none",
-          fontWeight: "bold",
-          color: "#c1440e",
-        }}
-      >
-        {isOpen ? "Cerrar invitación" : "Abrir invitación"}
-      </p>
     </div>
   );
 };
 
-export default Envelope;
+export default EnvelopeAnimated;
