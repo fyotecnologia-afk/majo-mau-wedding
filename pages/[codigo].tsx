@@ -38,14 +38,10 @@ export default function ConfirmacionPage() {
 
   if (!data) return <p>Cargando...</p>;
   if (!data.exists || data.estado !== "ACTIVO") return <p>No válido.</p>;
-
-  if (showPoster) {
-    return <FuriosaPoster onFinish={() => setShowPoster(false)} />;
-  }
   return (
     <main style={{ position: "relative", overflow: "hidden" }}>
       <div style={{ position: "relative", height: "100vh" }}>
-        <Masonry />
+        <FuriosaPoster />
       </div>
       <div style={{ position: "relative", height: "100vh" }}>
         <AnimatedBars />
