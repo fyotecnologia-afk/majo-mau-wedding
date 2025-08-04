@@ -8,11 +8,11 @@ import clamp from "lodash/clamp";
 import styles from "../styles/Viewpages.module.css";
 
 const pages: string[] = [
-  "images/mansory/image1.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "images/mansory/image2.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "images/mansory/image1.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "images/mansory/image2.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-  "images/mansory/image1.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+  "images/mansory/gallery-15.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+  "images/mansory/gallery-16.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+  "images/mansory/gallery-17.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+  "images/mansory/gallery-18.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+  "images/mansory/gallery-19.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
 ];
 
 function Viewpager() {

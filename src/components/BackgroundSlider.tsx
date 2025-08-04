@@ -5,10 +5,10 @@ import { useTransition, animated } from "@react-spring/web";
 import styles from "../styles/BackgroundSlider.module.css";
 
 const slides = [
-  "/images/mansory/image1.webp",
-  "/images/mansory/image2.webp",
-  "/images/mansory/image1.webp",
-  "/images/mansory/image2.webp",
+  "/images/mansory/gallery-1.webp",
+  "/images/mansory/gallery-2.webp",
+  "/images/mansory/gallery-3.webp",
+  "/images/mansory/gallery-4.webp",
 ];
 
 export default function BackgroundSlider() {
