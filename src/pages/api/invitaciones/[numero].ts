@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     include: {
       invitados: {
         where: {
-          estado: 'ACTIVO', // 👈 Solo invitados activos
+          estado: 'ACTIVO',
         },
       },
       confirmaciones: true,

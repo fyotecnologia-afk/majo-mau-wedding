@@ -11,6 +11,7 @@ import Masonry from "../components/Masonry";
 import Viewpages from "../components/Viewpages";
 import Envelope from "../components/Envelope";
 import Welcome from "../components/Welcome";
+import ParallaxInvitation from "../components/ParallaxInvitation"; // <-- nuevo componente
 
 type DataResponse = {
   exists: boolean;
