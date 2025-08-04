@@ -1,7 +1,6 @@
 // pages/[codigo].tsx
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import AnimatedBars from "../components/AnimatedBars";
 import Formulario from "../components/FormularioConfirmacion";
 import DeckComponent from "../components/Deck";
 import TrailAnimation from "../components/TrailAnimation";
