@@ -29,14 +29,14 @@ const Envelope = ({ onAnimationComplete }: EnvelopeProps) => {
     <div className="envelope-container" onClick={openEnvelope}>
       <div className="sobre">
         <img
-          src="/images/sobre/cuerpo.png"
+          src="/images/sobre/cuerpo.webp"
           alt="Cuerpo del sobre"
           className="sobre-cuerpo"
           draggable={false}
         />
         <img
           ref={solapaRef}
-          src="/images/sobre/solapa.png"
+          src="/images/sobre/solapa.webp"
           alt="Solapa del sobre"
           className="solapa"
           draggable={false}

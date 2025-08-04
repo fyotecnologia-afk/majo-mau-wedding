@@ -6,9 +6,9 @@ import { useDrag } from "@use-gesture/react";
 import styles from "../styles/Deck.module.css";
 
 const cards = [
-  "/images/cartas/image1.png",
-  "/images/cartas/image2.png",
-  "/images/cartas/image3.png",
+  "/images/cartas/image1.webp",
+  "/images/cartas/image2.webp",
+  "/images/cartas/image3.webp",
 ];
 
 const to = (i: number) => ({
