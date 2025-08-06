@@ -9,7 +9,6 @@ import styles from "../styles/Mansory.module.css";
 import data from "./data"; // tu array de items con { css: string, height: number }
 
 function useMedia(queries: string[], values: number[], defaultValue: number) {
-  // Hook para responder a media queries
   const [value, setValue] = React.useState(defaultValue);
 
   React.useEffect(() => {
@@ -23,7 +22,6 @@ function useMedia(queries: string[], values: number[], defaultValue: number) {
     };
 
     handler();
-
     mediaQueryLists.forEach((mql) => mql.addEventListener("change", handler));
 
     return () => {
@@ -42,13 +40,14 @@ function Masonry() {
     [5, 4, 3],
     2
   );
+
   const [ref, { width }] = useMeasure();
   const [items, setItems] = useState(data);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setItems(shuffle);
-    }, 2000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -70,6 +69,13 @@ function Masonry() {
     return [heightsArray, mapped];
   }, [columns, items, width]);
 
+  // ✅ Calculamos altura automática del contenedor
+  const autoHeight = useMemo(() => {
+    const totalHeight = items.reduce((acc, item) => acc + item.height, 0);
+    const estimated = totalHeight / columns / 2;
+    return Math.max(estimated + 20, 450); // mínimo 450px
+  }, [items, columns]);
+
   const transitions = useTransition(gridItems, {
     keys: (item) => item.css,
     from: ({ x, y, width, height }) => ({ x, y, width, height, opacity: 0 }),
@@ -84,7 +90,10 @@ function Masonry() {
     <div
       ref={ref}
       className={styles.list}
-      style={{ height: Math.max(...heights) }}
+      style={{
+        position: "relative",
+        height: autoHeight, // ⬅️ Ahora lo calculamos automáticamente
+      }}
     >
       {transitions((style, item) => (
         <a.div key={item.css} style={{ ...style, position: "absolute" }}>

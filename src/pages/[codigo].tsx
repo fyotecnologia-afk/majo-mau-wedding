@@ -64,7 +64,7 @@ export default function ConfirmacionPage() {
             <TrailAnimation />
           </div>
 
-          <div style={{ position: "relative", minHeight: "100vh" }}>
+          <div style={{ position: "relative" }}>
             <Masonry />
           </div>
 
