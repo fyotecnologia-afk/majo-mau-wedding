@@ -12,6 +12,7 @@ import DeckComponent from "../components/Deck";
 import Viewpages from "../components/Viewpages";
 import Formulario from "../components/FormularioConfirmacion";
 import WeddingEvents from "../components/WeddingEvents";
+import HotelSuggestions from "../components/HotelSuggestions";
 
 // Tipado
 type DataResponse = {
@@ -77,6 +78,10 @@ export default function ConfirmacionPage() {
 
           <div style={{ position: "relative", minHeight: "100vh" }}>
             <DeckComponent />
+          </div>
+
+          <div style={{ position: "relative", minHeight: "100vh" }}>
+            <HotelSuggestions />
           </div>
 
           <div style={{ position: "relative", minHeight: "100vh" }}>
