@@ -85,7 +85,10 @@ const CountdownSection = () => {
 
       {/* Contenido sobrepuesto */}
       <div className={styles.overlay}>
-        <h1 className={styles.names}>{names} Wedding</h1>
+        <h1 className={styles.names}>
+          {names} <br />
+          Wedding
+        </h1>
         <h2 className={styles.date}>
           {new Date(date).toLocaleDateString("es-MX", {
             year: "numeric",

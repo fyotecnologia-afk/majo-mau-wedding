@@ -11,6 +11,7 @@ import BackgroundSlider from "../components/BackgroundSlider";
 import DeckComponent from "../components/Deck";
 import Viewpages from "../components/Viewpages";
 import Formulario from "../components/FormularioConfirmacion";
+import WeddingEvents from "../components/WeddingEvents";
 
 // Tipado
 type DataResponse = {
@@ -64,6 +65,10 @@ export default function ConfirmacionPage() {
 
           <div style={{ position: "relative", minHeight: "100vh" }}>
             <Masonry />
+          </div>
+
+          <div style={{ position: "relative", minHeight: "100vh" }}>
+            <WeddingEvents />
           </div>
 
           <div style={{ position: "relative", minHeight: "100vh" }}>
