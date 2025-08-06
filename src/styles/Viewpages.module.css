@@ -6,7 +6,7 @@
 }
 
 .page > div {
-  touch-action: none;
+  touch-action: pan-y;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;

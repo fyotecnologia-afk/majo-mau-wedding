@@ -1,17 +1,18 @@
 // pages/[codigo].tsx
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Formulario from "../components/FormularioConfirmacion";
-import DeckComponent from "../components/Deck";
-import TrailAnimation from "../components/TrailAnimation";
-import ImageSlider from "../components/ImageSlider";
-import BackgroundSlider from "../components/BackgroundSlider";
-import Masonry from "../components/Masonry";
-import Viewpages from "../components/Viewpages";
+
+// Componentes
 import Envelope from "../components/Envelope";
 import Welcome from "../components/Welcome";
-import ParallaxInvitation from "../components/ParallaxInvitation"; // <-- nuevo componente
+import TrailAnimation from "../components/TrailAnimation";
+import Masonry from "../components/Masonry";
+import BackgroundSlider from "../components/BackgroundSlider";
+import DeckComponent from "../components/Deck";
+import Viewpages from "../components/Viewpages";
+import Formulario from "../components/FormularioConfirmacion";
 
+// Tipado
 type DataResponse = {
   exists: boolean;
   estado?: string;
@@ -24,11 +25,12 @@ export default function ConfirmacionPage() {
   const [numero, setNumero] = useState<string | null>(null);
   const [data, setData] = useState<DataResponse | null>(null);
 
-  // Estado para controlar si el sobre ya fue abierto (animación completada)
+  // Estado: sobre abierto o no
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
 
   useEffect(() => {
     if (!codigo) return;
+
     const decoded = atob(codigo as string);
     setNumero(decoded);
 
@@ -39,42 +41,40 @@ export default function ConfirmacionPage() {
   }, [codigo]);
 
   if (!data) return <p>Cargando...</p>;
-  if (!data.exists || data.estado !== "ACTIVO") return <p>No válido.</p>;
+  if (!data.exists || data.estado !== "ACTIVO")
+    return <p>Invitación no válida.</p>;
 
   return (
     <main style={{ position: "relative", overflow: "hidden" }}>
-      {/* Mostrar el sobre solo si NO se ha abierto */}
+      {/* Sobre animado al inicio */}
       {!envelopeOpened && (
-        <Envelope
-          onAnimationComplete={() => {
-            setEnvelopeOpened(true);
-          }}
-        />
+        <Envelope onAnimationComplete={() => setEnvelopeOpened(true)} />
       )}
 
-      {/* Mostrar los demás componentes SOLO si el sobre fue abierto */}
+      {/* Contenido de la invitación una vez abierto el sobre */}
       {envelopeOpened && (
         <>
-          <div style={{ position: "relative", height: "100vh" }}>
+          <div style={{ position: "relative", minHeight: "100vh" }}>
             <Welcome />
           </div>
+
           <div style={{ position: "relative", height: "100vh" }}>
             <TrailAnimation />
           </div>
 
-          <div style={{ position: "relative", height: "100vh" }}>
+          <div style={{ position: "relative", minHeight: "100vh" }}>
             <Masonry />
           </div>
 
-          <div style={{ position: "relative", height: "100vh" }}>
+          <div style={{ position: "relative", minHeight: "100vh" }}>
             <BackgroundSlider />
           </div>
 
-          <div style={{ position: "relative", height: "100vh" }}>
+          <div style={{ position: "relative", minHeight: "100vh" }}>
             <DeckComponent />
           </div>
 
-          <div style={{ position: "relative", height: "100vh" }}>
+          <div style={{ position: "relative", minHeight: "100vh" }}>
             <Viewpages />
           </div>
 
