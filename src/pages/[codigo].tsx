@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 // Componentes
-import Envelope from "../components/Envelope";
 import Welcome from "../components/Welcome";
 import TrailAnimation from "../components/TrailAnimation";
 import Masonry from "../components/Masonry";
@@ -13,6 +12,9 @@ import Viewpages from "../components/Viewpages";
 import Formulario from "../components/FormularioConfirmacion";
 import WeddingEvents from "../components/WeddingEvents";
 import HotelSuggestions from "../components/HotelSuggestions";
+import Spinner from "../components/Spinner";
+import FamilySection from "../components/FamilySection";
+import MusicPlayer from "../components/MusicPlayer";
 
 // Tipado
 type DataResponse = {
@@ -27,9 +29,6 @@ export default function ConfirmacionPage() {
   const [numero, setNumero] = useState<string | null>(null);
   const [data, setData] = useState<DataResponse | null>(null);
 
-  // Estado: sobre abierto o no
-  const [envelopeOpened, setEnvelopeOpened] = useState(false);
-
   useEffect(() => {
     if (!codigo) return;
 
@@ -42,58 +41,54 @@ export default function ConfirmacionPage() {
       .catch(() => setData({ exists: false }));
   }, [codigo]);
 
-  if (!data) return <p>Cargando...</p>;
+  if (!data) return <Spinner />;
   if (!data.exists || data.estado !== "ACTIVO")
     return <p>Invitación no válida.</p>;
 
   return (
     <main style={{ position: "relative", overflow: "hidden" }}>
-      {/* Sobre animado al inicio */}
-      {!envelopeOpened && (
-        <Envelope onAnimationComplete={() => setEnvelopeOpened(true)} />
-      )}
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+        <Welcome />
+      </div>
 
-      {/* Contenido de la invitación una vez abierto el sobre */}
-      {envelopeOpened && (
-        <>
-          <div style={{ position: "relative", minHeight: "100vh" }}>
-            <Welcome />
-          </div>
+      <MusicPlayer src="/music/cancion.mp3" />
 
-          <div style={{ position: "relative", height: "100vh" }}>
-            <TrailAnimation />
-          </div>
+      <div style={{ position: "relative", height: "100vh" }}>
+        <TrailAnimation />
+      </div>
 
-          <div style={{ position: "relative" }}>
-            <Masonry />
-          </div>
+      <div style={{ position: "relative" }}>
+        <Masonry />
+      </div>
 
-          <div style={{ position: "relative", minHeight: "100vh" }}>
-            <WeddingEvents />
-          </div>
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+        <WeddingEvents />
+      </div>
 
-          <div style={{ position: "relative", minHeight: "100vh" }}>
-            <BackgroundSlider />
-          </div>
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+        <BackgroundSlider />
+      </div>
 
-          <div style={{ position: "relative", minHeight: "100vh" }}>
-            <DeckComponent />
-          </div>
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+        <FamilySection />
+      </div>
 
-          <div style={{ position: "relative", minHeight: "100vh" }}>
-            <HotelSuggestions />
-          </div>
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+        <DeckComponent />
+      </div>
 
-          <div style={{ position: "relative", minHeight: "100vh" }}>
-            <Viewpages />
-          </div>
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+        <HotelSuggestions />
+      </div>
 
-          {data.confirmaciones! < 2 && (
-            <div style={{ position: "relative", zIndex: 2, marginTop: "2rem" }}>
-              <Formulario numero={numero} />
-            </div>
-          )}
-        </>
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+        <Viewpages />
+      </div>
+
+      {data.confirmaciones! < 2 && (
+        <div style={{ position: "relative", zIndex: 2, marginTop: "2rem" }}>
+          <Formulario numero={numero} />
+        </div>
       )}
     </main>
   );

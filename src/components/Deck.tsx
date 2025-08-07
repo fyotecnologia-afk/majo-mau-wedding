@@ -6,9 +6,14 @@ import { useDrag } from "@use-gesture/react";
 import styles from "../styles/Deck.module.css";
 
 const cards = [
-  "/images/cartas/image1.webp",
-  "/images/cartas/image2.webp",
-  "/images/cartas/image3.webp",
+  { type: "image", content: "/images/mansory/gallery-9.webp" },
+  { type: "text", content: "FRASE 3" },
+  { type: "image", content: "/images/mansory/gallery-10.webp" },
+  { type: "text", content: "FRASE 2" },
+  { type: "image", content: "/images/mansory/gallery-11.webp" },
+  { type: "text", content: "FRASE 1" },
+  { type: "image", content: "/images/mansory/gallery-12.webp" },
+  { type: "text", content: "Nuestros momentos son mágicos" },
 ];
 
 const to = (i: number) => ({
@@ -73,12 +78,26 @@ function Deck() {
             {...bind(i)}
             style={{
               transform: interpolate([rot, scale], trans),
-              backgroundImage: `url(${cards[i]})`,
+              backgroundImage:
+                cards[i].type === "image"
+                  ? `url(${cards[i].content})`
+                  : undefined,
               touchAction: "none",
               userSelect: "none",
               cursor: "grab",
+              // Solo para texto, centra el contenido
+              display: cards[i].type === "text" ? "flex" : undefined,
+              alignItems: cards[i].type === "text" ? "center" : undefined,
+              justifyContent: cards[i].type === "text" ? "center" : undefined,
+              textAlign: cards[i].type === "text" ? "center" : undefined,
+              color: cards[i].type === "text" ? "black" : undefined,
+              fontSize: cards[i].type === "text" ? "2.5rem" : undefined,
+              fontWeight: cards[i].type === "text" ? "bold" : undefined,
+              padding: cards[i].type === "text" ? "2rem" : undefined,
             }}
-          />
+          >
+            {cards[i].type === "text" ? cards[i].content : null}
+          </animated.div>
         </animated.div>
       ))}
     </>

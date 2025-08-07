@@ -91,7 +91,18 @@ const WeddingSchedule: React.FC = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <Title level={2}>Programa de la Boda</Title>
+      <Title
+        level={2}
+        style={{
+          textAlign: "center",
+          fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva
+          wordBreak: "break-word",
+          whiteSpace: "normal",
+          lineHeight: 1.3,
+        }}
+      >
+        ¿Dónde y Cúando?
+      </Title>
       <Row gutter={[16, 16]}>
         {data.ceremonies.map((ceremony, index) => (
           <Col xs={24} sm={12} md={8} key={index}>

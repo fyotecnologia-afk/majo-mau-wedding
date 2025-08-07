@@ -1,0 +1,61 @@
+import React from "react";
+import { Typography, Card, Row, Col } from "antd";
+import weddingData from "@/data/weddingData.json";
+
+const { Title, Text } = Typography;
+
+type Person = {
+  name: string;
+  role: string;
+};
+
+type FamilyData = {
+  parents: Person[];
+  godparents: Person[];
+};
+
+const FamilySection: React.FC = () => {
+  const family: FamilyData = weddingData.family;
+
+  const renderPeople = (list: Person[]) =>
+    list.map((person, index) => (
+      <Col xs={24} sm={12} md={8} key={index} style={{ marginBottom: 16 }}>
+        <Card
+          hoverable
+          variant={undefined}
+          style={{
+            textAlign: "center",
+            borderRadius: 16,
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          }}
+        >
+          <Title level={4} style={{ marginBottom: 4 }}>
+            {person.name}
+          </Title>
+          <Text type="secondary">{person.role}</Text>
+        </Card>
+      </Col>
+    ));
+
+  return (
+    <div style={{ padding: "4rem 1rem", backgroundColor: "#fff" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
+        <Title level={2} style={{ marginBottom: 40 }}>
+          Nuestros Padres
+        </Title>
+        <Row gutter={[24, 24]} justify="center">
+          {renderPeople(family.parents)}
+        </Row>
+
+        <Title level={2} style={{ marginTop: 60, marginBottom: 40 }}>
+          Nuestros Padrinos
+        </Title>
+        <Row gutter={[24, 24]} justify="center">
+          {renderPeople(family.godparents)}
+        </Row>
+      </div>
+    </div>
+  );
+};
+
+export default FamilySection;
