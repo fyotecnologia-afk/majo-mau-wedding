@@ -1,25 +1,47 @@
 // pages/_app.tsx
 import type { AppProps } from "next/app";
+import {
+  Meow_Script,
+  Roboto,
+  Great_Vibes,
+  Playfair_Display,
+} from "next/font/google";
 import "../styles/globals.css";
 
-// Importa las fuentes con next/font
-import { Great_Vibes, Playfair_Display } from "next/font/google";
+// Importar fuentes desde next/font/google
+const meow = Meow_Script({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-meow",
+  display: "swap",
+});
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-roboto",
+  display: "swap",
+});
 
 const greatVibes = Great_Vibes({
-  weight: "400",
   subsets: ["latin"],
+  weight: "400",
   variable: "--font-great-vibes",
+  display: "swap",
 });
 
 const playfair = Playfair_Display({
-  weight: ["400", "700"],
   subsets: ["latin"],
+  weight: ["400", "700"],
   variable: "--font-playfair",
+  display: "swap",
 });
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main className={`${greatVibes.variable} ${playfair.variable}`}>
+    <main
+      className={`${roboto.variable} ${meow.variable} ${greatVibes.variable} ${playfair.variable}`}
+    >
       <Component {...pageProps} />
     </main>
   );

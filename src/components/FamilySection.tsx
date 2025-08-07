@@ -5,7 +5,7 @@ import weddingData from "@/data/weddingData.json";
 const { Title, Text } = Typography;
 
 type Person = {
-  name: string;
+  names: string[];
   role: string;
 };
 
@@ -30,7 +30,9 @@ const FamilySection: React.FC = () => {
           }}
         >
           <Title level={4} style={{ marginBottom: 4 }}>
-            {person.name}
+            {person.names.map((name, i) => (
+              <div key={i}>{name}</div>
+            ))}
           </Title>
           <Text type="secondary">{person.role}</Text>
         </Card>
@@ -40,14 +42,22 @@ const FamilySection: React.FC = () => {
   return (
     <div style={{ padding: "4rem 1rem", backgroundColor: "#fff" }}>
       <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-        <Title level={2} style={{ marginBottom: 40 }}>
+        <Title
+          level={2}
+          className="title-decorative"
+          style={{ marginBottom: 40 }}
+        >
           Nuestros Padres
         </Title>
         <Row gutter={[24, 24]} justify="center">
           {renderPeople(family.parents)}
         </Row>
 
-        <Title level={2} style={{ marginTop: 60, marginBottom: 40 }}>
+        <Title
+          level={2}
+          className="title-decorative"
+          style={{ marginTop: 60, marginBottom: 40 }}
+        >
           Nuestros Padrinos
         </Title>
         <Row gutter={[24, 24]} justify="center">

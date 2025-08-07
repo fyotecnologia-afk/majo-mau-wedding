@@ -7,7 +7,7 @@ export default function Spinner() {
     from: { rotateZ: 0 },
     to: { rotateZ: 360 },
     loop: true,
-    config: { duration: 2000 },
+    config: { duration: 1000 },
   });
 
   return (
@@ -28,8 +28,8 @@ export default function Spinner() {
           width: 70,
           height: 70,
           borderRadius: "50%",
-          border: "6px solid #f8d8e4", // color rosado suave
-          borderTop: "6px solid #c78fa2", // acento
+          border: "6px solid #F6F1EB", // color rosado suave
+          borderTop: "6px solid #CBB278", // acento
           position: "relative",
         }}
       >
@@ -39,7 +39,7 @@ export default function Spinner() {
             width: 10,
             height: 10,
             backgroundColor: "#ffffff",
-            border: "2px solid #c78fa2",
+            border: "2px solid #CBB278",
             borderRadius: "50%",
             position: "absolute",
             top: -6,
@@ -53,7 +53,7 @@ export default function Spinner() {
         style={{
           marginTop: 20,
           fontSize: "1.2rem",
-          color: "#b36b82",
+          color: "#CBB278",
         }}
       >
         Cargando invitación…

@@ -15,6 +15,8 @@ import HotelSuggestions from "../components/HotelSuggestions";
 import Spinner from "../components/Spinner";
 import FamilySection from "../components/FamilySection";
 import MusicPlayer from "../components/MusicPlayer";
+import Makeup from "../components/Makeup";
+import RentCars from "../components/RentCars";
 
 // Tipado
 type DataResponse = {
@@ -79,6 +81,14 @@ export default function ConfirmacionPage() {
 
       <div style={{ position: "relative", minHeight: "100vh" }}>
         <HotelSuggestions />
+      </div>
+
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+        <Makeup />
+      </div>
+
+      <div style={{ position: "relative" }}>
+        <RentCars />
       </div>
 
       <div style={{ position: "relative", minHeight: "100vh" }}>

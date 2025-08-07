@@ -19,8 +19,9 @@
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    circle at 85% center, /* Ajusta la posición del foco horizontal si las personas están a la derecha */
-    rgba(0, 0, 0, 0) 0%,
+    circle at 85% center,
+    /* Ajusta la posición del foco horizontal si las personas están a la derecha */
+      rgba(0, 0, 0, 0) 0%,
     rgba(0, 0, 0, 0.2) 40%,
     rgba(0, 0, 0, 0.4) 60%,
     rgba(0, 0, 0, 0.7) 100%
@@ -53,14 +54,12 @@
 }
 
 .names {
-  font-family: var(--font-great-vibes), cursive;
-  font-size: 3.8rem;
+  font-family: var(--font-meow), cursive;
+  font-size: 6rem;
   font-weight: 400;
   text-align: center;
-  text-shadow:
-    0 0 5px rgba(0,0,0,0.7),
-    0 0 10px rgba(0,0,0,0.5),
-    0 0 15px rgba(0,0,0,0.4);
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.7), 0 0 10px rgba(0, 0, 0, 0.5),
+    0 0 15px rgba(0, 0, 0, 0.4);
 }
 
 .date,
@@ -72,10 +71,8 @@
 .date {
   font-size: 1.5rem;
   /* margin-bottom: 2rem; */
-  text-shadow:
-    0 0 5px rgba(0,0,0,0.7),
-    0 0 10px rgba(0,0,0,0.5),
-    0 0 15px rgba(0,0,0,0.4);
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.7), 0 0 10px rgba(0, 0, 0, 0.5),
+    0 0 15px rgba(0, 0, 0, 0.4);
 }
 
 .timer {
@@ -100,9 +97,7 @@
 .number {
   font-size: 2.5rem;
   font-weight: bold;
-  text-shadow:
-    0 0 4px rgba(0,0,0,0.8),
-    0 0 8px rgba(0,0,0,0.6);
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.6);
 }
 
 .label {
@@ -113,7 +108,6 @@
 
 /* Opcional para móvil */
 @media (max-width: 600px) {
-
   .bg {
     background-position: 50% top;
   }
@@ -123,8 +117,9 @@
     position: absolute;
     inset: 0;
     background: radial-gradient(
-      circle at 50% center, /* Ajusta la posición del foco horizontal si las personas están a la derecha */
-      rgba(0, 0, 0, 0) 0%,
+      circle at 50% center,
+      /* Ajusta la posición del foco horizontal si las personas están a la derecha */
+        rgba(0, 0, 0, 0) 0%,
       rgba(0, 0, 0, 0.2) 40%,
       rgba(0, 0, 0, 0.4) 60%,
       rgba(0, 0, 0, 0.7) 100%
@@ -134,7 +129,7 @@
   }
 
   .names {
-    font-size: 2.5rem;
+    font-size: 3.5rem;
   }
 
   .number {
@@ -145,5 +140,3 @@
     font-size: 1.2rem;
   }
 }
-
-

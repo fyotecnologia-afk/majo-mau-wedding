@@ -105,11 +105,11 @@ const WeddingSchedule: React.FC = () => {
       </Title>
       <Row gutter={[16, 16]}>
         {data.ceremonies.map((ceremony, index) => (
-          <Col xs={24} sm={12} md={8} key={index}>
+          <Col xs={24} sm={24} md={12} key={index}>
             <CeremonyCard ceremony={ceremony} />
           </Col>
         ))}
-        <Col xs={24} sm={12} md={8}>
+        <Col xs={24} sm={24} md={12}>
           <ReceptionCard reception={data.reception} />
         </Col>
       </Row>

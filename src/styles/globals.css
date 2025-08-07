@@ -4,5 +4,20 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: #c78fa2;
+  background-color: #f6f1eb;
+  font-family: var(--font-playfair), serif !important;
+}
+
+.title-decorative {
+  font-family: var(--font-meow), cursive;
+  font-size: 4rem !important;
+  font-weight: 400 !important;
+}
+
+.title-script {
+  font-family: var(--font-great-vibes), cursive;
+}
+
+.title-serif {
+  font-family: var(--font-playfair), serif;
 }

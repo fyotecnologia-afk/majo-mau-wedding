@@ -132,7 +132,6 @@ export default function ConfirmInvitation({
           <Title
             level={3}
             style={{
-              marginBottom: 0,
               textAlign: "center",
               fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva
               wordBreak: "break-word",
