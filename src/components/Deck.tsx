@@ -93,7 +93,8 @@ function Deck() {
               color: cards[i].type === "text" ? "black" : undefined,
               fontSize: cards[i].type === "text" ? "2.5rem" : undefined,
               fontWeight: cards[i].type === "text" ? "bold" : undefined,
-              padding: cards[i].type === "text" ? "2rem" : undefined,
+              // padding: cards[i].type === "text" ? "1rem" : undefined,
+              padding: "1rem",
             }}
           >
             {cards[i].type === "text" ? cards[i].content : null}

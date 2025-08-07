@@ -1,5 +1,5 @@
 .container {
-  /* background: lightblue; */
+  background: lightblue;
   display: flex;
   align-items: center;
   height: 100vh;
@@ -22,7 +22,7 @@
 
 .deck > div {
   background-color: white;
-  background-size: auto 75%;
+  background-size: auto 85%;
   background-repeat: no-repeat;
   background-position: center center;
   /* width: 45vh;
@@ -30,9 +30,9 @@
   height: 85vh;
   max-height: 285px; */
   width: 90vh;
-  max-width: 300px;
+  max-width: 245px;
   height: 170vh;
-  max-height: 570px;
+  max-height: 400px;
   will-change: transform;
   border-radius: 10px;
   box-shadow: 0 12.5px 100px -10px rgba(50, 50, 73, 0.4),
