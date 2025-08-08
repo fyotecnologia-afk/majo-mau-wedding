@@ -7,10 +7,9 @@ import {
   Typography,
   Space,
   Divider,
-  message,
+  Alert,
   Card,
   Steps,
-  Alert,
 } from "antd";
 import {
   UserOutlined,
@@ -21,60 +20,106 @@ import {
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 const { Step } = Steps;
-type Mensaje = {
-  tipo: "success" | "error" | "info" | "warning";
-  texto: string;
-};
+
 type Invitado = {
   id: string;
   nombre: string;
-};
-type ConfirmInvitationProps = {
-  numero?: string | null;
+  respuesta: "SI" | "NO" | null;
 };
 
-export default function ConfirmInvitation({
-  numero: numeroProp,
-}: ConfirmInvitationProps) {
-  const [numero, setNumero] = useState(numeroProp || "");
+type ConfirmacionInvitado = {
+  invitadoId: string;
+  respuesta: "SI" | "NO";
+};
+
+type Confirmacion = {
+  confirmacionInvitados: ConfirmacionInvitado[];
+};
+
+type InvitacionAPIResponse = {
+  exists: boolean;
+  estado: string;
+  invitados: { id: string; nombre: string }[];
+  confirmaciones: Confirmacion[];
+  dedicatoria?: string;
+};
+type TipoMensaje = "success" | "info" | "warning" | "error";
+
+export default function ConfirmInvitation() {
+  const [numero, setNumero] = useState("");
   const [invitados, setInvitados] = useState<Invitado[]>([]);
-  const [confirmaciones, setConfirmaciones] = useState(0);
-  const [seleccionados, setSeleccionados] = useState<string[]>([]);
   const [dedicatoria, setDedicatoria] = useState("");
-  const [enviando, setEnviando] = useState(false);
-  const [mensaje, setMensaje] = useState<Mensaje | null>(null);
+  const [confirmacionesCount, setConfirmacionesCount] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const [seleccionados, setSeleccionados] = useState<string[]>([]);
+  const [enviando, setEnviando] = useState(false);
 
-  // Buscar invitación
+  const [mensaje, setMensaje] = useState<{
+    tipo: TipoMensaje;
+    texto: string;
+  } | null>(null);
+
   const buscarInvitacion = async () => {
+    if (!numero.trim()) {
+      setMensaje({ tipo: "error", texto: "Ingresa un número de invitación" });
+      return;
+    }
+    setMensaje(null);
+
     try {
       const res = await fetch(
         `/api/invitaciones/${encodeURIComponent(numero.trim())}`
       );
-      if (!res.ok) {
-        setMensaje({
-          tipo: "error",
-          texto: "Número de invitación no encontrado",
-        });
-        setInvitados([]);
-        setConfirmaciones(0);
-        return;
-      }
-      const data = await res.json();
-      console.log(data);
-      setInvitados(data.invitados);
-      setConfirmaciones(data.confirmaciones);
-      setMensaje(null);
-      setSeleccionados([]);
-      setDedicatoria("");
+      if (!res.ok) throw new Error("Invitación no encontrada");
+
+      const data: InvitacionAPIResponse = await res.json();
+
+      // Agregar la respuesta a cada invitado según confirmaciones
+      const invitadosConRespuesta = data.invitados.map((inv) => {
+        let respuesta: "SI" | "NO" | null = null;
+        for (const confirmacion of data.confirmaciones) {
+          const cInvitado = confirmacion.confirmacionInvitados.find(
+            (ci) => ci.invitadoId === inv.id
+          );
+          if (cInvitado) {
+            respuesta = cInvitado.respuesta;
+            // Para tomar la última confirmación, puedes comentar el break
+            break;
+          }
+        }
+        return { ...inv, respuesta };
+      });
+
+      setInvitados(invitadosConRespuesta);
+      setDedicatoria(data.dedicatoria || "");
+      setConfirmacionesCount(data.confirmaciones.length || 0);
+
+      // Preseleccionar invitados que confirmaron "SI"
+      const preSeleccionados = invitadosConRespuesta
+        .filter((inv) => inv.respuesta === "SI")
+        .map((inv) => inv.id);
+
+      setSeleccionados(preSeleccionados);
       setCurrentStep(1);
-    } catch (error) {
-      setMensaje({ tipo: "error", texto: "Error buscando la invitación" });
+    } catch (error: any) {
+      setMensaje({
+        tipo: "error",
+        texto: error.message || "Error buscando invitación",
+      });
+      setInvitados([]);
+      setSeleccionados([]);
+      setCurrentStep(0);
     }
   };
 
-  // Enviar confirmación
   const enviarConfirmacion = async () => {
+    if (seleccionados.length === 0 && dedicatoria.trim() === "") {
+      setMensaje({
+        tipo: "error",
+        texto: "Selecciona al menos un invitado o escribe una dedicatoria",
+      });
+      return;
+    }
     setEnviando(true);
     setMensaje(null);
 
@@ -88,33 +133,25 @@ export default function ConfirmInvitation({
           dedicatoria,
         }),
       });
-      if (res.ok) {
-        setMensaje({ tipo: "success", texto: "¡Confirmado correctamente!" });
-        setCurrentStep(2);
-      } else {
+      if (!res.ok) {
         const errorData = await res.json();
-        setMensaje({
-          tipo: "error",
-          texto: errorData.error || "Error al confirmar",
-        });
+        throw new Error(errorData.error || "Error al confirmar");
       }
-    } catch (error) {
-      setMensaje({ tipo: "error", texto: "Error al enviar confirmación" });
+      setMensaje({ tipo: "success", texto: "¡Confirmado correctamente!" });
+      setCurrentStep(2);
+    } catch (error: any) {
+      setMensaje({
+        tipo: "error",
+        texto: error.message || "Error al enviar confirmación",
+      });
+    } finally {
+      setEnviando(false);
     }
-
-    setEnviando(false);
   };
 
-  if (confirmaciones >= 2) {
+  if (confirmacionesCount >= 2) {
     return (
-      <Card
-        style={{
-          maxWidth: 600,
-          margin: "2rem auto",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-          borderRadius: 12,
-        }}
-      >
+      <Card style={{ maxWidth: 600, margin: "2rem auto" }}>
         <Alert
           message="Límite alcanzado"
           description="Ya no se puede editar. Se alcanzó el límite de confirmaciones."
@@ -130,20 +167,14 @@ export default function ConfirmInvitation({
       <Card
         title={
           <Title
-            className="title-decorative"
-            level={2}
             style={{
               textAlign: "center",
-              fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              lineHeight: 1.3,
+              fontSize: "clamp(1.2rem, 5vw, 2rem)",
             }}
           >
             Confirmación de Invitación
           </Title>
         }
-        variant={undefined}
         style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)", borderRadius: 12 }}
       >
         <Steps current={currentStep} size="small" style={{ marginBottom: 24 }}>
@@ -195,7 +226,6 @@ export default function ConfirmInvitation({
               showIcon
               style={{ marginBottom: 16 }}
             />
-
             <Form layout="vertical" onFinish={enviarConfirmacion}>
               <Form.Item label="¿Quiénes asistirán?">
                 <Checkbox.Group
@@ -206,7 +236,17 @@ export default function ConfirmInvitation({
                   <Space direction="vertical" style={{ width: "100%" }}>
                     {invitados.map((invitado) => (
                       <Checkbox key={invitado.id} value={invitado.id}>
-                        {invitado.nombre}
+                        {invitado.nombre}{" "}
+                        {invitado.respuesta === "SI" && (
+                          <Text type="success" style={{ marginLeft: 8 }}>
+                            (Confirmado)
+                          </Text>
+                        )}
+                        {invitado.respuesta === "NO" && (
+                          <Text type="danger" style={{ marginLeft: 8 }}>
+                            (No asistirá)
+                          </Text>
+                        )}
                       </Checkbox>
                     ))}
                   </Space>
@@ -269,10 +309,11 @@ export default function ConfirmInvitation({
                 setSeleccionados([]);
                 setDedicatoria("");
                 setMensaje(null);
-                setConfirmaciones(0);
+                setConfirmacionesCount(0);
                 setCurrentStep(0);
                 setEnviando(false);
               }}
+              block
             >
               Confirmar otro número
             </Button>

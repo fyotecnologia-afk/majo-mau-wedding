@@ -40,6 +40,11 @@ model Invitado {
   confirmacionInvitados ConfirmacionInvitado[]
 }
 
+enum Respuesta {
+  SI
+  NO
+}
+
 model ConfirmacionInvitado {
   id             String       @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -48,6 +53,8 @@ model ConfirmacionInvitado {
 
   invitadoId     String
   invitado       Invitado     @relation(fields: [invitadoId], references: [id])
+
+  respuesta      Respuesta
 
   @@unique([confirmacionId, invitadoId])
 }
