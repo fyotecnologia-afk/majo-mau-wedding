@@ -163,5 +163,11 @@
   "dressCode": {
     "image": "/images/dress-code.webp",
     "description": "Para esta ocasión tan especial, sugerimos un atuendo formal elegante: vestidos largos y sofisticados para ellas, y traje oscuro con corbata para ellos. Queremos que se sientan cómodos y glamurosos."
+  },
+  "restrictions": {
+    "restriction": [
+      "Evento exclusivo para adultos",
+      "Pases personales e intransferibles"
+    ]
   }
 }

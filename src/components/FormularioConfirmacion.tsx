@@ -43,6 +43,7 @@ type InvitacionAPIResponse = {
   confirmaciones: Confirmacion[];
   dedicatoria?: string;
 };
+
 type TipoMensaje = "success" | "info" | "warning" | "error";
 
 type ConfirmInvitationProps = {
@@ -59,7 +60,6 @@ export default function ConfirmInvitation({
   const [currentStep, setCurrentStep] = useState(0);
   const [seleccionados, setSeleccionados] = useState<string[]>([]);
   const [enviando, setEnviando] = useState(false);
-
   const [mensaje, setMensaje] = useState<{
     tipo: TipoMensaje;
     texto: string;
@@ -80,7 +80,6 @@ export default function ConfirmInvitation({
 
       const data: InvitacionAPIResponse = await res.json();
 
-      // Agregar la respuesta a cada invitado según confirmaciones
       const invitadosConRespuesta = data.invitados.map((inv) => {
         let respuesta: "SI" | "NO" | null = null;
         for (const confirmacion of data.confirmaciones) {
@@ -89,7 +88,6 @@ export default function ConfirmInvitation({
           );
           if (cInvitado) {
             respuesta = cInvitado.respuesta;
-            // Para tomar la última confirmación, puedes comentar el break
             break;
           }
         }
@@ -99,12 +97,9 @@ export default function ConfirmInvitation({
       setInvitados(invitadosConRespuesta);
       setDedicatoria(data.dedicatoria || "");
       setConfirmacionesCount(data.confirmaciones.length || 0);
-
-      // Preseleccionar invitados que confirmaron "SI"
       const preSeleccionados = invitadosConRespuesta
         .filter((inv) => inv.respuesta === "SI")
         .map((inv) => inv.id);
-
       setSeleccionados(preSeleccionados);
       setCurrentStep(1);
     } catch (error: any) {
@@ -169,25 +164,43 @@ export default function ConfirmInvitation({
   }
 
   return (
-    <div style={{ maxWidth: 600, margin: "2rem auto", padding: "1rem" }}>
+    <div style={{ maxWidth: 700, margin: "3rem auto", padding: 24 }}>
       <Card
+        style={{
+          borderRadius: 24,
+          background: "linear-gradient(180deg, #F6F1EB 0%, #fffef8 100%)",
+          boxShadow:
+            "0 12px 24px rgba(122, 139, 117, 0.15), 0 8px 16px rgba(203, 178, 120, 0.3)",
+          border: `1px solid #CBB278`,
+        }}
         title={
           <Title
+            level={2}
             style={{
               textAlign: "center",
-              fontSize: "clamp(1.2rem, 5vw, 2rem)",
+              // fontSize: "clamp(1.4rem, 5vw, 2rem)",
+              margin: "1rem 0 0",
+              wordBreak: "break-word", // 🔑 Evita corte forzado de palabras
+              whiteSpace: "normal", // 🔑 Permite saltos de línea
+              overflowWrap: "break-word", // 🔑 Permite ajuste automático
             }}
+            className="title-decorative"
           >
-            Confirmación de Invitación
+            Confirma tu asistencia
           </Title>
         }
-        style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)", borderRadius: 12 }}
       >
-        <Steps current={currentStep} size="small" style={{ marginBottom: 24 }}>
-          <Step title="Buscar" icon={<MailOutlined />} />
-          <Step title="Seleccionar" icon={<UserOutlined />} />
-          <Step title="Confirmado" icon={<CheckCircleOutlined />} />
-        </Steps>
+        <Steps
+          current={currentStep}
+          size="small"
+          style={{ marginBottom: 24 }}
+          responsive
+          items={[
+            { title: "Buscar", icon: <MailOutlined /> },
+            { title: "Seleccionar", icon: <UserOutlined /> },
+            { title: "Confirmado", icon: <CheckCircleOutlined /> },
+          ]}
+        />
 
         {currentStep === 0 && (
           <Form layout="vertical" onFinish={buscarInvitacion}>
@@ -205,10 +218,24 @@ export default function ConfirmInvitation({
                 value={numero}
                 onChange={(e) => setNumero(e.target.value)}
                 placeholder="Ej. 1234"
+                style={{
+                  borderRadius: 8,
+                  padding: 12,
+                }}
               />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" block>
+              <Button
+                type="primary"
+                htmlType="submit"
+                block
+                style={{
+                  backgroundColor: "#CBB278",
+                  borderColor: "#CBB278",
+                  borderRadius: 8,
+                  fontWeight: "bold",
+                }}
+              >
                 Buscar invitados
               </Button>
             </Form.Item>
@@ -232,6 +259,7 @@ export default function ConfirmInvitation({
               showIcon
               style={{ marginBottom: 16 }}
             />
+
             <Form layout="vertical" onFinish={enviarConfirmacion}>
               <Form.Item label="¿Quiénes asistirán?">
                 <Checkbox.Group
@@ -242,7 +270,9 @@ export default function ConfirmInvitation({
                   <Space direction="vertical" style={{ width: "100%" }}>
                     {invitados.map((invitado) => (
                       <Checkbox key={invitado.id} value={invitado.id}>
-                        {invitado.nombre}{" "}
+                        <span style={{ fontWeight: 500 }}>
+                          {invitado.nombre}
+                        </span>
                         {invitado.respuesta === "SI" && (
                           <Text type="success" style={{ marginLeft: 8 }}>
                             (Confirmado)
@@ -265,6 +295,7 @@ export default function ConfirmInvitation({
                   value={dedicatoria}
                   onChange={(e) => setDedicatoria(e.target.value)}
                   placeholder="Escribe unas palabras para nosotros..."
+                  style={{ borderRadius: 8 }}
                 />
               </Form.Item>
 
@@ -286,24 +317,36 @@ export default function ConfirmInvitation({
                     seleccionados.length === 0 && dedicatoria.trim() === ""
                   }
                   block
+                  style={{
+                    backgroundColor: "#7A8B75",
+                    borderColor: "#7A8B75",
+                    borderRadius: 8,
+                    fontWeight: "bold",
+                  }}
                 >
                   Confirmar
                 </Button>
               </Form.Item>
             </Form>
-            <Button type="link" onClick={() => setCurrentStep(0)} block>
+            <Button
+              type="link"
+              onClick={() => setCurrentStep(0)}
+              style={{ display: "block", width: "100%", color: "#CBB278" }}
+            >
               Volver a buscar otro número
             </Button>
           </>
         )}
 
         {currentStep === 2 && (
-          <div style={{ textAlign: "center" }}>
+          <div style={{ textAlign: "center", padding: "2rem 1rem" }}>
             <CheckCircleOutlined
               style={{ fontSize: 64, color: "#52c41a", marginBottom: 16 }}
             />
-            <Title level={4}>¡Gracias por confirmar!</Title>
-            <Text>
+            <Title level={4} style={{ color: "#7A8B75" }}>
+              ¡Gracias por confirmar!
+            </Title>
+            <Text style={{ color: "#7A8B75" }}>
               Estamos felices de contar contigo en este evento tan especial.
             </Text>
             <Divider />
@@ -318,6 +361,12 @@ export default function ConfirmInvitation({
                 setConfirmacionesCount(0);
                 setCurrentStep(0);
                 setEnviando(false);
+              }}
+              style={{
+                backgroundColor: "#CBB278",
+                borderColor: "#CBB278",
+                borderRadius: 8,
+                fontWeight: "bold",
               }}
               block
             >

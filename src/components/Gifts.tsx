@@ -46,10 +46,9 @@ const GiftTable: React.FC = () => {
           level={2}
           style={{
             textAlign: "center",
-            fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva
+            margin: "1rem 0 0",
             wordBreak: "break-word",
             whiteSpace: "normal",
-            marginBottom: 6,
           }}
           className="title-decorative"
         >

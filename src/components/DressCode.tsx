@@ -30,11 +30,8 @@ const DressCode: React.FC = () => {
         <Title
           level={2}
           style={{
-            color: "#7A8B75",
-            fontWeight: "bold",
-            fontSize: "2.8rem",
-            letterSpacing: "0.05em",
-            marginBottom: 6,
+            textAlign: "center",
+            margin: "1rem 0 0",
           }}
           className="title-decorative"
         >

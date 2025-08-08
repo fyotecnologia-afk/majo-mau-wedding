@@ -45,7 +45,7 @@ const FamilySection: React.FC = () => {
         <Title
           level={2}
           className="title-decorative"
-          style={{ marginBottom: 40 }}
+          style={{ textAlign: "center", margin: "1rem 0 0" }}
         >
           Nuestros Padres
         </Title>
@@ -56,7 +56,7 @@ const FamilySection: React.FC = () => {
         <Title
           level={2}
           className="title-decorative"
-          style={{ marginTop: 60, marginBottom: 40 }}
+          style={{ textAlign: "center", margin: "1rem 0 0" }}
         >
           Nuestros Padrinos
         </Title>

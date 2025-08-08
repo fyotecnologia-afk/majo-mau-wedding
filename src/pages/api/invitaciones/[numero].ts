@@ -1,7 +1,6 @@
 // pages/api/invitaciones/[numero].ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '../../../../lib/db';
-import { Prisma } from '@prisma/client';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const numero = req.query.numero as string;
@@ -24,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             confirmacionInvitados: {
               select: {
                 invitadoId: true,
-                respuesta: true, // ✅ Tu schema lo tiene como enum Respuesta
+                respuesta: true,
               },
             },
           },

@@ -20,6 +20,7 @@ import RentCars from "../components/RentCars";
 import Itinerary from "../components/Itinerary";
 import Gifts from "../components/Gifts";
 import DressCode from "../components/DressCode";
+import Restrictions from "../components/Restrictions";
 
 // Tipado
 type DataResponse = {
@@ -104,6 +105,10 @@ export default function ConfirmacionPage() {
 
       <div style={{ position: "relative", minHeight: "100vh" }}>
         <DressCode />
+      </div>
+
+      <div style={{ position: "relative" }}>
+        <Restrictions />
       </div>
 
       <div style={{ position: "relative", minHeight: "100vh" }}>

@@ -96,10 +96,7 @@ const WeddingSchedule: React.FC = () => {
         className="title-decorative"
         style={{
           textAlign: "center",
-          fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva
-          wordBreak: "break-word",
-          whiteSpace: "normal",
-          lineHeight: 1.3,
+          margin: "1rem 0 0",
         }}
       >
         ¿Dónde y Cúando?
