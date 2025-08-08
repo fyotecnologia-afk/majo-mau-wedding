@@ -35,7 +35,6 @@ const DressCode: React.FC = () => {
             fontSize: "2.8rem",
             letterSpacing: "0.05em",
             marginBottom: 6,
-            fontFamily: "'Playfair Display', serif",
           }}
           className="title-decorative"
         >

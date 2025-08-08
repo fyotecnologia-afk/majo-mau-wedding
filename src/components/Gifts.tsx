@@ -43,15 +43,15 @@ const GiftTable: React.FC = () => {
         }}
       >
         <Title
-          className="title-decorative"
           level={2}
           style={{
             textAlign: "center",
             fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva
             wordBreak: "break-word",
             whiteSpace: "normal",
-            lineHeight: 1.3,
+            marginBottom: 6,
           }}
+          className="title-decorative"
         >
           Mesa de Regalos
         </Title>
