@@ -12,6 +12,7 @@ body {
   font-family: var(--font-meow), cursive;
   font-size: 4rem !important;
   font-weight: 400 !important;
+  color: #7a8b75;
 }
 
 .title-script {

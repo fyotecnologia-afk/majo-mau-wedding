@@ -18,7 +18,19 @@ const HotelSuggestions: React.FC = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <Title level={3}>Hoteles Cercanos al Salón de Recepción</Title>
+      <Title
+        className="title-decorative"
+        level={2}
+        style={{
+          textAlign: "center",
+          fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva
+          wordBreak: "break-word",
+          whiteSpace: "normal",
+          lineHeight: 1.3,
+        }}
+      >
+        Sugerencias de Hospedaje
+      </Title>
       <Row gutter={[16, 16]} justify="center">
         {hotels.map((hotel, idx) => (
           <Col xs={24} sm={12} md={8} key={idx} style={{ display: "flex" }}>

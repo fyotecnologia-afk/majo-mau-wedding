@@ -17,6 +17,9 @@ import FamilySection from "../components/FamilySection";
 import MusicPlayer from "../components/MusicPlayer";
 import Makeup from "../components/Makeup";
 import RentCars from "../components/RentCars";
+import Itinerary from "../components/Itinerary";
+import Gifts from "../components/Gifts";
+import DressCode from "../components/DressCode";
 
 // Tipado
 type DataResponse = {
@@ -91,8 +94,20 @@ export default function ConfirmacionPage() {
         <RentCars />
       </div>
 
+      <div style={{ position: "relative" }}>
+        <Itinerary />
+      </div>
+
       <div style={{ position: "relative", minHeight: "100vh" }}>
         <Viewpages />
+      </div>
+
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+        <DressCode />
+      </div>
+
+      <div style={{ position: "relative", minHeight: "100vh" }}>
+        <Gifts />
       </div>
 
       {data.confirmaciones! < 2 && (

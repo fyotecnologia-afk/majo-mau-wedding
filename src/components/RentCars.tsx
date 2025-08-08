@@ -19,7 +19,8 @@ const RentCarsList: React.FC = () => {
   return (
     <div style={{ padding: 20 }}>
       <Title
-        level={3}
+        className="title-decorative"
+        level={2}
         style={{
           textAlign: "center",
           fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva

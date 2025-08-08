@@ -79,12 +79,14 @@ const MakeupList: React.FC = () => {
   return (
     <div style={{ padding: "20px" }}>
       <Title
+        className="title-decorative"
         level={2}
         style={{
           textAlign: "center",
-          fontSize: "clamp(1.2rem, 5vw, 2rem)",
-          fontFamily: "serif",
-          marginBottom: "2rem",
+          fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva
+          wordBreak: "break-word",
+          whiteSpace: "normal",
+          lineHeight: 1.3,
         }}
       >
         Maquillaje y Peinado

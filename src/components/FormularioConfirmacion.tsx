@@ -130,7 +130,8 @@ export default function ConfirmInvitation({
       <Card
         title={
           <Title
-            level={3}
+            className="title-decorative"
+            level={2}
             style={{
               textAlign: "center",
               fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva

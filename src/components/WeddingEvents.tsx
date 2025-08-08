@@ -93,6 +93,7 @@ const WeddingSchedule: React.FC = () => {
     <div style={{ padding: "20px" }}>
       <Title
         level={2}
+        className="title-decorative"
         style={{
           textAlign: "center",
           fontSize: "clamp(1.2rem, 5vw, 2rem)", // 👈 clave responsiva

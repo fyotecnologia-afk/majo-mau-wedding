@@ -112,5 +112,56 @@
       "image": "https://www.hertzmexico.com/images/logo-white.svg",
       "link": "hertzmexico.com/bonda/"
     }
-  ]
+  ],
+  "itinerary": [
+    {
+      "time": "4:30 PM",
+      "title": "Ceremonia Religiosa",
+      "location": "",
+      "description": "Acompáñanos en la ceremonia donde uniremos nuestras vidas."
+    },
+    {
+      "time": "7:00 PM",
+      "title": "Coctel de bienvenida",
+      "location": "",
+      "description": "Disfruta de un refrescante coctel mientras nos preparamos para la fiesta."
+    },
+    {
+      "time": "8:00 PM",
+      "title": "Recepción",
+      "location": "",
+      "description": "Cena, brindis y baile para celebrar juntos."
+    },
+    {
+      "time": "2:00 AM",
+      "title": "Final",
+      "location": "",
+      "description": "Cierre de la celebración. ¡Gracias por acompañarnos!"
+    }
+  ],
+  "giftTable": {
+    "message": "El mejor regalo es compartir este día con ustedes. Pero si desean acompañarnos con un detalle, aquí les compartimos algunas opciones:",
+    "options": [
+      {
+        "type": "Liverpool",
+        "details": {
+          "numeroEvento": "51727723"
+        }
+      },
+      {
+        "type": "Transferencia",
+        "details": {
+          "beneficiario": "GABRIEL MAURICIO SÁNCHEZ CRUZ",
+          "banco": "SANTANDER",
+          "tarjeta": "5579 0990 1588 9027",
+          "cuenta": "20010519965",
+          "clabe": "014052200105199650"
+        }
+      }
+    ]
+  },
+  "dressCode": {
+    "image": "/images/dress-code.webp",
+    "description": "Para esta ocasión tan especial, sugerimos un atuendo formal elegante: vestidos largos y sofisticados para ellas, y traje oscuro con corbata para ellos. Queremos que se sientan cómodos y glamurosos."
+  }
 }
