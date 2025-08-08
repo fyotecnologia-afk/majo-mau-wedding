@@ -45,7 +45,13 @@ type InvitacionAPIResponse = {
 };
 type TipoMensaje = "success" | "info" | "warning" | "error";
 
-export default function ConfirmInvitation() {
+type ConfirmInvitationProps = {
+  numero?: string | null;
+};
+
+export default function ConfirmInvitation({
+  numero: numeroProp,
+}: ConfirmInvitationProps) {
   const [numero, setNumero] = useState("");
   const [invitados, setInvitados] = useState<Invitado[]>([]);
   const [dedicatoria, setDedicatoria] = useState("");
