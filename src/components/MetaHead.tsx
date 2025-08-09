@@ -7,7 +7,7 @@ interface MetaProps {
   url?: string;
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const siteUrl = "https://majo-mau-wedding.vercel.app/";
 
 export default function MetaHead({
   title = "Boda Majo & Mau",
