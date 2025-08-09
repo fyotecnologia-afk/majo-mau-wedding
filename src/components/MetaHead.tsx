@@ -12,7 +12,7 @@ const siteUrl = "https://majo-mau-wedding.vercel.app/";
 export default function MetaHead({
   title = "Boda Majo & Mau",
   description = "Te invitamos a celebrar con nosotros este día tan especial.",
-  image = "/preview.webp",
+  image = "preview.webp",
   url = siteUrl,
 }: MetaProps) {
   const imageUrl = image.startsWith("http")
