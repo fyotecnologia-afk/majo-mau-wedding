@@ -21,6 +21,7 @@ import Itinerary from "../components/Itinerary";
 import Gifts from "../components/Gifts";
 import DressCode from "../components/DressCode";
 import Restrictions from "../components/Restrictions";
+import ParallaxFrase from "../components/ParallaxFrase";
 
 // Tipado
 type DataResponse = {
@@ -58,10 +59,7 @@ export default function ConfirmacionPage() {
       </div>
 
       <MusicPlayer src="/music/cancion.mp3" />
-
-      <div style={{ position: "relative", height: "100vh" }}>
-        <TrailAnimation />
-      </div>
+      <TrailAnimation />
 
       <div style={{ position: "relative" }}>
         <Masonry />

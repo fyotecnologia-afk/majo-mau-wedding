@@ -37,7 +37,6 @@ const MakeupCard: React.FC<{ artist: MakeupArtist }> = ({ artist }) => (
           height={400}
           frameBorder={0}
           scrolling="no"
-          allowTransparency
           allow="encrypted-media"
           style={{ borderRadius: "12px 12px 0 0" }}
           loading="lazy"
@@ -45,24 +44,54 @@ const MakeupCard: React.FC<{ artist: MakeupArtist }> = ({ artist }) => (
       )
     }
   >
-    <Title level={4} className="!font-serif !mb-2">
+    <Title
+      level={4}
+      style={{
+        marginBottom: 8,
+      }}
+    >
       {artist.name}
     </Title>
-    <Text className="block mb-1">
-      <PhoneOutlined /> {artist.phone}
-    </Text>
+
+    <a
+      href={`tel:${artist.phone}`}
+      style={{
+        display: "block",
+        marginBottom: 6,
+        fontSize: 16,
+
+        textDecoration: "none",
+      }}
+    >
+      <PhoneOutlined style={{ marginRight: 8 }} />
+      {artist.phone}
+    </a>
+
     {artist.code && (
-      <Text className="block mb-1">
-        <TagOutlined /> Código: {artist.code}
+      <Text
+        style={{
+          display: "block",
+          marginBottom: 6,
+          fontSize: 16,
+        }}
+      >
+        <TagOutlined style={{ marginRight: 8 }} />
+        Código: {artist.code}
       </Text>
     )}
+
     <Link
       href={`https://${artist.instagram}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="block mt-1"
+      style={{
+        display: "inline-block",
+        marginTop: 8,
+        fontWeight: 500,
+      }}
     >
-      <InstagramOutlined /> Ver Instagram
+      <InstagramOutlined style={{ marginRight: 8 }} />
+      Ver Instagram
     </Link>
   </Card>
 );

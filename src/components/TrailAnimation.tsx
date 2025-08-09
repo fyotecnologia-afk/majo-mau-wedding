@@ -1,48 +1,38 @@
 "use client";
 
-import React, { useState } from "react";
-import { useTrail, a } from "@react-spring/web";
+import React, { useEffect } from "react";
+import { useSpring, a } from "@react-spring/web";
+import weddingData from "@/data/weddingData.json";
+import styles from "../styles/TrailAnimation.module.css"; // puedes renombrar si quieres
 
-import styles from "../styles/TrailAnimation.module.css";
+export default function ParallaxQuote() {
+  const frase = weddingData?.parallaxQuote ?? "NOS ELEGIMOS PARA SIEMPRE";
 
-const Trail: React.FC<{ open: boolean; children: React.ReactNode }> = ({
-  open,
-  children,
-}) => {
-  const items = React.Children.toArray(children);
-  const trail = useTrail(items.length, {
-    config: { mass: 5, tension: 2000, friction: 200 },
-    opacity: open ? 1 : 0,
-    x: open ? 0 : 20,
-    height: open ? 110 : 0,
-    from: { opacity: 0, x: 20, height: 0 },
-  });
+  // Efecto parallax en el fondo (no en el texto)
+  const [bgProps, api] = useSpring(() => ({
+    y: 0,
+  }));
 
-  return (
-    <div>
-      {trail.map(({ height, ...style }, index) => (
-        <a.div key={index} className={styles.trailsText} style={style}>
-          <a.div style={{ height }}>{items[index]}</a.div>
-        </a.div>
-      ))}
-    </div>
-  );
-};
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      api.start({ y: scrollY * 0.2 }); // parallax sutil
+    };
 
-export default function TrailAnimation() {
-  const [open, setOpen] = useState(true);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [api]);
 
   return (
-    <div
+    <a.div
       className={styles.container}
-      onClick={() => setOpen((state) => !state)}
+      style={{
+        backgroundPositionY: bgProps.y.to((y) => `${-y}px`),
+      }}
     >
-      <Trail open={open}>
-        <span>Majo</span>
-        <span>&</span>
-        <span>Mau</span>
-        <span>Wedding</span>
-      </Trail>
-    </div>
+      <div className={styles.quoteWrapper}>
+        <span className={styles.quoteText}>{frase}</span>
+      </div>
+    </a.div>
   );
 }
