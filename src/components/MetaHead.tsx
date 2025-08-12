@@ -9,7 +9,7 @@ interface MetaHeadProps {
 export default function MetaHead({
   title = "Boda Majo & Mau",
   description = "Nos elegimos una vez… y hoy con más amor, nos elegimos para siempre",
-  image = "/preview.png", // Recomendado PNG/JPG mínimo 1200x630
+  image = "/preview.webp", // Recomendado PNG/JPG mínimo 1200x630
 }: MetaHeadProps) {
   return (
     <Head>
