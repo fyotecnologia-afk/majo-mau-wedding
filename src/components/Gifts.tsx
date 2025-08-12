@@ -1,19 +1,21 @@
 import React, { useState } from "react";
-import { Card, Col, Row, Typography } from "antd";
-import { FaGift, FaCreditCard, FaUniversity } from "react-icons/fa";
+import { Card, Col, Row, Typography, Button } from "antd";
 import weddingData from "@/data/weddingData.json";
+import DoubleDownArrowIcon from "./DoubleArrow"; // o donde lo guardes
+import Liverpool from "./Liverpool"; // o donde lo guardes
 
 const { Title, Text } = Typography;
 
 const GiftTable: React.FC = () => {
   const { message, options } = weddingData.giftTable;
   const [copiedText, setCopiedText] = useState<string>("");
+  const [visibleDetails, setVisibleDetails] = useState<number | null>(null);
 
   const handleCopy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedText(text);
-      setTimeout(() => setCopiedText(""), 2000); // limpia mensaje después de 2s
+      setTimeout(() => setCopiedText(""), 2000);
     } catch {
       alert("No se pudo copiar al portapapeles");
     }
@@ -23,193 +25,219 @@ const GiftTable: React.FC = () => {
     <section
       style={{
         maxWidth: 900,
-        margin: "3rem auto",
-        padding: 24,
-        borderRadius: 24,
-        border: `1px solid #F6F1EB`,
-        boxShadow:
-          "0 12px 24px rgba(122, 139, 117, 0.15), 0 8px 16px rgba(122, 139, 117, 0.1)",
-        background: "linear-gradient(180deg, #F6F1EB 0%, #fffef8 100%)",
-        position: "relative",
-        overflow: "hidden",
+        margin: "0 auto",
+        padding: 5,
       }}
     >
-      {/* Título */}
-      <div
-        style={{
-          textAlign: "center",
-          position: "relative",
-          zIndex: 10,
-        }}
+      <Title
+        level={2}
+        style={{ textAlign: "center", margin: "1rem 0 0" }}
+        className="title-decorative"
       >
-        <Title
-          level={2}
-          style={{
-            textAlign: "center",
-            margin: "1rem 0 0",
-            wordBreak: "break-word",
-            whiteSpace: "normal",
-          }}
-          className="title-decorative"
-        >
-          Mesa de Regalos
-        </Title>
-        <div
-          style={{
-            width: 80,
-            height: 4,
-            backgroundColor: "#CBB278",
-            borderRadius: 100,
-            margin: "0 auto",
-          }}
-        />
-      </div>
+        Mesa de Regalos
+      </Title>
 
-      {/* Mensaje */}
       <Text
         style={{
           display: "block",
           textAlign: "center",
           color: "#7A8B75",
           fontSize: 16,
-          fontStyle: "italic",
           maxWidth: 600,
           margin: "0 auto 40px auto",
           lineHeight: 1.5,
-          userSelect: "none",
         }}
       >
         {message}
       </Text>
 
-      {/* Opciones */}
       <Row gutter={[24, 24]} justify="center">
-        {options.map((option, index) => (
-          <Col xs={24} sm={12} key={index}>
-            <Card
-              hoverable
-              style={{
-                borderRadius: 20,
-                boxShadow: "0 10px 25px rgba(122, 139, 117, 0.12)",
-                border: `1px solid #F6F1EB`,
-                background: "rgba(246, 241, 235, 0.9)",
-                transition: "all 0.3s ease",
-                color: "#7A8B75",
-              }}
-              onMouseEnter={(e) => {
-                const el = e.currentTarget;
-                el.style.boxShadow = "0 15px 40px rgba(203, 178, 120, 0.3)";
-                el.style.transform = "translateY(-5px)";
-              }}
-              onMouseLeave={(e) => {
-                const el = e.currentTarget;
-                el.style.boxShadow = "0 10px 25px rgba(122, 139, 117, 0.12)";
-                el.style.transform = "translateY(0)";
-              }}
-              title={
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  {option.type === "Liverpool" ? (
-                    <img
-                      src="/icons/liverpool-logo.webp"
-                      alt="Liverpool"
-                      style={{ width: 28, height: 28, objectFit: "contain" }}
-                    />
-                  ) : option.type === "Transferencia" ? (
-                    <FaUniversity style={{ fontSize: 28, color: "#CBB278" }} />
-                  ) : null}
-                  <span
-                    style={{
-                      color: "#7A8B75",
-                      fontWeight: "600",
-                      fontSize: 18,
-                      fontFamily: "'Playfair Display', serif",
-                    }}
-                  >
-                    {option.type}
-                  </span>
-                </div>
-              }
-            >
-              {/* Detalles */}
-              <div style={{ padding: "0 0" }}>
-                <ul
+        {options.map((option, index) => {
+          const isTransfer = option.type.toLowerCase() === "transferencia";
+          const showDetails = !isTransfer || visibleDetails === index;
+
+          return (
+            <Col xs={24} sm={12} md={10} key={index}>
+              <Card
+                style={{
+                  borderRadius: 20,
+                  border: `1px solid #F6F1EB`,
+                  background: "rgba(246, 241, 235, 0.9)",
+                  color: "#7A8B75",
+                  maxWidth: 320,
+                  margin: "0 auto",
+                }}
+                styles={{ body: { padding: 16 } }}
+              >
+                <div
                   style={{
-                    listStyle: "none",
-                    padding: 0,
-                    margin: 0,
-                    color: "#7A8B75",
-                    fontSize: 14,
-                    lineHeight: 1.6,
+                    display: "flex",
+                    gap: 16,
+                    alignItems: "center", // Centra la imagen verticalmente
                   }}
                 >
-                  {Object.entries(option.details).map(([key, value]) => (
-                    <li
-                      key={key}
+                  {/* Imagen */}
+                  <div style={{ flexShrink: 0 }}>
+                    {isTransfer ? (
+                      <img
+                        src="/icons/santander.webp"
+                        alt="Santander"
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: 80,
+                          height: 80,
+                          border: "2px solid #CBB278",
+                          borderRadius: "12px", // ← Aquí el cambio
+                          backgroundColor: "#CBB278",
+                          objectFit: "contain",
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: 80,
+                          height: 80,
+                          border: "2px solid #CBB278",
+                          borderRadius: "12px", // ← Aquí también
+                          backgroundColor: "#CBB278",
+                        }}
+                      >
+                        <Liverpool />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Contenido */}
+                  <div style={{ flex: 1, textAlign: "center" }}>
+                    <Title
+                      level={5}
                       style={{
-                        textTransform: "capitalize",
-                        fontWeight: "600",
-                        marginBottom: 6,
-                        cursor:
-                          key.toLowerCase().includes("numeroevento") ||
-                          key.toLowerCase().includes("beneficiario") ||
-                          key.toLowerCase().includes("tarjeta") ||
-                          key.toLowerCase().includes("cuenta") ||
-                          key.toLowerCase().includes("clabe")
-                            ? "pointer"
-                            : "default",
-                        userSelect:
-                          key.toLowerCase().includes("numeroevento") ||
-                          key.toLowerCase().includes("beneficiario") ||
-                          key.toLowerCase().includes("tarjeta") ||
-                          key.toLowerCase().includes("cuenta") ||
-                          key.toLowerCase().includes("tarjeta") ||
-                          key.toLowerCase().includes("clabe")
-                            ? "all"
-                            : "none",
+                        marginBottom: 8,
+                        color: "#7A8B75",
                       }}
-                      onClick={() => {
-                        if (
-                          key.toLowerCase().includes("numeroevento") ||
-                          key.toLowerCase().includes("beneficiario") ||
-                          key.toLowerCase().includes("tarjeta") ||
-                          key.toLowerCase().includes("cuenta") ||
-                          key.toLowerCase().includes("tarjeta") ||
-                          key.toLowerCase().includes("clabe")
-                        ) {
-                          handleCopy(value);
-                        }
-                      }}
-                      title={
-                        key.toLowerCase().includes("numeroevento") ||
-                        key.toLowerCase().includes("beneficiario") ||
-                        key.toLowerCase().includes("tarjeta") ||
-                        key.toLowerCase().includes("cuenta") ||
-                        key.toLowerCase().includes("tarjeta") ||
-                        key.toLowerCase().includes("clabe")
-                          ? "Click para copiar"
-                          : undefined
-                      }
                     >
-                      {key.replace(/([A-Z])/g, " $1")}:&nbsp;
-                      <strong style={{ color: "#CBB278" }}>{value}</strong>
-                      {copiedText === value && (
+                      {option.type}
+                    </Title>
+
+                    {isTransfer && (
+                      <Button
+                        type="link"
+                        onClick={() =>
+                          setVisibleDetails((prev) =>
+                            prev === index ? null : index
+                          )
+                        }
+                        style={{
+                          paddingLeft: 0,
+                          color: "#CBB278",
+                          fontWeight: 500,
+                          fontSize: 14,
+                          marginBottom: 12,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        aria-label={
+                          showDetails
+                            ? "Ocultar datos bancarios"
+                            : "Mostrar datos bancarios"
+                        }
+                      >
                         <span
                           style={{
-                            marginLeft: 8,
-                            color: "#7A8B75",
-                            fontSize: 12,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: 28,
+                            height: 28,
+                            borderRadius: "50%",
+                            border: "1px solid #CBB278",
+                            transition: "transform 0.3s ease",
+                            transform: showDetails
+                              ? "rotate(180deg)"
+                              : "rotate(0deg)",
+                            backgroundColor: "#CBB278",
                           }}
                         >
-                          Copiado!
+                          <DoubleDownArrowIcon />
                         </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </Card>
-          </Col>
-        ))}
+                      </Button>
+                    )}
+
+                    {showDetails && (
+                      <ul
+                        style={{
+                          listStyle: "none",
+                          padding: 0,
+                          margin: 0,
+                          fontSize: 14,
+                          lineHeight: 1.6,
+                          color: "#7A8B75",
+                        }}
+                      >
+                        {Object.entries(option.details).map(([key, value]) => {
+                          const keyLower = key.toLowerCase();
+                          const isCopyable = [
+                            "numeroevento",
+                            "beneficiario",
+                            "tarjeta",
+                            "cuenta",
+                            "clabe",
+                          ].some((k) => keyLower.includes(k));
+
+                          const isLiverpoolEvent =
+                            option.type.toLowerCase() === "liverpool" &&
+                            keyLower === "numeroevento";
+
+                          return (
+                            <li
+                              key={key}
+                              style={{
+                                fontWeight: 600,
+                                marginBottom: 6,
+                                cursor: isCopyable ? "pointer" : "default",
+                                userSelect: isCopyable ? "all" : "none",
+                              }}
+                              onClick={() => isCopyable && handleCopy(value)}
+                              title={
+                                isCopyable ? "Click para copiar" : undefined
+                              }
+                            >
+                              <strong style={{ color: "#CBB278" }}>
+                                {isLiverpoolEvent
+                                  ? value
+                                  : `${key.replace(
+                                      /([A-Z])/g,
+                                      " $1"
+                                    )}: ${value}`}
+                              </strong>
+                              {copiedText === value && (
+                                <span
+                                  style={{
+                                    marginLeft: 8,
+                                    color: "#7A8B75",
+                                    fontSize: 12,
+                                  }}
+                                >
+                                  Copiado!
+                                </span>
+                              )}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              </Card>
+            </Col>
+          );
+        })}
       </Row>
     </section>
   );

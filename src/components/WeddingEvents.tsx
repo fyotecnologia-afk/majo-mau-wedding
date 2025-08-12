@@ -1,108 +1,167 @@
-// components/WeddingSchedule.tsx
 import React from "react";
-import { Card, Col, Row, Typography } from "antd";
-import { EnvironmentOutlined } from "@ant-design/icons";
+import { Card, Col, Row, Typography, Button } from "antd";
 import weddingData from "@/data/weddingData.json";
+import LocationPinIcon from "./LocationPin";
 
 const { Title, Text } = Typography;
 
-interface Ceremony {
-  title: string;
-  date: string;
-  location: string;
-  address: string;
-  mapsLink: string;
-  iframe: string;
-}
+const cardStyle = {
+  border: "3px solid rgb(225, 203, 163)",
+  borderRadius: 2,
+};
 
-interface Reception {
-  title: string;
-  date: string;
-  location: string;
-  address: string;
-  mapsLink: string;
-  iframe: string;
-}
+const imageStyle: React.CSSProperties = {
+  width: "100%",
+  height: "40vw", // relativo al ancho de la ventana
+  maxHeight: "300px", // límite en pantallas grandes
+  borderRadius: 6,
+  objectFit: "contain",
+};
 
-interface WeddingData {
-  ceremonies: Ceremony[];
-  reception: Reception;
-}
+const mapsButtonStyle: React.CSSProperties = {
+  backgroundColor: "#d6b77b", // dorado
+  color: "#fff",
+  border: "none",
+  borderRadius: "25px 6px 6px 25px", // izquierda redondeada, derecha ligera
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "flex-start",
+  padding: "0 20px 0 0", // más espacio a la derecha que a la izquierda
+  textTransform: "uppercase",
+  fontSize: "10px",
+  gap: "8px",
+  height: "40px",
+};
 
-const CeremonyCard: React.FC<{ ceremony: Ceremony }> = ({ ceremony }) => (
-  <Card
-    hoverable
-    cover={
-      <iframe
-        title={ceremony.title}
-        src={ceremony.iframe}
-        width="100%"
-        height={250}
-        style={{ border: 0, borderRadius: 12 }}
-        loading="lazy"
-      />
-    }
-    style={{ marginBottom: 16 }}
-  >
-    <Title level={4}>{ceremony.title}</Title>
-    <Text>{new Date(ceremony.date).toLocaleString()}</Text>
-    <br />
-    <Text>{ceremony.location}</Text>
-    <br />
-    <Text>{ceremony.address}</Text>
-    <br />
-    <a href={ceremony.mapsLink} target="_blank" rel="noopener noreferrer">
-      <EnvironmentOutlined /> Ver en Google Maps
-    </a>
+const mapsIconWrapper: React.CSSProperties = {
+  backgroundColor: "#fff",
+  borderRadius: "50%",
+  padding: "10px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#d6b77b",
+  marginRight: "8px",
+  marginLeft: "0px",
+  fontSize: "20px", // tamaño del icono dentro
+};
+
+const CeremonyCard: React.FC<{ ceremony: any }> = ({ ceremony }) => (
+  <Card hoverable style={cardStyle}>
+    <Title
+      level={4}
+      style={{ textAlign: "center", margin: 0, color: "#7a8b75" }}
+      className="font-manjari"
+    >
+      {ceremony.title}
+    </Title>
+    <img src={ceremony.imgUrl} alt={ceremony.title} style={imageStyle} />
+    <Text
+      strong
+      style={{ display: "block", textAlign: "center", marginBottom: 0 }}
+      className="font-manjari"
+    >
+      {ceremony.location}
+    </Text>
+    <Text
+      style={{ display: "block", textAlign: "center", marginBottom: 0 }}
+      className="font-manjari"
+    >
+      {ceremony.date}
+    </Text>
+    <Text
+      style={{ display: "block", textAlign: "center", marginBottom: 12 }}
+      className="font-manjari"
+    >
+      {ceremony.address}
+    </Text>
+    <div style={{ textAlign: "center" }}>
+      <Button
+        href={ceremony.mapsLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={mapsButtonStyle}
+      >
+        <span style={mapsIconWrapper}>
+          <LocationPinIcon size={20} />
+        </span>
+        <span style={{ lineHeight: "1.1" }}>
+          VER EN
+          <br />
+          GOOGLE MAPS
+        </span>
+      </Button>
+    </div>
   </Card>
 );
 
-const ReceptionCard: React.FC<{ reception: Reception }> = ({ reception }) => (
-  <Card
-    hoverable
-    cover={
-      <iframe
-        title={reception.title}
-        src={reception.iframe}
-        width="100%"
-        height={250}
-        style={{ border: 0, borderRadius: 12 }}
-        loading="lazy"
-      />
-    }
-    style={{ marginBottom: 16 }}
-  >
-    <Title level={4}>{reception.title}</Title>
-    <Text>{new Date(reception.date).toLocaleString()}</Text>
-    <br />
-    <Text>{reception.location}</Text>
-    <br />
-    <Text>{reception.address}</Text>
-    <br />
-    <a href={reception.mapsLink} target="_blank" rel="noopener noreferrer">
-      <EnvironmentOutlined /> Ver en Google Maps
-    </a>
+const ReceptionCard: React.FC<{ reception: any }> = ({ reception }) => (
+  <Card hoverable style={cardStyle}>
+    <Title
+      level={4}
+      style={{ textAlign: "center", margin: 0, color: "#7a8b75" }}
+      className="font-manjari"
+    >
+      {reception.title}
+    </Title>
+    <img src={reception.imgUrl} alt={reception.title} style={imageStyle} />
+    <Text
+      strong
+      style={{ display: "block", textAlign: "center", marginBottom: 0 }}
+      className="font-manjari"
+    >
+      {reception.location}
+    </Text>
+    <Text
+      style={{ display: "block", textAlign: "center", marginBottom: 0 }}
+      className="font-manjari"
+    >
+      {reception.date}
+    </Text>
+    <Text
+      style={{ display: "block", textAlign: "center", marginBottom: 12 }}
+      className="font-manjari"
+    >
+      {reception.address}
+    </Text>
+    <div style={{ textAlign: "center" }}>
+      <Button
+        href={reception.mapsLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={mapsButtonStyle}
+      >
+        <span style={mapsIconWrapper}>
+          <LocationPinIcon size={20} />
+        </span>
+        <span style={{ lineHeight: "1.1" }}>
+          VER EN
+          <br />
+          GOOGLE MAPS
+        </span>
+      </Button>
+    </div>
   </Card>
 );
 
 const WeddingSchedule: React.FC = () => {
-  // Puedes tipar weddingData para evitar errores si quieres:
-  const data = weddingData as WeddingData;
+  const data = weddingData as any;
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ padding: "20px" }} className="font-manjari">
       <Title
         level={2}
         className="title-decorative"
         style={{
           textAlign: "center",
-          margin: "1rem 0 0",
+          margin: "1rem 0 2rem",
         }}
       >
-        ¿Dónde y Cúando?
+        ¿Cuándo y dónde?
       </Title>
+
       <Row gutter={[16, 16]}>
-        {data.ceremonies.map((ceremony, index) => (
+        {data.ceremonies.map((ceremony: any, index: number) => (
           <Col xs={24} sm={24} md={12} key={index}>
             <CeremonyCard ceremony={ceremony} />
           </Col>

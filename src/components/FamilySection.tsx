@@ -22,25 +22,37 @@ const FamilySection: React.FC = () => {
       <Col xs={24} sm={12} md={8} key={index} style={{ marginBottom: 16 }}>
         <Card
           hoverable
-          variant={undefined}
+          className="custom-family-card"
           style={{
             textAlign: "center",
             borderRadius: 16,
             boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            border: "2px solid #d6b77b",
+            padding: 5,
           }}
         >
-          <Title level={4} style={{ marginBottom: 4 }}>
+          <Title
+            level={4}
+            style={{ marginBottom: 4, color: "#7a8b75" }}
+            className="font-manjari"
+          >
             {person.names.map((name, i) => (
               <div key={i}>{name}</div>
             ))}
           </Title>
-          <Text type="secondary">{person.role}</Text>
+          <Text
+            type="secondary"
+            style={{ color: "#7a8b75" }}
+            className="font-manjari"
+          >
+            {person.role}
+          </Text>
         </Card>
       </Col>
     ));
 
   return (
-    <div style={{ padding: "4rem 1rem", backgroundColor: "#fff" }}>
+    <div style={{ padding: "1rem 1rem" }}>
       <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
         <Title
           level={2}

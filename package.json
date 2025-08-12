@@ -30,7 +30,8 @@
     "react-use-measure": "^2.1.7",
     "sass": "^1.89.2",
     "three": "^0.179.1",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "yet-another-react-lightbox": "^3.25.0"
   },
   "devDependencies": {
     "@types/lodash.shuffle": "^4.2.9",

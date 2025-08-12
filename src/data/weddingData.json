@@ -2,8 +2,7 @@
   "names": "Majo & Mau",
   "date": "2025-11-14T16:30:00",
   "slides": [
-    "/images/mansory/gallery-11.webp",
-    "/images/mansory/gallery-12.webp"
+    "/images/mansory/gallery-12.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
   ],
   "ceremonies": [
     {
@@ -12,15 +11,17 @@
       "location": "Parroquia de Nuestra Señora de Bugambilias",
       "address": "De Las Magnolias 111, Bugambilias, 45238 Zapopan, Jal.",
       "mapsLink": "https://maps.app.goo.gl/S1fB3unNFxJ28nB27",
+      "imgUrl": "/images/iglesia.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
       "iframe": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d466.83667885738953!2d-103.4499486!3d20.6005736!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8428ac83205fc78d%3A0xc73b963bd0ca75c1!2sParroquia%20de%20Nuestra%20Se%C3%B1ora%20de%20Bugambilias!5e0!3m2!1ses-419!2smx!4v1754581560800!5m2!1ses-419!2smx"
     }
   ],
   "reception": {
     "title": "Recepción",
     "date": "2025-11-14T19:00:00",
-    "location": "Campo Real",
+    "location": "Campo Real Eventos",
     "address": "Rio Nilo 112, 45645 San Agustín, Jal.",
     "mapsLink": "https://maps.app.goo.gl/nxErTU5b2r4SgGUF8",
+    "imgUrl": "/images/salon.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
     "iframe": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1868.0418133162586!2d-103.4602467!3d20.543759!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x842f55306b049fab%3A0x8dc9c9a4702d4082!2sCampo%20Real%20Eventos!5e0!3m2!1ses-419!2smx!4v1754581680390!5m2!1ses-419!2smx"
   },
   "family": {
@@ -66,51 +67,63 @@
       "address": "Av. Punto Sur 235, Los Gavilanes, 45645 Los Gavilanes, Jal.",
       "phone": "",
       "mapsLink": "https://maps.app.goo.gl/XLM36hnSgJSpzux26",
-      "image": "/images/hotels/Aloft.webp"
+      "image": "/images/hotels/Aloft.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
     },
     {
       "name": "Ramada Encore Guadalajara Sur",
       "address": "1710 Lopez Mateos Sur Ave, 45645 Jal.",
       "phone": "",
       "mapsLink": "https://maps.app.goo.gl/7GXVfwRL5JtirUJ69",
-      "image": "/images/hotels/Ramada.webp"
+      "image": "/images/hotels/Ramada.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
     },
     {
       "name": "Microtel Inn & Suites by Wyndham Guadalajara Sur",
       "address": "Av. Adolfo López Mateos Sur 1710-Int. F-1, San José del Tajo, El Palomar, 45645 Palomar, Jal.",
       "phone": "",
       "mapsLink": "https://maps.app.goo.gl/9JhY1fQcdWovC91Z7",
-      "image": "/images/hotels/Microtel.webp"
+      "image": "/images/hotels/Microtel.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
     },
     {
       "name": "City Express Plus by Marriott Guadalajara Palomar",
       "address": "Av. Adolfo López Mateos Sur 1450, Col. Las Villas, 45643 Palomar, Jal.",
       "phone": "",
       "mapsLink": "https://maps.app.goo.gl/xearx9Yxwny3nqtFA",
-      "image": "/images/hotels/Citiexpress.webp"
+      "image": "/images/hotels/Citiexpress.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
     }
   ],
   "makeup": [
     {
+      "avatar": "/images/makeup/moni-colmenares.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      "username": "moni.colmenares",
+      "followers": "1.494 seguidores",
       "name": "Monica Colmenares",
       "phone": "33 1366 4738",
       "code": "Boda Majo y Mau",
-      "instagram": "www.instagram.com/moni.colmenares",
-      "embedUrl": "C_uLB19OZtL"
+      "service": "Servicio A Domicilio",
+      "profileLink": "https://instagram.com/moni.colmenares"
     },
     {
+      "avatar": "/images/makeup/esmeralda.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      "username": "esmemejiamakeup",
+      "followers": "2.940 seguidores",
       "name": "Esmeralda Mejía",
       "phone": "33 3956 6923",
-      "code": "",
-      "instagram": "www.instagram.com/esmemejiamakeup",
-      "embedUrl": "C3xi_VHujwm"
+      "service": "Servicio A Domicilio",
+      "profileLink": "https://instagram.com/esmemejiamakeup"
     }
   ],
   "rent_cars": [
     {
-      "name": "Hertz México (With disccount)",
-      "image": "https://www.hertzmexico.com/images/logo-white.svg",
+      "name": "Hertz Guadalajara",
+      "text": "(Descuento Especial)",
+      "image": "/images/hertz.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
       "link": "hertzmexico.com/bonda/"
+    },
+    {
+      "name": "Alamo",
+      "text": "(Código Descuento)",
+      "image": "/images/alamo.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      "link": "wa.me/5565411924?text=%C2%A1Hola!%20Me%20gustar%C3%ADa%20obtener%20el%20c%C3%B3digo%20de%20Alamo%20para%20rentar%20un%20auto%20para%20la%20boda%20de%20Majo%20y%20Mau"
     }
   ],
   "itinerary": [
@@ -161,14 +174,12 @@
     ]
   },
   "dressCode": {
-    "image": "/images/dress-code.webp",
+    "image": "/images/dress-code.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
     "description": "Para esta ocasión tan especial, sugerimos un atuendo formal elegante: vestidos largos y sofisticados para ellas, y traje oscuro con corbata para ellos. Queremos que se sientan cómodos y glamurosos."
   },
   "restrictions": {
-    "restriction": [
-      "Evento exclusivo para adultos",
-      "Pases personales e intransferibles"
-    ]
+    "restriction": ["Evento para adultos", "Pases personales"]
   },
-  "parallaxQuote": "Nos elegimos una vez… y hoy con más amor, nos elegimos para siempre"
+  "parallaxQuote": "\"Nos elegimos una vez… y hoy con más amor, nos elegimos para siempre\"",
+  "form": "Nos encantará contar contigo. Por favor confirma tu asistencia antes del 17 de octubre para ayudarnos a preparar todo con cariño."
 }

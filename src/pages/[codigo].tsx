@@ -21,7 +21,7 @@ import Itinerary from "../components/Itinerary";
 import Gifts from "../components/Gifts";
 import DressCode from "../components/DressCode";
 import Restrictions from "../components/Restrictions";
-import ParallaxFrase from "../components/ParallaxFrase";
+import Slider2 from "../components/Slider2";
 
 // Tipado
 type DataResponse = {
@@ -54,7 +54,7 @@ export default function ConfirmacionPage() {
 
   return (
     <main style={{ position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "relative", minHeight: "100vh" }}>
+      <div style={{ position: "relative" }}>
         <Welcome />
       </div>
 
@@ -65,27 +65,31 @@ export default function ConfirmacionPage() {
         <Masonry />
       </div>
 
-      <div style={{ position: "relative", minHeight: "100vh" }}>
+      <div style={{ position: "relative" }}>
         <WeddingEvents />
       </div>
 
-      <div style={{ position: "relative", minHeight: "100vh" }}>
+      <div style={{ position: "relative" }}>
         <BackgroundSlider />
       </div>
 
-      <div style={{ position: "relative", minHeight: "100vh" }}>
+      <div style={{ position: "relative" }}>
         <FamilySection />
       </div>
 
-      <div style={{ position: "relative", minHeight: "100vh" }}>
-        <DeckComponent />
+      <div style={{ position: "relative" }}>
+        <Itinerary />
       </div>
 
-      <div style={{ position: "relative", minHeight: "100vh" }}>
+      <div style={{ position: "relative" }}>
+        <Viewpages />
+      </div>
+
+      <div style={{ position: "relative" }}>
         <HotelSuggestions />
       </div>
 
-      <div style={{ position: "relative", minHeight: "100vh" }}>
+      <div style={{ position: "relative" }}>
         <Makeup />
       </div>
 
@@ -94,14 +98,10 @@ export default function ConfirmacionPage() {
       </div>
 
       <div style={{ position: "relative" }}>
-        <Itinerary />
+        <Slider2 />
       </div>
 
-      <div style={{ position: "relative", minHeight: "100vh" }}>
-        <Viewpages />
-      </div>
-
-      <div style={{ position: "relative", minHeight: "100vh" }}>
+      <div style={{ position: "relative" }}>
         <DressCode />
       </div>
 
@@ -109,7 +109,7 @@ export default function ConfirmacionPage() {
         <Restrictions />
       </div>
 
-      <div style={{ position: "relative", minHeight: "100vh" }}>
+      <div style={{ position: "relative" }}>
         <Gifts />
       </div>
 

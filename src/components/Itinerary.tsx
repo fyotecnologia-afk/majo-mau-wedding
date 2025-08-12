@@ -82,6 +82,7 @@ const ItineraryTimeline: React.FC = () => {
                   fontWeight: "bold",
                   fontSize: 14,
                 }}
+                className="font-manjari"
               >
                 {item.time}
               </Text>
@@ -95,11 +96,17 @@ const ItineraryTimeline: React.FC = () => {
               >
                 {item.title}
               </Title>
-              <Text style={{ color: "#555", display: "block" }}>
+              <Text
+                style={{ color: "#555", display: "block" }}
+                className="font-manjari"
+              >
                 {item.location}
               </Text>
               {item.description && (
-                <Text style={{ color: "#777", display: "block", marginTop: 4 }}>
+                <Text
+                  style={{ color: "#777", display: "block", marginTop: 4 }}
+                  className="font-manjari"
+                >
                   {item.description}
                 </Text>
               )}

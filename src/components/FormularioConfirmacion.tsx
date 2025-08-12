@@ -16,6 +16,7 @@ import {
   MailOutlined,
   CheckCircleOutlined,
 } from "@ant-design/icons";
+import weddingData from "@/data/weddingData.json";
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -53,6 +54,8 @@ type ConfirmInvitationProps = {
 export default function ConfirmInvitation({
   numero: numeroProp,
 }: ConfirmInvitationProps) {
+  const { form } = weddingData;
+
   const [numero, setNumero] = useState("");
   const [invitados, setInvitados] = useState<Invitado[]>([]);
   const [dedicatoria, setDedicatoria] = useState("");
@@ -174,20 +177,38 @@ export default function ConfirmInvitation({
           border: `1px solid #CBB278`,
         }}
         title={
-          <Title
-            level={2}
-            style={{
-              textAlign: "center",
-              // fontSize: "clamp(1.4rem, 5vw, 2rem)",
-              margin: "1rem 0 0",
-              wordBreak: "break-word", // 🔑 Evita corte forzado de palabras
-              whiteSpace: "normal", // 🔑 Permite saltos de línea
-              overflowWrap: "break-word", // 🔑 Permite ajuste automático
-            }}
-            className="title-decorative"
-          >
-            Confirma tu asistencia
-          </Title>
+          <>
+            <Title
+              level={2}
+              style={{
+                textAlign: "center",
+                margin: "1rem 0 0",
+                wordBreak: "break-word",
+                whiteSpace: "normal",
+                overflowWrap: "break-word",
+              }}
+              className="title-decorative"
+            >
+              Confirma tu asistencia
+            </Title>
+
+            {/* Mensaje desde JSON */}
+            {form && (
+              <Text
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  color: "#c6b687",
+                  fontSize: 16,
+                  maxWidth: 600,
+                  margin: "1rem auto 0 auto",
+                  lineHeight: 1.5,
+                }}
+              >
+                {form}
+              </Text>
+            )}
+          </>
         }
       >
         <Steps
@@ -196,14 +217,31 @@ export default function ConfirmInvitation({
           style={{ marginBottom: 24 }}
           responsive
           items={[
-            { title: "Buscar", icon: <MailOutlined /> },
-            { title: "Seleccionar", icon: <UserOutlined /> },
-            { title: "Confirmado", icon: <CheckCircleOutlined /> },
+            {
+              title: "Buscar",
+              icon: <MailOutlined />,
+              className: "font-manjari",
+            },
+            {
+              title: "Seleccionar",
+              icon: <UserOutlined />,
+              className: "font-manjari",
+            },
+            {
+              title: "Confirmado",
+              icon: <CheckCircleOutlined />,
+              className: "font-manjari",
+            },
           ]}
         />
 
+        {/* Paso 1: Buscar */}
         {currentStep === 0 && (
-          <Form layout="vertical" onFinish={buscarInvitacion}>
+          <Form
+            layout="vertical"
+            onFinish={buscarInvitacion}
+            className="font-manjari"
+          >
             <Form.Item
               label="Número de invitación"
               name="numero"
@@ -213,6 +251,7 @@ export default function ConfirmInvitation({
                   message: "Por favor ingresa tu número de invitación",
                 },
               ]}
+              className="font-manjari"
             >
               <Input
                 value={numero}
@@ -222,9 +261,10 @@ export default function ConfirmInvitation({
                   borderRadius: 8,
                   padding: 12,
                 }}
+                className="font-manjari"
               />
             </Form.Item>
-            <Form.Item>
+            <Form.Item className="font-manjari">
               <Button
                 type="primary"
                 htmlType="submit"
@@ -244,12 +284,14 @@ export default function ConfirmInvitation({
                 message={mensaje.texto}
                 type={mensaje.tipo}
                 showIcon
-                style={{ marginTop: 16 }}
+                style={{ marginTop: 5 }}
+                className="font-manjari"
               />
             )}
           </Form>
         )}
 
+        {/* Paso 2: Confirmar */}
         {currentStep === 1 && (
           <>
             <Alert
@@ -257,29 +299,47 @@ export default function ConfirmInvitation({
               description="Marca los nombres que confirmarán asistencia."
               type="info"
               showIcon
-              style={{ marginBottom: 16 }}
+              style={{ marginBottom: 5 }}
+              className="font-manjari"
             />
 
-            <Form layout="vertical" onFinish={enviarConfirmacion}>
+            <Form
+              layout="vertical"
+              onFinish={enviarConfirmacion}
+              className="font-manjari"
+            >
               <Form.Item label="¿Quiénes asistirán?">
                 <Checkbox.Group
                   style={{ width: "100%" }}
                   value={seleccionados}
                   onChange={setSeleccionados}
+                  className="font-manjari"
                 >
-                  <Space direction="vertical" style={{ width: "100%" }}>
+                  <Space
+                    direction="vertical"
+                    style={{ width: "100%" }}
+                    className="font-manjari"
+                  >
                     {invitados.map((invitado) => (
                       <Checkbox key={invitado.id} value={invitado.id}>
                         <span style={{ fontWeight: 500 }}>
                           {invitado.nombre}
                         </span>
                         {invitado.respuesta === "SI" && (
-                          <Text type="success" style={{ marginLeft: 8 }}>
+                          <Text
+                            type="success"
+                            style={{ marginLeft: 8 }}
+                            className="font-manjari"
+                          >
                             (Confirmado)
                           </Text>
                         )}
                         {invitado.respuesta === "NO" && (
-                          <Text type="danger" style={{ marginLeft: 8 }}>
+                          <Text
+                            type="danger"
+                            style={{ marginLeft: 8 }}
+                            className="font-manjari"
+                          >
                             (No asistirá)
                           </Text>
                         )}
@@ -289,13 +349,17 @@ export default function ConfirmInvitation({
                 </Checkbox.Group>
               </Form.Item>
 
-              <Form.Item label="Dedicatoria (opcional)">
+              <Form.Item
+                label="Dedicatoria (opcional)"
+                className="font-manjari"
+              >
                 <TextArea
                   rows={4}
                   value={dedicatoria}
                   onChange={(e) => setDedicatoria(e.target.value)}
                   placeholder="Escribe unas palabras para nosotros..."
                   style={{ borderRadius: 8 }}
+                  className="font-manjari"
                 />
               </Form.Item>
 
@@ -304,7 +368,8 @@ export default function ConfirmInvitation({
                   message={mensaje.texto}
                   type={mensaje.tipo}
                   showIcon
-                  style={{ marginBottom: 16 }}
+                  style={{ marginBottom: 5 }}
+                  className="font-manjari"
                 />
               )}
 
@@ -318,8 +383,8 @@ export default function ConfirmInvitation({
                   }
                   block
                   style={{
-                    backgroundColor: "#7A8B75",
-                    borderColor: "#7A8B75",
+                    backgroundColor: "#c6b687",
+                    borderColor: "#c6b687",
                     borderRadius: 8,
                     fontWeight: "bold",
                   }}
@@ -338,15 +403,20 @@ export default function ConfirmInvitation({
           </>
         )}
 
+        {/* Paso 3: Confirmado */}
         {currentStep === 2 && (
           <div style={{ textAlign: "center", padding: "2rem 1rem" }}>
             <CheckCircleOutlined
               style={{ fontSize: 64, color: "#52c41a", marginBottom: 16 }}
             />
-            <Title level={4} style={{ color: "#7A8B75" }}>
+            <Title
+              level={4}
+              style={{ color: "#c6b687" }}
+              className="font-manjari"
+            >
               ¡Gracias por confirmar!
             </Title>
-            <Text style={{ color: "#7A8B75" }}>
+            <Text style={{ color: "#c6b687" }} className="font-manjari">
               Estamos felices de contar contigo en este evento tan especial.
             </Text>
             <Divider />
@@ -369,6 +439,7 @@ export default function ConfirmInvitation({
                 fontWeight: "bold",
               }}
               block
+              className="font-manjari"
             >
               Confirmar otro número
             </Button>

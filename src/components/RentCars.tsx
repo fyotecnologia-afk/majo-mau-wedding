@@ -5,10 +5,11 @@ import { Card, Col, Row, Typography, Button } from "antd";
 import { CarOutlined, LinkOutlined } from "@ant-design/icons";
 import weddingData from "@/data/weddingData.json";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 interface RentCarOption {
   name: string;
+  text?: string;
   link: string;
   image?: string;
 }
@@ -26,46 +27,77 @@ const RentCarsList: React.FC = () => {
           margin: "1rem 0 0",
         }}
       >
-        Opciones para Renta de Autos
+        Renta de autos
       </Title>
+
       <Row gutter={[16, 16]} justify="center">
         {options.map((option, idx) => (
-          <Col xs={24} sm={12} md={8} key={idx} style={{ display: "flex" }}>
+          <Col xs={24} sm={24} md={12} key={idx}>
             <Card
+              className="custom-family-card font-manjari"
               hoverable
-              style={{ flex: 1, display: "flex", flexDirection: "column" }}
-              cover={
-                option.image ? (
+              style={{
+                borderRadius: 12,
+                border: "1px solid #d6b77b",
+                padding: 8,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 16,
+                }}
+              >
+                {option.image && (
                   <img
-                    alt={option.name}
                     src={option.image}
+                    alt={option.name}
                     style={{
-                      borderRadius: 12,
-                      height: 150,
+                      width: 100,
+                      height: 100,
                       objectFit: "contain",
-                      backgroundColor: "black",
+                      borderRadius: 8,
                     }}
                   />
-                ) : undefined
-              }
-            >
-              <div style={{ flex: 1 }}>
-                <Title level={4}>
-                  <CarOutlined style={{ marginRight: 8 }} />
-                  {option.name}
-                </Title>
-              </div>
+                )}
 
-              <Button
-                type="link"
-                href={`https://${option.link}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                icon={<LinkOutlined />}
-                style={{ marginTop: 12 }}
-              >
-                Visitar sitio web
-              </Button>
+                <div style={{ flex: 1, textAlign: "left" }}>
+                  <Title
+                    level={4}
+                    style={{
+                      margin: 0,
+                      color: "#7a8b75",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    {option.name}
+                  </Title>
+                  <Title
+                    level={5}
+                    style={{
+                      margin: 0,
+                      color: "#7a8b75",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
+                  >
+                    {option.text}
+                  </Title>
+                  <Button
+                    type="link"
+                    href={`https://${option.link}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ paddingLeft: 0 }}
+                  >
+                    {idx === 0 ? "Visitar sitio" : "Solicítalo aquí"}
+                  </Button>
+                </div>
+              </div>
             </Card>
           </Col>
         ))}

@@ -1,30 +1,21 @@
-// src/components/Welcome.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useTrail, useTransition, a, animated } from "@react-spring/web";
-import styles from "../styles/Welcome.module.css";
 import weddingData from "@/data/weddingData.json";
+import styles from "../styles/Welcome.module.css";
 
-const CountdownSection = () => {
+const Welcome: React.FC = () => {
   const { names, date, slides } = weddingData;
 
-  // Fondo con transición animada
-  const [index, setIndex] = useState(0);
-
-  const transitions = useTransition(index, {
-    key: index,
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-    config: { duration: 2000 },
-    onRest: (_a, _b, item) => {
-      if (index === item) {
-        setIndex((state) => (state + 1) % slides.length);
-      }
-    },
-    exitBeforeEnter: true,
-  });
+  // Fecha en formato DD.MM.YYYY
+  const eventDate = new Date(date);
+  const formattedDate = `${String(eventDate.getDate()).padStart(
+    2,
+    "0"
+  )}.${String(eventDate.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}.${eventDate.getFullYear()}`;
 
   // Countdown
   const calculateTimeLeft = () => {
@@ -55,63 +46,38 @@ const CountdownSection = () => {
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
-
-  const trail = useTrail(timeLeft.length, {
-    config: { mass: 5, tension: 2000, friction: 200 },
-    opacity: 1,
-    x: 0,
-    height: 110,
-    from: { opacity: 0, x: 20, height: 0 },
-  });
 
   const labels = ["Días", "Horas", "Min", "Seg"];
 
   return (
-    <div className={styles.fullscreenContainer}>
-      {/* Fondo con transición */}
-      {transitions((style, i) => (
-        <animated.div
-          key={i}
-          className={styles.bg}
-          style={{
-            ...style,
-            backgroundImage: `url(${slides[i]})`,
-          }}
-        />
-      ))}
+    <div className={styles.container}>
+      {/* Nombres */}
+      <div className={styles.header}>
+        <h1 className={styles.names}>{names}</h1>
+        <h2 className={styles.subtitle}>Wedding</h2>
+      </div>
 
-      {/* Contenido sobrepuesto */}
-      <div className={styles.overlay}>
-        <h1 className={styles.names}>
-          {names} <br />
-          Wedding
-        </h1>
-        <h2 className={styles.date}>
-          {new Date(date).toLocaleDateString("es-MX", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </h2>
+      {/* Imagen */}
+      <div className={styles.imageWrapper}>
+        <img src={slides[0]} alt="Wedding" className={styles.image} />
+      </div>
 
-        <div className={styles.timer}>
-          {trail.map(({ height, ...style }, index) => (
-            <a.div key={index} className={styles.trailsText} style={style}>
-              <a.div style={{ height }}>
-                <div className={styles.timeBlock}>
-                  <div className={styles.number}>{timeLeft[index]}</div>
-                  <div className={styles.label}>{labels[index]}</div>
-                </div>
-              </a.div>
-            </a.div>
-          ))}
-        </div>
+      {/* Fecha */}
+      <p className={styles.date}>{formattedDate}</p>
+
+      {/* Contador */}
+      <div className={styles.timer}>
+        {timeLeft.map((num, i) => (
+          <div key={i} className={styles.timeBlock}>
+            <div className={styles.number}>{num}</div>
+            <div className={styles.label}>{labels[i]}</div>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default CountdownSection;
+export default Welcome;

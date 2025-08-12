@@ -1,24 +1,71 @@
 /* styles/globals.css */
+:root {
+  --font-meow: "Meow Script", cursive;
+  --font-manjari: "Manjari", sans-serif;
+}
 html,
-body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  background-color: #f6f1eb;
-  font-family: var(--font-playfair), serif !important;
+body,
+main {
+  font-family: var(--font-manjari) !important;
+  color: rgb(122, 139, 117);
+  background-color: #f6f1eb !important;
 }
 
 .title-decorative {
   font-family: var(--font-meow), cursive;
-  font-size: 4rem !important;
-  font-weight: 400 !important;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  margin: 1rem 0px 1rem;
+  font-weight: 400;
   color: #7a8b75;
 }
 
+h1,
+h2,
+h3,
+h4,
+label,
+.font-manjari {
+  font-family: var(--font-manjari);
+  color: #7a8b75;
+}
+
+span {
+  font-family: var(--font-manjari);
+}
+
 .title-script {
-  font-family: var(--font-great-vibes), cursive;
+  font-family: var(--font-manjari);
 }
 
 .title-serif {
-  font-family: var(--font-playfair), serif;
+  font-family: var(--font-manjari);
 }
+
+.custom-family-card .ant-card-body {
+  padding: 0;
+}
+
+/* a,
+a:link {
+  color: #7a8b75 !important;
+  text-decoration: none !important;
+  outline: none !important;
+}
+
+a:visited {
+  color: #5f6f5d !important;
+}
+
+a:hover {
+  color: #98a88f !important;
+  text-decoration: underline !important;
+}
+
+a:active {
+  color: #4d5b4a !important;
+}
+
+a:focus {
+  color: #7a8b75 !important;
+  border-bottom: 1px dotted #7a8b75 !important;
+} */

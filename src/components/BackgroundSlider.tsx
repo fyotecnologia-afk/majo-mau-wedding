@@ -1,48 +1,30 @@
-"use client";
+import React from "react";
 
-import React, { useState } from "react";
-import { useTransition, animated } from "@react-spring/web";
-import styles from "../styles/BackgroundSlider.module.css";
+const imageUrl =
+  "images/mansory/gallery-1.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
 
-const slides = [
-  "/images/mansory/gallery-1.webp",
-  "/images/mansory/gallery-2.webp",
-  "/images/mansory/gallery-3.webp",
-  "/images/mansory/gallery-4.webp",
-];
-
-export default function BackgroundSlider() {
-  const [index, setIndex] = useState(0);
-
-  const transitions = useTransition(index, {
-    key: index,
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-    config: { duration: 3000 },
-    onRest: (_a, _b, item) => {
-      if (index === item) {
-        setIndex((state) => (state + 1) % slides.length);
-      }
-    },
-    exitBeforeEnter: true,
-  });
-
+const ViewpagerSimple: React.FC = () => {
   return (
     <div
-      className="flex fill center"
-      style={{ position: "relative", width: "100vw", height: "100vh" }}
+      style={{
+        width: "100%",
+        maxWidth: 1260,
+        margin: "0 auto",
+        overflow: "hidden",
+      }}
     >
-      {transitions((style, i) => (
-        <animated.div
-          key={i}
-          className={styles.bg}
-          style={{
-            ...style,
-            backgroundImage: `url(${slides[i]})`,
-          }}
-        />
-      ))}
+      <img
+        src={imageUrl}
+        alt="Gallery"
+        style={{
+          width: "100%",
+          height: "auto",
+          objectFit: "contain",
+          display: "block",
+        }}
+      />
     </div>
   );
-}
+};
+
+export default ViewpagerSimple;

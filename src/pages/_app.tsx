@@ -1,13 +1,8 @@
 // pages/_app.tsx
 import type { AppProps } from "next/app";
-import MetaHead from "@/components/MetaHead"; // importa tu componente
+import MetaHead from "@/components/MetaHead";
 
-import {
-  Meow_Script,
-  Roboto,
-  Great_Vibes,
-  Playfair_Display,
-} from "next/font/google";
+import { Meow_Script, Manjari } from "next/font/google";
 
 import "../styles/globals.css";
 
@@ -18,31 +13,16 @@ const meow = Meow_Script({
   variable: "--font-meow",
   display: "swap",
 });
-const roboto = Roboto({
+const manjari = Manjari({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-roboto",
-  display: "swap",
-});
-const greatVibes = Great_Vibes({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-great-vibes",
-  display: "swap",
-});
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-playfair",
+  weight: ["400", "700"], // o los pesos que necesites
+  variable: "--font-manjari",
   display: "swap",
 });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main
-      className={`${roboto.variable} ${meow.variable} ${greatVibes.variable} ${playfair.variable}`}
-    >
-      {/* Meta global, puede ser sobreescrito en las páginas */}
+    <main className={`${meow.variable} ${manjari.variable}`}>
       <MetaHead />
       <Component {...pageProps} />
     </main>

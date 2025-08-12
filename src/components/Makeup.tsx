@@ -1,129 +1,114 @@
-"use client";
-
 import React from "react";
-import { Card, Col, Row, Typography } from "antd";
-import {
-  InstagramOutlined,
-  PhoneOutlined,
-  TagOutlined,
-} from "@ant-design/icons";
-import { useTrail, animated } from "@react-spring/web";
+import { Card, Button, Row, Col, Typography } from "antd";
 import weddingData from "@/data/weddingData.json";
 
-const { Title, Text, Link } = Typography;
+const { Text } = Typography;
 
-interface MakeupArtist {
+interface MakeupArtistSimple {
+  avatar: string;
+  username: string;
+  followers: string;
   name: string;
   phone: string;
   code?: string;
-  instagram: string;
-  embedUrl?: string;
+  service: string;
+  profileLink: string;
 }
 
-const MakeupCard: React.FC<{ artist: MakeupArtist }> = ({ artist }) => (
-  <Card
-    hoverable
-    style={{
-      background: "#fffaf5",
-      border: "1px solid #f0e6dd",
-      borderRadius: 12,
-    }}
-    cover={
-      artist.embedUrl && (
-        <iframe
-          title={artist.name}
-          src={`https://www.instagram.com/p/${artist.embedUrl}/embed`}
-          width="100%"
-          height={400}
-          frameBorder={0}
-          scrolling="no"
-          allow="encrypted-media"
-          style={{ borderRadius: "12px 12px 0 0" }}
-          loading="lazy"
-        />
-      )
-    }
-  >
-    <Title
-      level={4}
+const ArtistCardSimple: React.FC<{ artist: MakeupArtistSimple }> = ({
+  artist,
+}) => {
+  return (
+    <Card
       style={{
-        marginBottom: 8,
+        borderRadius: 10,
+        border: "1px solid #d6b77b",
+        marginBottom: 16,
+        backgroundColor: "#fef9f2",
+        padding: "12px 16px",
       }}
+      styles={{ body: { padding: 0 } }}
+      size="small"
     >
-      {artist.name}
-    </Title>
-
-    <a
-      href={`tel:${artist.phone}`}
-      style={{
-        display: "block",
-        marginBottom: 6,
-        fontSize: 16,
-
-        textDecoration: "none",
-      }}
-    >
-      <PhoneOutlined style={{ marginRight: 8 }} />
-      {artist.phone}
-    </a>
-
-    {artist.code && (
-      <Text
+      {/* Primera línea: avatar + username/followers + botón */}
+      <div
         style={{
-          display: "block",
-          marginBottom: 6,
-          fontSize: 16,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 8,
         }}
       >
-        <TagOutlined style={{ marginRight: 8 }} />
-        Código: {artist.code}
-      </Text>
-    )}
+        {/* Avatar + Text */}
+        <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
+          <img
+            src={artist.avatar}
+            alt={artist.username}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: "50%",
+              objectFit: "cover",
+              border: "2px solid #d6b77b",
+              marginRight: 12,
+            }}
+          />
+          <div>
+            <Text strong>{artist.username}</Text>
+            <br />
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              {artist.followers}
+            </Text>
+          </div>
+        </div>
 
-    <Link
-      href={`https://${artist.instagram}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        display: "inline-block",
-        marginTop: 8,
-        fontWeight: 500,
-      }}
-    >
-      <InstagramOutlined style={{ marginRight: 8 }} />
-      Ver Instagram
-    </Link>
-  </Card>
-);
+        {/* Button */}
+        <Button
+          type="primary"
+          size="small"
+          href={artist.profileLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            backgroundColor: "#3b5998",
+            borderColor: "#3b5998",
+            marginLeft: 12,
+          }}
+        >
+          Ver perfil
+        </Button>
+      </div>
 
-const MakeupList: React.FC = () => {
-  const artists: MakeupArtist[] = weddingData.makeup;
+      {/* Datos del artista */}
+      <div
+        style={{
+          marginTop: 8,
+          fontSize: 14,
+          color: "#7a8b75",
+          textAlign: "center",
+        }}
+      >
+        <div>
+          {artist.name} | {artist.phone}
+        </div>
+        <div>
+          {artist.code && <span>Código: {artist.code} | </span>}
+          {artist.service}
+        </div>
+      </div>
+    </Card>
+  );
+};
 
-  const trail = useTrail(artists.length, {
-    from: { opacity: 0, transform: "translateY(20px)" },
-    to: { opacity: 1, transform: "translateY(0)" },
-    config: { mass: 1, tension: 200, friction: 20 },
-  });
+const MakeupListSimple: React.FC = () => {
+  const artists: MakeupArtistSimple[] = weddingData.makeup;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <Title
-        className="title-decorative"
-        level={2}
-        style={{
-          textAlign: "center",
-          margin: "1rem 0 0",
-        }}
-      >
-        Maquillaje y Peinado
-      </Title>
-
+    <div style={{ padding: 20 }}>
       <Row gutter={[16, 16]}>
-        {trail.map((style, index) => (
-          <Col xs={24} sm={24} md={12} key={index}>
-            <animated.div style={style}>
-              <MakeupCard artist={artists[index]} />
-            </animated.div>
+        {artists.map((artist, idx) => (
+          <Col xs={24} sm={24} md={12} key={idx}>
+            <ArtistCardSimple artist={artist} />
           </Col>
         ))}
       </Row>
@@ -131,4 +116,4 @@ const MakeupList: React.FC = () => {
   );
 };
 
-export default MakeupList;
+export default MakeupListSimple;
