@@ -7,7 +7,6 @@ import Welcome from "../components/Welcome";
 import TrailAnimation from "../components/TrailAnimation";
 import Masonry from "../components/Masonry";
 import BackgroundSlider from "../components/BackgroundSlider";
-import DeckComponent from "../components/Deck";
 import Viewpages from "../components/Viewpages";
 import Formulario from "../components/FormularioConfirmacion";
 import WeddingEvents from "../components/WeddingEvents";

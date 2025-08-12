@@ -10,49 +10,49 @@ export default function MansoryGallery() {
 
   const slides = [
     {
-      src: "/images/mansory/gallery-15.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-15.webp",
     },
     {
-      src: "/images/mansory/gallery-14.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-14.webp",
     },
     {
-      src: "/images/mansory/gallery-13.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-13.webp",
     },
     {
-      src: "/images/mansory/gallery-12.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-12.webp",
     },
     {
-      src: "/images/mansory/gallery-11.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-11.webp",
     },
     {
-      src: "/images/mansory/gallery-10.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-10.webp",
     },
     {
-      src: "/images/mansory/gallery-9.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-9.webp",
     },
     {
-      src: "/images/mansory/gallery-8.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-8.webp",
     },
     {
-      src: "/images/mansory/gallery-7.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-7.webp",
     },
     {
-      src: "/images/mansory/gallery-6.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-6.webp",
     },
     {
-      src: "/images/mansory/gallery-5.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-5.webp",
     },
     {
-      src: "/images/mansory/gallery-4.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-4.webp",
     },
     {
-      src: "/images/mansory/gallery-3.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-3.webp",
     },
     {
-      src: "/images/mansory/gallery-2.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-2.webp",
     },
     {
-      src: "/images/mansory/gallery-1.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      src: "/images/mansory/gallery-1.webp",
     },
   ];
 

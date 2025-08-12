@@ -1,7 +1,6 @@
 import React from "react";
 
-const imageUrl =
-  "images/mansory/gallery-7.webp?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260";
+const imageUrl = "images/mansory/gallery-7.webp";
 
 const ViewpagerSimple: React.FC = () => {
   return (
