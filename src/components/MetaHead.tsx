@@ -15,7 +15,7 @@ export default function MetaHead({
   image = "preview.webp",
   url = siteUrl,
 }: MetaProps) {
-  const imageUrl = image.startsWith("http")
+  const imageUrl = image.startsWith("https")
     ? image
     : `${siteUrl}${image.startsWith("/") ? "" : "/"}${image}`;
 
