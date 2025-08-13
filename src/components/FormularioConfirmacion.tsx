@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Form,
   Input,
@@ -6,7 +6,6 @@ import {
   Checkbox,
   Typography,
   Space,
-  Divider,
   Alert,
   Card,
   Steps,
@@ -16,7 +15,6 @@ import {
   MailOutlined,
   CheckCircleOutlined,
 } from "@ant-design/icons";
-import weddingData from "@/data/weddingData.json";
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -54,22 +52,35 @@ type ConfirmInvitationProps = {
 export default function ConfirmInvitation({
   numero: numeroProp,
 }: ConfirmInvitationProps) {
-  const { form } = weddingData;
-
-  const [numero, setNumero] = useState("");
+  const [form] = Form.useForm();
   const [invitados, setInvitados] = useState<Invitado[]>([]);
-  const [dedicatoria, setDedicatoria] = useState("");
   const [confirmacionesCount, setConfirmacionesCount] = useState(0);
-  const [currentStep, setCurrentStep] = useState(0);
   const [seleccionados, setSeleccionados] = useState<string[]>([]);
+  const [currentStep, setCurrentStep] = useState(0);
   const [enviando, setEnviando] = useState(false);
   const [mensaje, setMensaje] = useState<{
     tipo: TipoMensaje;
     texto: string;
   } | null>(null);
+  const [dedicatoria, setDedicatoria] = useState("");
+
+  // Precargar número si viene por props
+  useEffect(() => {
+    if (numeroProp) {
+      form.setFieldsValue({ numero: numeroProp });
+    }
+  }, [numeroProp, form]);
+
+  // Cargar dedicatoria cuando se cambia currentStep y tenemos dedicatoria almacenada en estado
+  useEffect(() => {
+    if (currentStep === 1) {
+      form.setFieldsValue({ dedicatoria });
+    }
+  }, [currentStep, dedicatoria, form]);
 
   const buscarInvitacion = async () => {
-    if (!numero.trim()) {
+    const numero = form.getFieldValue("numero")?.trim();
+    if (!numero) {
       setMensaje({ tipo: "error", texto: "Ingresa un número de invitación" });
       return;
     }
@@ -77,7 +88,7 @@ export default function ConfirmInvitation({
 
     try {
       const res = await fetch(
-        `/api/invitaciones/${encodeURIComponent(numero.trim())}`
+        `/api/invitaciones/${encodeURIComponent(numero)}`
       );
       if (!res.ok) throw new Error("Invitación no encontrada");
 
@@ -98,8 +109,11 @@ export default function ConfirmInvitation({
       });
 
       setInvitados(invitadosConRespuesta);
-      setDedicatoria(data.dedicatoria || "");
       setConfirmacionesCount(data.confirmaciones.length || 0);
+
+      // Carga dedicatoria en estado para luego cargar en el form (por useEffect)
+      setDedicatoria(data.dedicatoria || "");
+
       const preSeleccionados = invitadosConRespuesta
         .filter((inv) => inv.respuesta === "SI")
         .map((inv) => inv.id);
@@ -113,11 +127,14 @@ export default function ConfirmInvitation({
       setInvitados([]);
       setSeleccionados([]);
       setCurrentStep(0);
+      setDedicatoria("");
+      form.resetFields();
     }
   };
 
   const enviarConfirmacion = async () => {
-    if (seleccionados.length === 0 && dedicatoria.trim() === "") {
+    const dedicatoriaForm = form.getFieldValue("dedicatoria")?.trim() || "";
+    if (seleccionados.length === 0 && dedicatoriaForm === "") {
       setMensaje({
         tipo: "error",
         texto: "Selecciona al menos un invitado o escribe una dedicatoria",
@@ -128,13 +145,14 @@ export default function ConfirmInvitation({
     setMensaje(null);
 
     try {
+      const numero = form.getFieldValue("numero");
       const res = await fetch("/api/invitaciones/confirmar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           numero,
           asistentes: seleccionados,
-          dedicatoria,
+          dedicatoria: dedicatoriaForm,
         }),
       });
       if (!res.ok) {
@@ -142,6 +160,11 @@ export default function ConfirmInvitation({
         throw new Error(errorData.error || "Error al confirmar");
       }
       setMensaje({ tipo: "success", texto: "¡Confirmado correctamente!" });
+
+      // Actualiza dedicatoria local para persistir la última confirmación hecha
+      setDedicatoria(dedicatoriaForm);
+
+      setConfirmacionesCount((c) => c + 1);
       setCurrentStep(2);
     } catch (error: any) {
       setMensaje({
@@ -153,6 +176,7 @@ export default function ConfirmInvitation({
     }
   };
 
+  // Bloquear formulario si ya hay 2 o más confirmaciones
   if (confirmacionesCount >= 2) {
     return (
       <Card style={{ maxWidth: 600, margin: "0 auto" }}>
@@ -177,73 +201,33 @@ export default function ConfirmInvitation({
           border: `1px solid #CBB278`,
         }}
         title={
-          <>
-            <Title
-              level={2}
-              style={{
-                textAlign: "center",
-                margin: "1rem 0 0",
-                wordBreak: "break-word",
-                whiteSpace: "normal",
-                overflowWrap: "break-word",
-              }}
-              className="title-decorative"
-            >
-              Confirma tu asistencia
-            </Title>
-
-            {/* Mensaje desde JSON */}
-            {form && (
-              <Text
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  color: "#c6b687",
-                  fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
-                  wordBreak: "break-word",
-                  whiteSpace: "normal",
-                  maxWidth: 600,
-                  margin: "1rem auto 0 auto",
-                  lineHeight: 1.5,
-                }}
-              >
-                {form}
-              </Text>
-            )}
-          </>
+          <Title
+            level={2}
+            style={{
+              textAlign: "center",
+              margin: "1rem 0 0",
+              wordBreak: "break-word",
+              whiteSpace: "normal",
+              overflowWrap: "break-word",
+            }}
+          >
+            Confirma tu asistencia
+          </Title>
         }
       >
         <Steps
           current={currentStep}
           size="small"
           style={{ marginBottom: 24 }}
-          responsive
           items={[
-            {
-              title: "Buscar",
-              icon: <MailOutlined />,
-              className: "font-manjari",
-            },
-            {
-              title: "Seleccionar",
-              icon: <UserOutlined />,
-              className: "font-manjari",
-            },
-            {
-              title: "Confirmado",
-              icon: <CheckCircleOutlined />,
-              className: "font-manjari",
-            },
+            { title: "Buscar", icon: <MailOutlined /> },
+            { title: "Seleccionar", icon: <UserOutlined /> },
+            { title: "Confirmado", icon: <CheckCircleOutlined /> },
           ]}
         />
 
-        {/* Paso 1: Buscar */}
         {currentStep === 0 && (
-          <Form
-            layout="vertical"
-            onFinish={buscarInvitacion}
-            className="font-manjari"
-          >
+          <Form form={form} layout="vertical" onFinish={buscarInvitacion}>
             <Form.Item
               label="Número de invitación"
               name="numero"
@@ -253,20 +237,13 @@ export default function ConfirmInvitation({
                   message: "Por favor ingresa tu número de invitación",
                 },
               ]}
-              className="font-manjari"
             >
               <Input
-                value={numero}
-                onChange={(e) => setNumero(e.target.value)}
                 placeholder="Ej. 1234"
-                style={{
-                  borderRadius: 8,
-                  padding: 12,
-                }}
-                className="font-manjari"
+                style={{ borderRadius: 8, padding: 12 }}
               />
             </Form.Item>
-            <Form.Item className="font-manjari">
+            <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
@@ -287,13 +264,11 @@ export default function ConfirmInvitation({
                 type={mensaje.tipo}
                 showIcon
                 style={{ marginTop: 5 }}
-                className="font-manjari"
               />
             )}
           </Form>
         )}
 
-        {/* Paso 2: Confirmar */}
         {currentStep === 1 && (
           <>
             <Alert
@@ -302,46 +277,26 @@ export default function ConfirmInvitation({
               type="info"
               showIcon
               style={{ marginBottom: 5 }}
-              className="font-manjari"
             />
 
-            <Form
-              layout="vertical"
-              onFinish={enviarConfirmacion}
-              className="font-manjari"
-            >
+            <Form form={form} layout="vertical" onFinish={enviarConfirmacion}>
               <Form.Item label="¿Quiénes asistirán?">
                 <Checkbox.Group
                   style={{ width: "100%" }}
                   value={seleccionados}
                   onChange={setSeleccionados}
-                  className="font-manjari"
                 >
-                  <Space
-                    direction="vertical"
-                    style={{ width: "100%" }}
-                    className="font-manjari"
-                  >
-                    {invitados.map((invitado) => (
-                      <Checkbox key={invitado.id} value={invitado.id}>
-                        <span style={{ fontWeight: 500 }}>
-                          {invitado.nombre}
-                        </span>
-                        {invitado.respuesta === "SI" && (
-                          <Text
-                            type="success"
-                            style={{ marginLeft: 8 }}
-                            className="font-manjari"
-                          >
+                  <Space direction="vertical" style={{ width: "100%" }}>
+                    {invitados.map(({ id, nombre, respuesta }) => (
+                      <Checkbox key={id} value={id}>
+                        <span style={{ fontWeight: 500 }}>{nombre}</span>
+                        {respuesta === "SI" && (
+                          <Text type="success" style={{ marginLeft: 8 }}>
                             (Confirmado)
                           </Text>
                         )}
-                        {invitado.respuesta === "NO" && (
-                          <Text
-                            type="danger"
-                            style={{ marginLeft: 8 }}
-                            className="font-manjari"
-                          >
+                        {respuesta === "NO" && (
+                          <Text type="danger" style={{ marginLeft: 8 }}>
                             (No asistirá)
                           </Text>
                         )}
@@ -351,17 +306,11 @@ export default function ConfirmInvitation({
                 </Checkbox.Group>
               </Form.Item>
 
-              <Form.Item
-                label="Dedicatoria (opcional)"
-                className="font-manjari"
-              >
+              <Form.Item label="Dedicatoria (opcional)" name="dedicatoria">
                 <TextArea
                   rows={4}
-                  value={dedicatoria}
-                  onChange={(e) => setDedicatoria(e.target.value)}
                   placeholder="Escribe unas palabras para nosotros..."
                   style={{ borderRadius: 8 }}
-                  className="font-manjari"
                 />
               </Form.Item>
 
@@ -371,7 +320,6 @@ export default function ConfirmInvitation({
                   type={mensaje.tipo}
                   showIcon
                   style={{ marginBottom: 5 }}
-                  className="font-manjari"
                 />
               )}
 
@@ -381,7 +329,8 @@ export default function ConfirmInvitation({
                   htmlType="submit"
                   loading={enviando}
                   disabled={
-                    seleccionados.length === 0 && dedicatoria.trim() === ""
+                    seleccionados.length === 0 &&
+                    !form.getFieldValue("dedicatoria")
                   }
                   block
                   style={{
@@ -397,7 +346,14 @@ export default function ConfirmInvitation({
             </Form>
             <Button
               type="link"
-              onClick={() => setCurrentStep(0)}
+              onClick={() => {
+                setCurrentStep(0);
+                setMensaje(null);
+                setInvitados([]);
+                setSeleccionados([]);
+                form.resetFields(["dedicatoria"]);
+                setDedicatoria("");
+              }}
               style={{ display: "block", width: "100%", color: "#CBB278" }}
             >
               Volver a buscar otro número
@@ -405,43 +361,37 @@ export default function ConfirmInvitation({
           </>
         )}
 
-        {/* Paso 3: Confirmado */}
         {currentStep === 2 && (
           <div style={{ textAlign: "center", padding: "2rem 1rem" }}>
             <CheckCircleOutlined
               style={{ fontSize: 64, color: "#52c41a", marginBottom: 16 }}
             />
-            <Title
-              level={4}
-              style={{ color: "#c6b687" }}
-              className="font-manjari"
-            >
+            <Title level={4} style={{ color: "#c6b687" }}>
               ¡Gracias por confirmar!
             </Title>
-            <Text style={{ color: "#c6b687" }} className="font-manjari">
+            <Text style={{ color: "#c6b687" }}>
               Estamos felices de contar contigo en este evento tan especial.
             </Text>
-            <Divider />
             <Button
               type="primary"
               onClick={() => {
-                setNumero("");
+                setCurrentStep(0);
+                setMensaje(null);
                 setInvitados([]);
                 setSeleccionados([]);
-                setDedicatoria("");
-                setMensaje(null);
-                setConfirmacionesCount(0);
-                setCurrentStep(0);
+                form.resetFields();
                 setEnviando(false);
+                setConfirmacionesCount(0);
+                setDedicatoria("");
               }}
               style={{
                 backgroundColor: "#CBB278",
                 borderColor: "#CBB278",
                 borderRadius: 8,
                 fontWeight: "bold",
+                marginTop: 24,
               }}
               block
-              className="font-manjari"
             >
               Confirmar otro número
             </Button>

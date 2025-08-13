@@ -7,6 +7,9 @@ interface Invitado {
   id: string;
   nombre: string;
   respuesta: Respuesta;
+  principal?: boolean;
+  categoria?: string;
+  estado?: string;
 }
 
 interface Dedicatoria {
@@ -19,6 +22,13 @@ interface InvitacionData {
   id: string;
   numeroInvitacion: string;
   url: string;
+  hostedBy?: string;
+  tipo?: string;
+  familia?: string;
+  saveTheDate?: boolean;
+  invitacionEnviada?: boolean;
+  especial?: boolean;
+  tanteo?: number;
   invitados: Invitado[];
   dedicatorias: Dedicatoria[];
 }
@@ -30,7 +40,16 @@ export default async function handler(
   try {
     const invitaciones = await db.invitacion.findMany({
       where: { estado: "ACTIVO" },
-      include: {
+      select: {
+        id: true,
+        numero: true,
+        hostedBy: true,
+        tipo: true,
+        familia: true,
+        saveTheDate: true,
+        invitacionEnviada: true,
+        especial: true,
+        tanteo: true,
         invitados: {
           where: { estado: "ACTIVO" },
           include: {
@@ -55,6 +74,9 @@ export default async function handler(
           id: invitado.id,
           nombre: invitado.nombre,
           respuesta: confirmacionInv ? confirmacionInv.respuesta : null,
+          principal: invitado.principal,
+          categoria: invitado.categoria,
+          estado: invitado.estado,
         };
       });
 
@@ -68,6 +90,13 @@ export default async function handler(
         id: inv.id,
         numeroInvitacion: inv.numero,
         url,
+        hostedBy: inv.hostedBy,
+        tipo: inv.tipo,
+        familia: inv.familia,
+        saveTheDate: inv.saveTheDate,
+        invitacionEnviada: inv.invitacionEnviada,
+        especial: inv.especial,
+        tanteo: inv.tanteo,
         invitados,
         dedicatorias,
       };

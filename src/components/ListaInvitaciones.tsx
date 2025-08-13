@@ -9,6 +9,9 @@ interface Invitado {
   id: string;
   nombre: string;
   respuesta: Respuesta;
+  principal?: boolean;
+  categoria?: string;
+  estado?: string;
 }
 
 interface Dedicatoria {
@@ -21,6 +24,13 @@ interface InvitacionData {
   id: string;
   numeroInvitacion: string;
   url: string;
+  hostedBy?: string;
+  tipo?: string;
+  familia?: string;
+  saveTheDate?: boolean;
+  invitacionEnviada?: boolean;
+  especial?: boolean;
+  tanteo?: number;
   invitados: Invitado[];
   dedicatorias: Dedicatoria[];
 }
@@ -49,6 +59,44 @@ export default function ListaInvitaciones() {
       key: "numeroInvitacion",
     },
     {
+      title: "Familia",
+      dataIndex: "familia",
+      key: "familia",
+    },
+    {
+      title: "Hosted By",
+      dataIndex: "hostedBy",
+      key: "hostedBy",
+    },
+    {
+      title: "Tipo",
+      dataIndex: "tipo",
+      key: "tipo",
+    },
+    {
+      title: "Save the Date",
+      dataIndex: "saveTheDate",
+      key: "saveTheDate",
+      render: (val: boolean) => (val ? "Sí" : "No"),
+    },
+    {
+      title: "Invitación Enviada",
+      dataIndex: "invitacionEnviada",
+      key: "invitacionEnviada",
+      render: (val: boolean) => (val ? "Sí" : "No"),
+    },
+    {
+      title: "Especial",
+      dataIndex: "especial",
+      key: "especial",
+      render: (val: boolean) => (val ? "Sí" : "No"),
+    },
+    {
+      title: "Tanteo",
+      dataIndex: "tanteo",
+      key: "tanteo",
+    },
+    {
       title: "URL",
       dataIndex: "url",
       key: "url",
@@ -74,6 +122,8 @@ export default function ListaInvitaciones() {
                   ? "No asistirá"
                   : "Sin respuesta"}
               </strong>
+              {inv.principal ? " (Principal)" : ""}
+              {inv.categoria ? ` [${inv.categoria}]` : ""}
             </li>
           ))}
         </ul>
@@ -85,15 +135,18 @@ export default function ListaInvitaciones() {
       key: "dedicatorias",
       render: (dedicatorias: Dedicatoria[]) => (
         <Collapse>
-          {dedicatorias.map((d) => (
-            <Collapse.Panel
-              header={new Date(d.fecha).toLocaleString()}
-              key={d.id}
-            >
-              <p style={{ whiteSpace: "pre-wrap" }}>{d.texto}</p>
-            </Collapse.Panel>
-          ))}
-          {dedicatorias.length === 0 && <p>No hay dedicatorias</p>}
+          {dedicatorias.length > 0 ? (
+            dedicatorias.map((d) => (
+              <Collapse.Panel
+                header={new Date(d.fecha).toLocaleString()}
+                key={d.id}
+              >
+                <p style={{ whiteSpace: "pre-wrap" }}>{d.texto}</p>
+              </Collapse.Panel>
+            ))
+          ) : (
+            <p>No hay dedicatorias</p>
+          )}
         </Collapse>
       ),
     },
@@ -115,6 +168,7 @@ export default function ListaInvitaciones() {
           rowKey="id"
           style={{ marginTop: 20 }}
           pagination={{ pageSize: 5 }}
+          loading={loading}
         />
       )}
     </div>

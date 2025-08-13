@@ -12,12 +12,39 @@ enum Estado {
   INACTIVO
 }
 
+enum CategoriaInvitado {
+  ADULTO
+  NINO
+}
+
 model Invitacion {
-  id             String          @id @default(auto()) @map("_id") @db.ObjectId
-  numero         String          @unique
-  estado         Estado          @default(ACTIVO)
-  invitados      Invitado[]
-  confirmaciones Confirmacion[]
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  numero            String          @unique
+  estado            Estado          @default(ACTIVO)
+
+  // Nuevos campos para tus encabezados
+  hostedBy          String?         // Hosted By
+  tipo              String?         // Tipo
+  familia           String?         // Familia
+  saveTheDate       Boolean?        // Save the Date enviado
+  invitacionEnviada Boolean?        // Invitación enviada
+  especial          Boolean?        // Especial
+  tanteo            Int?            // Tanteo
+
+  invitados         Invitado[]
+  confirmaciones    Confirmacion[]
+}
+
+model Invitado {
+  id                    String       @id @default(auto()) @map("_id") @db.ObjectId
+  nombre                String
+  principal             Boolean?     // Principal
+  categoria             CategoriaInvitado? // Adulto | Niño
+  estado                Estado       @default(ACTIVO)
+  invitacionId          String
+  invitacion            Invitacion?  @relation(fields: [invitacionId], references: [id])
+
+  confirmacionInvitados ConfirmacionInvitado[]
 }
 
 model Confirmacion {
@@ -26,16 +53,6 @@ model Confirmacion {
   createdAt     DateTime     @default(now())
   invitacionId  String
   invitacion    Invitacion?  @relation(fields: [invitacionId], references: [id])
-
-  confirmacionInvitados ConfirmacionInvitado[]
-}
-
-model Invitado {
-  id             String       @id @default(auto()) @map("_id") @db.ObjectId
-  nombre         String
-  estado         Estado       @default(ACTIVO)
-  invitacionId   String
-  invitacion     Invitacion?  @relation(fields: [invitacionId], references: [id])
 
   confirmacionInvitados ConfirmacionInvitado[]
 }
