@@ -18,7 +18,6 @@ import {
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
-const { Step } = Steps;
 
 type Invitado = {
   id: string;
@@ -201,18 +200,41 @@ export default function ConfirmInvitation({
           border: `1px solid #CBB278`,
         }}
         title={
-          <Title
-            level={2}
-            style={{
-              textAlign: "center",
-              margin: "1rem 0 0",
-              wordBreak: "break-word",
-              whiteSpace: "normal",
-              overflowWrap: "break-word",
-            }}
-          >
-            Confirma tu asistencia
-          </Title>
+          <>
+            <Title
+              level={2}
+              style={{
+                textAlign: "center",
+                fontSize: "clamp(1.2rem, 5vw, 2rem)",
+                margin: "1rem 0 0",
+                wordBreak: "break-word", // 🔑 Evita corte forzado de palabras
+                whiteSpace: "normal", // 🔑 Permite saltos de línea
+                overflowWrap: "break-word", // 🔑 Permite ajuste automático
+              }}
+              className="title-decorative"
+            >
+              Confirma tu asistencia
+            </Title>
+            {form && (
+              <Text
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  color: "#c6b687",
+                  fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
+                  wordBreak: "break-word",
+                  whiteSpace: "normal",
+                  margin: "0 auto 0 auto",
+                  lineHeight: 1.5,
+                  fontWeight: 100,
+                }}
+              >
+                Nos encantará contar contigo. Por favor confirma tu asistencia
+                antes del <strong> 17 de octubre</strong> para ayudarnos a
+                preparar todo con cariño.
+              </Text>
+            )}
+          </>
         }
       >
         <Steps
