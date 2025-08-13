@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Card, Col, Row, Typography, Button } from "antd";
 import weddingData from "@/data/weddingData.json";
-import DoubleDownArrowIcon from "./DoubleArrow"; // o donde lo guardes
-import Liverpool from "./Liverpool"; // o donde lo guardes
+import DoubleDownArrowIcon from "./DoubleArrow";
+import Liverpool from "./Liverpool";
 
 const { Title, Text } = Typography;
 
@@ -22,13 +22,7 @@ const GiftTable: React.FC = () => {
   };
 
   return (
-    <section
-      style={{
-        maxWidth: 900,
-        margin: "0 auto",
-        padding: 5,
-      }}
-    >
+    <div style={{ maxWidth: 900, margin: "0 auto" }}>
       <Title
         level={2}
         style={{ textAlign: "center", margin: "1rem 0 0" }}
@@ -54,6 +48,7 @@ const GiftTable: React.FC = () => {
       <Row gutter={[24, 24]} justify="center">
         {options.map((option, index) => {
           const isTransfer = option.type.toLowerCase() === "transferencia";
+          const isLiverpool = option.type.toLowerCase() === "liverpool";
           const showDetails = !isTransfer || visibleDetails === index;
 
           return (
@@ -73,7 +68,7 @@ const GiftTable: React.FC = () => {
                   style={{
                     display: "flex",
                     gap: 16,
-                    alignItems: "center", // Centra la imagen verticalmente
+                    alignItems: "flex-start", // Para que imagen no se mueva al abrir detalles
                   }}
                 >
                   {/* Imagen */}
@@ -89,7 +84,7 @@ const GiftTable: React.FC = () => {
                           width: 80,
                           height: 80,
                           border: "2px solid #CBB278",
-                          borderRadius: "12px", // ← Aquí el cambio
+                          borderRadius: "12px",
                           backgroundColor: "#CBB278",
                           objectFit: "contain",
                         }}
@@ -103,7 +98,7 @@ const GiftTable: React.FC = () => {
                           width: 80,
                           height: 80,
                           border: "2px solid #CBB278",
-                          borderRadius: "12px", // ← Aquí también
+                          borderRadius: "12px",
                           backgroundColor: "#CBB278",
                         }}
                       >
@@ -118,12 +113,48 @@ const GiftTable: React.FC = () => {
                       level={5}
                       style={{
                         marginBottom: 8,
+                        fontSize: "clamp(1rem, 2vw, 1.2rem)",
+                        fontWeight: 100,
                         color: "#7A8B75",
                       }}
                     >
                       {option.type}
                     </Title>
 
+                    {/* Aquí solamente para Liverpool */}
+                    {isLiverpool && option.details.numeroEvento && (
+                      <div
+                        style={{
+                          fontWeight: 500,
+                          fontSize: "clamp(1rem, 2vw, 1.2rem)",
+                          color: "#7A8B75",
+                          marginBottom: 12,
+                          userSelect: "all",
+                          cursor: "pointer",
+                        }}
+                        onClick={() =>
+                          option.details.numeroEvento &&
+                          handleCopy(option.details.numeroEvento)
+                        }
+                        title="Click para copiar número de evento"
+                      >
+                        {option.details.numeroEvento}
+                        {copiedText === option.details.numeroEvento && (
+                          <span
+                            style={{
+                              marginLeft: 8,
+                              color: "#CBB278",
+                              fontWeight: 500,
+                              fontSize: 12,
+                            }}
+                          >
+                            Copiado!
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Botón para mostrar/ocultar detalles - sólo para transferencia */}
                     {isTransfer && (
                       <Button
                         type="link"
@@ -133,14 +164,17 @@ const GiftTable: React.FC = () => {
                           )
                         }
                         style={{
-                          paddingLeft: 0,
-                          color: "#CBB278",
                           fontWeight: 500,
+                          color: "#CBB278",
                           fontSize: 14,
                           marginBottom: 12,
                           display: "flex",
-                          alignItems: "center",
                           justifyContent: "center",
+                          alignItems: "center",
+                          padding: 0,
+                          margin: "0 auto",
+                          width: 28,
+                          height: 28,
                         }}
                         aria-label={
                           showDetails
@@ -150,7 +184,7 @@ const GiftTable: React.FC = () => {
                       >
                         <span
                           style={{
-                            display: "inline-flex",
+                            display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
                             width: 28,
@@ -168,31 +202,47 @@ const GiftTable: React.FC = () => {
                         </span>
                       </Button>
                     )}
+                  </div>
+                </div>
 
-                    {showDetails && (
-                      <ul
-                        style={{
-                          listStyle: "none",
-                          padding: 0,
-                          margin: 0,
-                          fontSize: 14,
-                          lineHeight: 1.6,
-                          color: "#7A8B75",
-                        }}
-                      >
-                        {Object.entries(option.details).map(([key, value]) => {
+                {/* Aquí solamente para Transferencia */}
+                <div
+                  style={{
+                    overflow: "hidden",
+                    maxHeight: showDetails ? 300 : 0,
+                    transition: "max-height 0.3s ease",
+                    width: "100%",
+                    textAlign: "center",
+                  }}
+                >
+                  {showDetails && (
+                    <ul
+                      style={{
+                        listStyle: "none",
+                        padding: 0,
+                        margin: 0,
+                        fontSize: 14,
+                        lineHeight: 1.6,
+                        color: "#7A8B75",
+                      }}
+                    >
+                      {Object.entries(option.details)
+                        // Excluir numeroEvento para Liverpool para no duplicar
+                        .filter(
+                          ([key]) =>
+                            !(
+                              isLiverpool &&
+                              key.toLowerCase() === "numeroevento"
+                            )
+                        )
+                        .map(([key, value]) => {
                           const keyLower = key.toLowerCase();
                           const isCopyable = [
-                            "numeroevento",
                             "beneficiario",
                             "tarjeta",
                             "cuenta",
                             "clabe",
                           ].some((k) => keyLower.includes(k));
-
-                          const isLiverpoolEvent =
-                            option.type.toLowerCase() === "liverpool" &&
-                            keyLower === "numeroevento";
 
                           return (
                             <li
@@ -208,19 +258,19 @@ const GiftTable: React.FC = () => {
                                 isCopyable ? "Click para copiar" : undefined
                               }
                             >
-                              <strong style={{ color: "#CBB278" }}>
-                                {isLiverpoolEvent
-                                  ? value
-                                  : `${key.replace(
-                                      /([A-Z])/g,
-                                      " $1"
-                                    )}: ${value}`}
+                              <strong
+                                style={{
+                                  fontSize: "clamp(1rem, 2vw, 1.2rem)",
+                                  color: "#7A8B75",
+                                }}
+                              >
+                                {`${key.replace(/([A-Z])/g, " $1")}: ${value}`}
                               </strong>
                               {copiedText === value && (
                                 <span
                                   style={{
                                     marginLeft: 8,
-                                    color: "#7A8B75",
+                                    color: "#CBB278",
                                     fontSize: 12,
                                   }}
                                 >
@@ -230,16 +280,15 @@ const GiftTable: React.FC = () => {
                             </li>
                           );
                         })}
-                      </ul>
-                    )}
-                  </div>
+                    </ul>
+                  )}
                 </div>
               </Card>
             </Col>
           );
         })}
       </Row>
-    </section>
+    </div>
   );
 };
 

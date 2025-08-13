@@ -155,7 +155,7 @@ export default function ConfirmInvitation({
 
   if (confirmacionesCount >= 2) {
     return (
-      <Card style={{ maxWidth: 600, margin: "2rem auto" }}>
+      <Card style={{ maxWidth: 600, margin: "0 auto" }}>
         <Alert
           message="Límite alcanzado"
           description="Ya no se puede editar. Se alcanzó el límite de confirmaciones."
@@ -167,7 +167,7 @@ export default function ConfirmInvitation({
   }
 
   return (
-    <div style={{ maxWidth: 700, margin: "3rem auto", padding: 24 }}>
+    <div style={{ maxWidth: 700, margin: "0 auto" }}>
       <Card
         style={{
           borderRadius: 24,
@@ -199,7 +199,9 @@ export default function ConfirmInvitation({
                   display: "block",
                   textAlign: "center",
                   color: "#c6b687",
-                  fontSize: 16,
+                  fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
+                  wordBreak: "break-word",
+                  whiteSpace: "normal",
                   maxWidth: 600,
                   margin: "1rem auto 0 auto",
                   lineHeight: 1.5,

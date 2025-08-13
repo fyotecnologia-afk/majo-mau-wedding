@@ -24,7 +24,7 @@ const ItineraryTimeline: React.FC = () => {
   });
 
   return (
-    <div style={{ maxWidth: 600, margin: "2rem auto", padding: "0 1rem" }}>
+    <div style={{ maxWidth: 600, margin: "auto" }}>
       <Title
         level={2}
         className="title-decorative"
@@ -92,20 +92,28 @@ const ItineraryTimeline: React.FC = () => {
                   margin: "4px 0",
                   fontFamily: "'Meow Script', cursive",
                   fontSize: 24,
+                  color: "#7a8b75",
                 }}
               >
                 {item.title}
               </Title>
               <Text
-                style={{ color: "#555", display: "block" }}
                 className="font-manjari"
+                style={{
+                  color: "#7a8b75",
+                  display: "block",
+                }}
               >
                 {item.location}
               </Text>
               {item.description && (
                 <Text
-                  style={{ color: "#777", display: "block", marginTop: 4 }}
                   className="font-manjari"
+                  style={{
+                    color: "#7a8b75",
+                    display: "block",
+                    marginTop: 4,
+                  }}
                 >
                   {item.description}
                 </Text>

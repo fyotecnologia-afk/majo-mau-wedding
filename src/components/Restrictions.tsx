@@ -10,10 +10,9 @@ const Restrictions: React.FC = () => {
   if (!restrictions.length) return null;
 
   return (
-    <section
+    <div
       style={{
         maxWidth: 900,
-        margin: "0 auto",
         textAlign: "center",
       }}
     >
@@ -32,7 +31,7 @@ const Restrictions: React.FC = () => {
           </React.Fragment>
         ))}
       </div>
-    </section>
+    </div>
   );
 };
 

@@ -148,15 +148,8 @@ const WeddingSchedule: React.FC = () => {
   const data = weddingData as any;
 
   return (
-    <div style={{ padding: "20px" }} className="font-manjari">
-      <Title
-        level={2}
-        className="title-decorative"
-        style={{
-          textAlign: "center",
-          margin: "1rem 0 2rem",
-        }}
-      >
+    <div className="font-manjari">
+      <Title level={2} className="title-decorative">
         ¿Cuándo y dónde?
       </Title>
 

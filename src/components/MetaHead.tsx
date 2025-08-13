@@ -7,7 +7,7 @@ interface MetaHeadProps {
 }
 
 export default function MetaHead({
-  title = "Boda Majo & Mau",
+  title = "Majo & Mau Wedding",
   description = "Nos elegimos una vez… y hoy con más amor, nos elegimos para siempre",
   image = "/preview.webp", // Recomendado PNG/JPG mínimo 1200x630
 }: MetaHeadProps) {
@@ -48,6 +48,7 @@ export default function MetaHead({
       <meta name="theme-color" content="#ffffff" />
       <meta name="mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     </Head>
   );
 }

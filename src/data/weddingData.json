@@ -1,7 +1,10 @@
 {
   "names": "Majo & Mau",
   "date": "2025-11-14T16:30:00",
-  "slides": ["/images/mansory/gallery-12.webp"],
+  "slides": [
+    "/images/mansory/gallery-12.webp",
+    "/images/mansory/gallery-11.webp"
+  ],
   "ceremonies": [
     {
       "title": "Ceremonia Religiosa",
@@ -25,37 +28,34 @@
   "family": {
     "parents": [
       {
-        "names": ["VERONICA RODRÍGUEZ BOCANEGRA", "JOSÉ VICTOR SOLÍS VADILLO"],
-        "role": "Padres de la novia"
+        "names": ["Verónica Rodríguez Bocanegra", "José Víctor Solís Vadillo"],
+        "role": "PADRES DE LA NOVIA"
       },
       {
-        "names": ["ANA LAURA CRUZ HERNÁNDEZ", "CESAR GABRIEL SÁNCHEZ ALFARO"],
-        "role": "Padres del novio"
+        "names": ["Ana Laura Cruz Hernández", "Cesar Gabriel Sánchez Alfaro"],
+        "role": "PADRES DEL NOVIO"
       }
     ],
     "godparents": [
       {
-        "names": [
-          "MIRIAM YOLANDA GONZALEZ HERNANDEZ",
-          "GREGORIO CABRERA BAQUEIRO"
-        ],
-        "role": "Padrinos de velación"
+        "names": ["Miriam Y. González Hernández", "Gregorio Cabrera Baqueiro"],
+        "role": "PADRINOS DE VELACIÓN"
       },
       {
-        "names": ["KENIA GABRIELA SÁNCHEZ CRUZ", "CESAR YAHIR PIÑA RAMIREZ"],
-        "role": "Padrinos de Arras"
+        "names": ["Gloria Rodríguez Bocanegra"],
+        "role": "MADRINA DE ANILLOS"
       },
       {
-        "names": ["GLORIA RODRÍGUEZ BOCANEGRA"],
-        "role": "Madrina de anillos"
+        "names": ["Kenia Gabriela Sánchez Cruz", "Cesar Yahir Piña Ramírez"],
+        "role": "PADRINOS DE ARRAS"
       },
       {
-        "names": ["ELIZABETH ALEXANDRES RODRÍGUEZ", "ANA LAURA SÁNCHEZ CRUZ"],
-        "role": "Padrinos de Lazo"
+        "names": ["Ana Laura Sánchez Cruz", "Elizabeth Alexandres Rodríguez"],
+        "role": "MADRINAS DE LAZO"
       },
       {
-        "names": ["ASHANTY SOLÍS NARVAEZ", "JORGE LEÓN DELFÍN"],
-        "role": "Padrinos de Biblia y Rosario"
+        "names": ["Ashanty Solís Narvaez", "Jorge León Delfín"],
+        "role": "PADRINOS DE BIBLIA & ROSARIO"
       }
     ]
   },
@@ -68,7 +68,7 @@
       "image": "/images/hotels/Aloft.webp"
     },
     {
-      "name": "Ramada Encore Guadalajara Sur",
+      "name": "Ramada Encore GDL Sur",
       "address": "1710 Lopez Mateos Sur Ave, 45645 Jal.",
       "phone": "",
       "mapsLink": "https://maps.app.goo.gl/7GXVfwRL5JtirUJ69",
@@ -162,22 +162,22 @@
       {
         "type": "Transferencia",
         "details": {
-          "beneficiario": "GABRIEL MAURICIO SÁNCHEZ CRUZ",
-          "banco": "SANTANDER",
-          "tarjeta": "5579 0990 1588 9027",
-          "cuenta": "20010519965",
-          "clabe": "014052200105199650"
+          "Beneficiario": "GABRIEL MAURICIO SÁNCHEZ CRUZ",
+          "Banco": "SANTANDER",
+          "Tarjeta": "5579 0990 1588 9027",
+          "Cuenta": "20010519965",
+          "Clabe": "014052200105199650"
         }
       }
     ]
   },
   "dressCode": {
     "image": "/images/dress-code.webp",
-    "description": "Para esta ocasión tan especial, sugerimos un atuendo formal elegante: vestidos largos y sofisticados para ellas, y traje oscuro con corbata para ellos. Queremos que se sientan cómodos y glamurosos."
+    "description": "Para esta ocasión tan especial, sugerimos un atuendo formal elegante: vestidos largos para ellas y traje oscuro para ellos. Queremos que se sientan cómodos."
   },
   "restrictions": {
     "restriction": ["Evento para adultos", "Pases personales"]
   },
-  "parallaxQuote": "\"Nos elegimos una vez… y hoy con más amor, nos elegimos para siempre\"",
+  "frase": "“Nos elegimos una vez… y hoy con más amor, nos elegimos para siempre.”",
   "form": "Nos encantará contar contigo. Por favor confirma tu asistencia antes del 17 de octubre para ayudarnos a preparar todo con cariño."
 }

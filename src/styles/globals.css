@@ -1,8 +1,16 @@
 /* styles/globals.css */
+@import "animate.css/animate.min.css";
+
 :root {
-  --font-meow: "Meow Script", cursive;
+  --font-meow: "Meow Script";
   --font-manjari: "Manjari", sans-serif;
 }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Esto hace que el padding no aumente el tamaño del elemento */
+}
+
 html,
 body,
 main {
@@ -12,11 +20,25 @@ main {
 }
 
 .title-decorative {
-  font-family: var(--font-meow), cursive;
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  margin: 1rem 0px 1rem;
-  font-weight: 400;
-  color: #7a8b75;
+  font-family: var(--font-meow) !important;
+  font-weight: 200 !important;
+  color: rgb(122, 139, 117) !important;
+  font-size: clamp(2.4rem, 4vw, 4rem) !important;
+  margin: 1rem 0px 1rem !important;
+  text-align: center !important;
+}
+
+.text-responsive {
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+}
+
+.title-spinner {
+  font-family: var(--font-meow) !important;
+  font-weight: 200 !important;
+  color: #cbb278 !important;
+  font-size: 2.4rem !important;
+  margin: 1rem 0px 1rem !important;
+  text-align: center !important;
 }
 
 h1,

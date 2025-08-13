@@ -21,6 +21,7 @@ import Gifts from "../components/Gifts";
 import DressCode from "../components/DressCode";
 import Restrictions from "../components/Restrictions";
 import Slider2 from "../components/Slider2";
+import ImagenFinal from "../components/ImagenFinal";
 
 // Tipado
 type DataResponse = {
@@ -53,18 +54,18 @@ export default function ConfirmacionPage() {
 
   return (
     <main style={{ position: "relative", overflow: "hidden" }}>
-      <div style={{ position: "relative" }}>
+      <MusicPlayer src="/music/cancion.mp3" />
+      <div style={{ position: "relative", minHeight: "100vh" }}>
         <Welcome />
       </div>
 
-      <MusicPlayer src="/music/cancion.mp3" />
       <TrailAnimation />
 
       <div style={{ position: "relative" }}>
         <Masonry />
       </div>
 
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <WeddingEvents />
       </div>
 
@@ -72,11 +73,11 @@ export default function ConfirmacionPage() {
         <BackgroundSlider />
       </div>
 
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <FamilySection />
       </div>
 
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <Itinerary />
       </div>
 
@@ -84,15 +85,15 @@ export default function ConfirmacionPage() {
         <Viewpages />
       </div>
 
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <HotelSuggestions />
       </div>
 
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <Makeup />
       </div>
 
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <RentCars />
       </div>
 
@@ -100,20 +101,26 @@ export default function ConfirmacionPage() {
         <Slider2 />
       </div>
 
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <DressCode />
       </div>
 
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <Restrictions />
       </div>
 
-      <div style={{ position: "relative" }}>
+      <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <Gifts />
       </div>
 
+      <div style={{ position: "relative", padding: "0 20px 20px" }}>
+        <ImagenFinal />
+      </div>
+
       {data.confirmaciones! < 2 && (
-        <div style={{ position: "relative", zIndex: 2, marginTop: "2rem" }}>
+        <div
+          style={{ position: "relative", zIndex: 2, padding: "0 20px 20px" }}
+        >
           <Formulario numero={numero} />
         </div>
       )}

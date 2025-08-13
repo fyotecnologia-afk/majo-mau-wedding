@@ -33,7 +33,7 @@ const FamilySection: React.FC = () => {
         >
           <Title
             level={4}
-            style={{ marginBottom: 4, color: "#7a8b75" }}
+            style={{ marginBottom: 4, color: "#7a8b75", fontSize: "1rem" }}
             className="font-manjari"
           >
             {person.names.map((name, i) => (
@@ -52,7 +52,7 @@ const FamilySection: React.FC = () => {
     ));
 
   return (
-    <div style={{ padding: "1rem 1rem" }}>
+    <div>
       <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
         <Title
           level={2}

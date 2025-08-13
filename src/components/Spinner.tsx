@@ -55,6 +55,7 @@ export default function Spinner() {
           fontSize: "1.2rem",
           color: "#CBB278",
         }}
+        className="title-spinner"
       >
         Cargando invitación…
       </p>

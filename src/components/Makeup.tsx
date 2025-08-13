@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Button, Row, Col, Typography } from "antd";
 import weddingData from "@/data/weddingData.json";
 
-const { Text } = Typography;
+const { Title, Text } = Typography;
 
 interface MakeupArtistSimple {
   avatar: string;
@@ -104,7 +104,17 @@ const MakeupListSimple: React.FC = () => {
   const artists: MakeupArtistSimple[] = weddingData.makeup;
 
   return (
-    <div style={{ padding: 20 }}>
+    <div>
+      <Title
+        className="title-decorative"
+        level={2}
+        style={{
+          textAlign: "center",
+          margin: "1rem 0 0",
+        }}
+      >
+        Maquillaje y peinado
+      </Title>
       <Row gutter={[16, 16]}>
         {artists.map((artist, idx) => (
           <Col xs={24} sm={24} md={12} key={idx}>

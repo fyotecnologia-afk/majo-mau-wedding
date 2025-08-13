@@ -8,14 +8,10 @@ const DressCode: React.FC = () => {
   const { dressCode } = weddingData;
 
   return (
-    <section
+    <div
       style={{
-        maxWidth: 900,
         margin: "0 auto",
-        padding: 24,
         textAlign: "center",
-        color: "#7A8B75",
-        fontFamily: "'Playfair Display', serif",
         position: "relative",
         overflow: "hidden",
       }}
@@ -50,8 +46,7 @@ const DressCode: React.FC = () => {
       {/* Descripción */}
       <Paragraph
         style={{
-          fontSize: 18,
-          lineHeight: 1.6,
+          fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
           maxWidth: 700,
           margin: "0 auto",
           color: "#7A8B75",
@@ -61,7 +56,7 @@ const DressCode: React.FC = () => {
       >
         {dressCode.description}
       </Paragraph>
-    </section>
+    </div>
   );
 };
 

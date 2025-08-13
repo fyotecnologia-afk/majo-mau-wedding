@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Card, Col, Row, Typography, Button } from "antd";
-import { CarOutlined, LinkOutlined } from "@ant-design/icons";
 import weddingData from "@/data/weddingData.json";
 
 const { Title } = Typography;
@@ -18,7 +17,7 @@ const RentCarsList: React.FC = () => {
   const options: RentCarOption[] = weddingData.rent_cars;
 
   return (
-    <div style={{ padding: 20 }}>
+    <div>
       <Title
         className="title-decorative"
         level={2}
@@ -62,31 +61,38 @@ const RentCarsList: React.FC = () => {
                   />
                 )}
 
-                <div style={{ flex: 1, textAlign: "left" }}>
+                <div
+                  style={{
+                    flex: 1,
+                    textAlign: "center", // <-- aquí cambié de left a center
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <Title
                     level={4}
                     style={{
                       margin: 0,
                       color: "#7a8b75",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
+                      display: "block", // ya no flex para texto solo
                     }}
                   >
                     {option.name}
                   </Title>
-                  <Title
-                    level={5}
-                    style={{
-                      margin: 0,
-                      color: "#7a8b75",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 8,
-                    }}
-                  >
-                    {option.text}
-                  </Title>
+                  {option.text && (
+                    <Title
+                      level={5}
+                      style={{
+                        margin: 0,
+                        color: "#7a8b75",
+                        display: "block",
+                      }}
+                    >
+                      {option.text}
+                    </Title>
+                  )}
                   <Button
                     type="link"
                     href={`https://${option.link}`}

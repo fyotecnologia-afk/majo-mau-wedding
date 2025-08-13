@@ -26,27 +26,27 @@ const mapsButtonStyle: React.CSSProperties = {
   textTransform: "uppercase",
   fontSize: "10px",
   gap: "8px",
-  height: "40px",
+  height: "30px",
 };
 
 const mapsIconWrapper: React.CSSProperties = {
   backgroundColor: "#fff",
   borderRadius: "50%",
-  padding: "10px",
+  padding: "6px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   color: "#d6b77b",
   marginRight: "8px",
   marginLeft: "0px",
-  fontSize: "20px", // tamaño del icono dentro
+  fontSize: "1rem", // tamaño del icono dentro
 };
 
 const HotelSuggestions: React.FC = () => {
   const hotels: Hotel[] = weddingData.hotels;
 
   return (
-    <div style={{ padding: 20 }}>
+    <div>
       <Title
         className="title-decorative"
         level={2}
@@ -59,7 +59,13 @@ const HotelSuggestions: React.FC = () => {
       </Title>
       <Row gutter={[16, 16]} justify="center">
         {hotels.map((hotel, idx) => (
-          <Col xs={24} sm={12} md={8} key={idx} style={{ display: "flex" }}>
+          <Col
+            xs={24}
+            sm={12}
+            md={8}
+            key={idx}
+            style={{ display: "flex", padding: "0px 30px 0px" }}
+          >
             <Card
               hoverable
               style={{
@@ -81,6 +87,7 @@ const HotelSuggestions: React.FC = () => {
                       margin: "16px 0 8px",
                       color: "#7a8b75",
                       fontFamily: "'Manjari', sans-serif",
+                      fontSize: "1.3rem",
                     }}
                   >
                     {hotel.name}
@@ -89,7 +96,7 @@ const HotelSuggestions: React.FC = () => {
                     alt={hotel.name}
                     src={hotel.image}
                     style={{
-                      width: "80%", // ancho más pequeño que el 100%
+                      width: "70%", // ancho más pequeño que el 100%
                       height: 180,
                       objectFit: "cover",
                       display: "block",
@@ -134,7 +141,7 @@ const HotelSuggestions: React.FC = () => {
                   <span style={mapsIconWrapper}>
                     <LocationPinIcon size={20} />
                   </span>
-                  <span style={{ lineHeight: "1.1" }}>
+                  <span style={{ lineHeight: "1.1", fontSize: ".5rem" }}>
                     VER EN
                     <br />
                     GOOGLE MAPS

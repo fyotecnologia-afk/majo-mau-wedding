@@ -1,81 +1,78 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
 import weddingData from "@/data/weddingData.json";
 import styles from "../styles/Welcome.module.css";
 
 const Welcome: React.FC = () => {
   const { names, date, slides } = weddingData;
 
-  // Fecha en formato DD.MM.YYYY
+  const mesesAbreviados = [
+    "ENE",
+    "FEB",
+    "MAR",
+    "ABR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AGO",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DIC",
+  ];
+
   const eventDate = new Date(date);
-  const formattedDate = `${String(eventDate.getDate()).padStart(
-    2,
-    "0"
-  )}.${String(eventDate.getMonth() + 1).padStart(
-    2,
-    "0"
-  )}.${eventDate.getFullYear()}`;
+  const dia = String(eventDate.getDate()).padStart(2, "0");
+  const mes = mesesAbreviados[eventDate.getMonth()];
+  const año = eventDate.getFullYear();
 
-  // Countdown
-  const calculateTimeLeft = () => {
-    const difference = +new Date(date) - +new Date();
-    if (difference <= 0) return ["00", "00", "00", "00"];
+  const formattedDate = `${dia}.${mes}.${año}`;
 
-    const days = String(
-      Math.floor(difference / (1000 * 60 * 60 * 24))
-    ).padStart(2, "0");
-    const hours = String(
-      Math.floor((difference / (1000 * 60 * 60)) % 24)
-    ).padStart(2, "0");
-    const minutes = String(Math.floor((difference / 1000 / 60) % 60)).padStart(
-      2,
-      "0"
-    );
-    const seconds = String(Math.floor((difference / 1000) % 60)).padStart(
-      2,
-      "0"
-    );
-
-    return [days, hours, minutes, seconds];
-  };
-
-  const [timeLeft, setTimeLeft] = useState<string[]>(calculateTimeLeft());
+  // Refs para los elementos que quieres animar
+  const headerRef = useRef<HTMLDivElement>(null);
+  const subtitleRef = useRef<HTMLHeadingElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const dateRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+    const tl = gsap.timeline({
+      defaults: { ease: "power3.out", duration: 0.8 },
+    });
 
-  const labels = ["Días", "Horas", "Min", "Seg"];
+    if (
+      headerRef.current &&
+      subtitleRef.current &&
+      imageRef.current &&
+      dateRef.current
+    ) {
+      tl.from(headerRef.current, { opacity: 0, y: 20 })
+        .from(subtitleRef.current, { opacity: 0, y: 20 }, "-=0.5")
+        .from(imageRef.current, { opacity: 0, scale: 1 }, "-=0.4")
+        .from(dateRef.current, { opacity: 0, y: 20 }, "-=0.4");
+    }
+  }, []);
 
   return (
     <div className={styles.container}>
       {/* Nombres */}
-      <div className={styles.header}>
+      <div ref={headerRef} className={styles.header}>
         <h1 className={styles.names}>{names}</h1>
-        <h2 className={styles.subtitle}>Wedding</h2>
+        <h2 ref={subtitleRef} className={styles.subtitle}>
+          WEDDING
+        </h2>
       </div>
 
       {/* Imagen */}
-      <div className={styles.imageWrapper}>
+      <div ref={imageRef} className={styles.imageWrapper}>
         <img src={slides[0]} alt="Wedding" className={styles.image} />
       </div>
 
       {/* Fecha */}
-      <p className={styles.date}>{formattedDate}</p>
-
-      {/* Contador */}
-      <div className={styles.timer}>
-        {timeLeft.map((num, i) => (
-          <div key={i} className={styles.timeBlock}>
-            <div className={styles.number}>{num}</div>
-            <div className={styles.label}>{labels[i]}</div>
-          </div>
-        ))}
-      </div>
+      <p ref={dateRef} className={styles.date}>
+        {formattedDate}
+      </p>
     </div>
   );
 };
