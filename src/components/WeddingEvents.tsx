@@ -22,29 +22,65 @@ const mapsButtonStyle: React.CSSProperties = {
   backgroundColor: "#d6b77b", // dorado
   color: "#fff",
   border: "none",
-  borderRadius: "25px 6px 6px 25px", // izquierda redondeada, derecha ligera
+  borderRadius: "25px 6px 6px 25px",
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "flex-start",
-  padding: "0 20px 0 0", // más espacio a la derecha que a la izquierda
+  padding: "0 20px 0 0",
   textTransform: "uppercase",
   fontSize: "10px",
   gap: "8px",
-  height: "40px",
+  height: "30px",
 };
 
 const mapsIconWrapper: React.CSSProperties = {
   backgroundColor: "#fff",
   borderRadius: "50%",
-  padding: "10px",
+  padding: "5px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   color: "#d6b77b",
   marginRight: "8px",
-  marginLeft: "0px",
-  fontSize: "20px", // tamaño del icono dentro
+  fontSize: "1rem",
 };
+
+// Función para formatear la fecha en formato largo en español
+function capitalizeFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function formatLongDate(dateString: string) {
+  const date = new Date(dateString);
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  };
+
+  let formattedDate = new Intl.DateTimeFormat("es-ES", dateOptions).format(
+    date
+  );
+  formattedDate = formattedDate.replace(",", "");
+  formattedDate = capitalizeFirstLetter(formattedDate);
+
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+
+  const ampm = hours >= 12 ? "p.m." : "a.m.";
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+
+  const minutesStr = minutes.toString().padStart(2, "0");
+  const timeStr = `${hours}:${minutesStr} ${ampm}`;
+
+  return (
+    <>
+      {formattedDate} del {date.getFullYear()} a las <strong>{timeStr}</strong>
+    </>
+  );
+}
 
 const CeremonyCard: React.FC<{ ceremony: any }> = ({ ceremony }) => (
   <Card hoverable style={cardStyle}>
@@ -67,7 +103,7 @@ const CeremonyCard: React.FC<{ ceremony: any }> = ({ ceremony }) => (
       style={{ display: "block", textAlign: "center", marginBottom: 0 }}
       className="font-manjari"
     >
-      {ceremony.date}
+      {formatLongDate(ceremony.date)}
     </Text>
     <Text
       style={{ display: "block", textAlign: "center", marginBottom: 12 }}
@@ -85,7 +121,7 @@ const CeremonyCard: React.FC<{ ceremony: any }> = ({ ceremony }) => (
         <span style={mapsIconWrapper}>
           <LocationPinIcon size={20} />
         </span>
-        <span style={{ lineHeight: "1.1" }}>
+        <span style={{ lineHeight: "1.1", fontSize: ".5rem" }}>
           VER EN
           <br />
           GOOGLE MAPS
@@ -116,7 +152,7 @@ const ReceptionCard: React.FC<{ reception: any }> = ({ reception }) => (
       style={{ display: "block", textAlign: "center", marginBottom: 0 }}
       className="font-manjari"
     >
-      {reception.date}
+      {formatLongDate(reception.date)}
     </Text>
     <Text
       style={{ display: "block", textAlign: "center", marginBottom: 12 }}
@@ -134,7 +170,7 @@ const ReceptionCard: React.FC<{ reception: any }> = ({ reception }) => (
         <span style={mapsIconWrapper}>
           <LocationPinIcon size={20} />
         </span>
-        <span style={{ lineHeight: "1.1" }}>
+        <span style={{ lineHeight: "1.1", fontSize: ".5rem" }}>
           VER EN
           <br />
           GOOGLE MAPS

@@ -81,6 +81,7 @@ const ItineraryTimeline: React.FC = () => {
                 style={{
                   fontWeight: "bold",
                   fontSize: 14,
+                  color: "#7a8b75",
                 }}
                 className="font-manjari"
               >

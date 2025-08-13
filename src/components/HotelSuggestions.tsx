@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Col, Row, Typography, Button } from "antd";
-import { EnvironmentOutlined, PhoneOutlined } from "@ant-design/icons";
+import { EnvironmentOutlined } from "@ant-design/icons";
 import weddingData from "@/data/weddingData.json";
 import LocationPinIcon from "./LocationPin";
 
@@ -9,7 +9,6 @@ const { Title, Text } = Typography;
 interface Hotel {
   name: string;
   address: string;
-  phone?: string;
   mapsLink: string;
   image: string;
 }
@@ -18,11 +17,11 @@ const mapsButtonStyle: React.CSSProperties = {
   backgroundColor: "#d6b77b", // dorado
   color: "#fff",
   border: "none",
-  borderRadius: "25px 6px 6px 25px", // izquierda redondeada, derecha ligera
+  borderRadius: "25px 6px 6px 25px",
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "flex-start",
-  padding: "0 20px 0 0", // más espacio a la derecha que a la izquierda
+  padding: "0 20px 0 0",
   textTransform: "uppercase",
   fontSize: "10px",
   gap: "8px",
@@ -32,14 +31,13 @@ const mapsButtonStyle: React.CSSProperties = {
 const mapsIconWrapper: React.CSSProperties = {
   backgroundColor: "#fff",
   borderRadius: "50%",
-  padding: "6px",
+  padding: "5px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   color: "#d6b77b",
   marginRight: "8px",
-  marginLeft: "0px",
-  fontSize: "1rem", // tamaño del icono dentro
+  fontSize: "1rem",
 };
 
 const HotelSuggestions: React.FC = () => {
@@ -76,62 +74,82 @@ const HotelSuggestions: React.FC = () => {
                 borderRadius: 12,
                 textAlign: "center",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                // Para que el Card ocupe toda la altura disponible en el Col:
+                height: "100%",
               }}
-              cover={
-                <div
-                  style={{ borderRadius: "12px 12px 0 0", overflow: "hidden" }}
-                >
-                  <Title
-                    level={4}
-                    style={{
-                      margin: "16px 0 8px",
-                      color: "#7a8b75",
-                      fontFamily: "'Manjari', sans-serif",
-                      fontSize: "1.3rem",
-                    }}
-                  >
-                    {hotel.name}
-                  </Title>
-                  <img
-                    alt={hotel.name}
-                    src={hotel.image}
-                    style={{
-                      width: "70%", // ancho más pequeño que el 100%
-                      height: 180,
-                      objectFit: "cover",
-                      display: "block",
-                      margin: "0 auto", // centrado horizontal
-                    }}
-                  />
-                </div>
-              }
             >
-              <div style={{ flex: 1 }}>
-                <Text
+              {/* Header: título con altura fija */}
+              <div
+                style={{
+                  minHeight: 60, // ajusta según necesidad para que nombre alto quede igual
+                  marginBottom: 8,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "0 10px",
+                  overflow: "hidden",
+                }}
+              >
+                <Title
+                  level={4}
                   style={{
-                    display: "block",
-                    marginBottom: 8,
                     color: "#7a8b75",
                     fontFamily: "'Manjari', sans-serif",
+                    fontSize: "1.3rem",
+                    margin: 0,
+                    whiteSpace: "normal",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {hotel.name}
+                </Title>
+              </div>
+
+              {/* Contenido: imagen + dirección */}
+              <div
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: "0 10px",
+                  overflow: "hidden",
+                }}
+              >
+                <img
+                  alt={hotel.name}
+                  src={hotel.image}
+                  style={{
+                    width: "70%",
+                    height: 180,
+                    objectFit: "cover",
+                    display: "block",
+                    marginBottom: 12,
+                    borderRadius: 8,
+                  }}
+                />
+                <Text
+                  style={{
+                    color: "#7a8b75",
+                    fontFamily: "'Manjari', sans-serif",
+                    textAlign: "center",
+                    whiteSpace: "normal",
+                    wordBreak: "break-word",
+                    fontSize: "0.9rem",
                   }}
                 >
                   <EnvironmentOutlined /> {hotel.address}
                 </Text>
-                {hotel.phone && hotel.phone.trim() !== "" && (
-                  <Text
-                    style={{
-                      display: "block",
-                      marginBottom: 8,
-                      color: "#7a8b75",
-                      fontFamily: "'Manjari', sans-serif",
-                    }}
-                  >
-                    <PhoneOutlined /> {hotel.phone}
-                  </Text>
-                )}
               </div>
 
-              <div style={{ textAlign: "center" }}>
+              {/* Footer: botón al fondo */}
+              <div
+                style={{
+                  marginTop: "auto", // empuja al botón hacia el fondo
+                  textAlign: "center",
+                  padding: "12px 0 0",
+                }}
+              >
                 <Button
                   href={hotel.mapsLink}
                   target="_blank"

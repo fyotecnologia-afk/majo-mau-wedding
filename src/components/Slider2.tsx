@@ -7,7 +7,6 @@ const ViewpagerSimple: React.FC = () => {
     <div
       style={{
         width: "100%",
-        maxWidth: 1260,
         margin: "0 auto",
         overflow: "hidden",
       }}

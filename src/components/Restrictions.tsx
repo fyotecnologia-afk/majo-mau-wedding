@@ -12,21 +12,35 @@ const Restrictions: React.FC = () => {
   return (
     <div
       style={{
-        maxWidth: 900,
+        maxWidth: "900px",
+        margin: "-20px auto",
         textAlign: "center",
       }}
     >
-      <div style={{}}>
+      <div>
         {restrictions.map((item, index) => (
           <React.Fragment key={index}>
             <Text
-              style={{ fontSize: 15, lineHeight: 1.6, margin: "0 2px" }}
+              style={{
+                fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
+                lineHeight: 1.6,
+                margin: "1rem 0 0",
+              }}
               className="font-manjari"
             >
               {item}
             </Text>
             {index !== restrictions.length - 1 && (
-              <Text className="font-manjari">|</Text>
+              <Text
+                style={{
+                  fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
+                  lineHeight: 1.6,
+                  margin: "0px 2px 0px",
+                }}
+                className="font-manjari"
+              >
+                |
+              </Text>
             )}
           </React.Fragment>
         ))}
