@@ -22,7 +22,7 @@ interface InvitacionData {
   id: string;
   numeroInvitacion: string;
   url: string;
-  hostedBy: string | null;  // <-- acepta null explícitamente
+  hostedBy: string | null;
   tipo: string | null;
   familia: string | null;
   saveTheDate: boolean | null;
@@ -32,7 +32,6 @@ interface InvitacionData {
   invitados: Invitado[];
   dedicatorias: Dedicatoria[];
 }
-
 
 export default async function handler(
   req: NextApiRequest,
@@ -54,9 +53,7 @@ export default async function handler(
         invitados: {
           where: { estado: "ACTIVO" },
           include: {
-            confirmacionInvitados: {
-              include: { confirmacion: true },
-            },
+            confirmacionInvitados: true,
           },
         },
         confirmaciones: true,
@@ -70,13 +67,16 @@ export default async function handler(
       const url = `${baseUrl}/${encodeURIComponent(codigo)}`;
 
       const invitados: Invitado[] = inv.invitados.map((invitado) => {
+        // Tomamos la primera confirmación si existe
         const confirmacionInv = invitado.confirmacionInvitados[0];
+
         return {
           id: invitado.id,
           nombre: invitado.nombre,
           respuesta: confirmacionInv ? confirmacionInv.respuesta : null,
-          principal: invitado.principal,
-          categoria: invitado.categoria,
+          // Convertimos null a undefined para coincidir con el tipo
+          principal: invitado.principal ?? undefined,
+          categoria: invitado.categoria ?? undefined,
           estado: invitado.estado,
         };
       });
