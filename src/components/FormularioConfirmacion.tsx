@@ -242,9 +242,21 @@ export default function ConfirmInvitation({
           size="small"
           style={{ marginBottom: 24 }}
           items={[
-            { title: "Buscar", icon: <MailOutlined /> },
-            { title: "Seleccionar", icon: <UserOutlined /> },
-            { title: "Confirmado", icon: <CheckCircleOutlined /> },
+            {
+              title: "Buscar",
+              icon: <MailOutlined />,
+              className: "font-manjari",
+            },
+            {
+              title: "Seleccionar",
+              icon: <UserOutlined />,
+              className: "font-manjari",
+            },
+            {
+              title: "Confirmado",
+              icon: <CheckCircleOutlined />,
+              className: "font-manjari",
+            },
           ]}
         />
 
@@ -259,10 +271,16 @@ export default function ConfirmInvitation({
                   message: "Por favor ingresa tu número de invitación",
                 },
               ]}
+              className="font-manjari"
             >
               <Input
-                placeholder="Ej. 1234"
-                style={{ borderRadius: 8, padding: 12 }}
+                placeholder="Comienza por MM"
+                className="font-manjari"
+                style={{
+                  borderRadius: 8,
+                  padding: 12,
+                  color: "#000000",
+                }}
               />
             </Form.Item>
             <Form.Item>
@@ -286,6 +304,7 @@ export default function ConfirmInvitation({
                 type={mensaje.tipo}
                 showIcon
                 style={{ marginTop: 5 }}
+                className="font-manjari"
               />
             )}
           </Form>
@@ -299,6 +318,7 @@ export default function ConfirmInvitation({
               type="info"
               showIcon
               style={{ marginBottom: 5 }}
+              className="font-manjari"
             />
 
             <Form form={form} layout="vertical" onFinish={enviarConfirmacion}>
@@ -307,18 +327,27 @@ export default function ConfirmInvitation({
                   style={{ width: "100%" }}
                   value={seleccionados}
                   onChange={setSeleccionados}
+                  className="font-manjari"
                 >
                   <Space direction="vertical" style={{ width: "100%" }}>
                     {invitados.map(({ id, nombre, respuesta }) => (
                       <Checkbox key={id} value={id}>
                         <span style={{ fontWeight: 500 }}>{nombre}</span>
                         {respuesta === "SI" && (
-                          <Text type="success" style={{ marginLeft: 8 }}>
+                          <Text
+                            type="success"
+                            style={{ marginLeft: 8 }}
+                            className="font-manjari"
+                          >
                             (Confirmado)
                           </Text>
                         )}
                         {respuesta === "NO" && (
-                          <Text type="danger" style={{ marginLeft: 8 }}>
+                          <Text
+                            type="danger"
+                            style={{ marginLeft: 8 }}
+                            className="font-manjari"
+                          >
                             (No asistirá)
                           </Text>
                         )}
@@ -328,11 +357,16 @@ export default function ConfirmInvitation({
                 </Checkbox.Group>
               </Form.Item>
 
-              <Form.Item label="Dedicatoria (opcional)" name="dedicatoria">
+              <Form.Item
+                label="Dedicatoria (opcional)"
+                name="dedicatoria"
+                className="font-manjari"
+              >
                 <TextArea
                   rows={4}
                   placeholder="Escribe unas palabras para nosotros..."
-                  style={{ borderRadius: 8 }}
+                  className="font-manjari"
+                  style={{ borderRadius: 8, color: "#000000ff" }}
                 />
               </Form.Item>
 
@@ -342,6 +376,7 @@ export default function ConfirmInvitation({
                   type={mensaje.tipo}
                   showIcon
                   style={{ marginBottom: 5 }}
+                  className="font-manjari"
                 />
               )}
 
@@ -388,10 +423,14 @@ export default function ConfirmInvitation({
             <CheckCircleOutlined
               style={{ fontSize: 64, color: "#52c41a", marginBottom: 16 }}
             />
-            <Title level={4} style={{ color: "#c6b687" }}>
+            <Title
+              level={4}
+              style={{ color: "#c6b687" }}
+              className="font-manjari"
+            >
               ¡Gracias por confirmar!
             </Title>
-            <Text style={{ color: "#c6b687" }}>
+            <Text style={{ color: "#c6b687" }} className="font-manjari">
               Estamos felices de contar contigo en este evento tan especial.
             </Text>
             <Button
