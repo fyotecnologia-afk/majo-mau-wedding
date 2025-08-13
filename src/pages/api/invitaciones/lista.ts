@@ -22,16 +22,17 @@ interface InvitacionData {
   id: string;
   numeroInvitacion: string;
   url: string;
-  hostedBy?: string;
-  tipo?: string;
-  familia?: string;
-  saveTheDate?: boolean;
-  invitacionEnviada?: boolean;
-  especial?: boolean;
-  tanteo?: number;
+  hostedBy: string | null;  // <-- acepta null explícitamente
+  tipo: string | null;
+  familia: string | null;
+  saveTheDate: boolean | null;
+  invitacionEnviada: boolean | null;
+  especial: boolean | null;
+  tanteo: number | null;
   invitados: Invitado[];
   dedicatorias: Dedicatoria[];
 }
+
 
 export default async function handler(
   req: NextApiRequest,
