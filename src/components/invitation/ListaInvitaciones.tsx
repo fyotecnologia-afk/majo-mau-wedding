@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Table, Typography, Collapse } from "antd";
+import { Button, Table, Typography, message, Space } from "antd";
+import { CopyOutlined } from "@ant-design/icons";
 
 type Respuesta = "SI" | "NO" | null;
 
@@ -11,7 +12,6 @@ interface Invitado {
   respuesta: Respuesta;
   principal?: boolean;
   categoria?: string;
-  estado?: string;
 }
 
 interface Dedicatoria {
@@ -24,13 +24,7 @@ interface InvitacionData {
   id: string;
   numeroInvitacion: string;
   url: string;
-  hostedBy?: string;
-  tipo?: string;
   familia?: string;
-  saveTheDate?: boolean;
-  invitacionEnviada?: boolean;
-  especial?: boolean;
-  tanteo?: number;
   invitados: Invitado[];
   dedicatorias: Dedicatoria[];
 }
@@ -52,11 +46,22 @@ export default function ListaInvitaciones() {
     setLoading(false);
   };
 
+  const copiarAlPortapapeles = async (url: string) => {
+    const textoCompleto = `Estamos muy emocionados por recibirlos en esta celebración tan importante\n${url}`;
+    try {
+      await navigator.clipboard.writeText(textoCompleto);
+      message.success("Texto copiado al portapapeles");
+    } catch {
+      message.error("No se pudo copiar el texto");
+    }
+  };
+
   const columnas = [
     {
       title: "Número Invitación",
       dataIndex: "numeroInvitacion",
       key: "numeroInvitacion",
+      fixed: "left" as const,
     },
     {
       title: "Familia",
@@ -64,46 +69,35 @@ export default function ListaInvitaciones() {
       key: "familia",
     },
     {
-      title: "Hosted By",
-      dataIndex: "hostedBy",
-      key: "hostedBy",
-    },
-    {
-      title: "Tipo",
-      dataIndex: "tipo",
-      key: "tipo",
-    },
-    {
-      title: "Save the Date",
-      dataIndex: "saveTheDate",
-      key: "saveTheDate",
-      render: (val: boolean) => (val ? "Sí" : "No"),
-    },
-    {
-      title: "Invitación Enviada",
-      dataIndex: "invitacionEnviada",
-      key: "invitacionEnviada",
-      render: (val: boolean) => (val ? "Sí" : "No"),
-    },
-    {
-      title: "Especial",
-      dataIndex: "especial",
-      key: "especial",
-      render: (val: boolean) => (val ? "Sí" : "No"),
-    },
-    {
-      title: "Tanteo",
-      dataIndex: "tanteo",
-      key: "tanteo",
-    },
-    {
       title: "URL",
       dataIndex: "url",
       key: "url",
       render: (url: string) => (
-        <a href={url} target="_blank" rel="noopener noreferrer">
-          {url}
-        </a>
+        <Space direction="vertical" size={4} style={{ maxWidth: 200 }}>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-block",
+              maxWidth: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+              verticalAlign: "bottom",
+            }}
+            title={url}
+          >
+            {url}
+          </a>
+          <Button
+            icon={<CopyOutlined />}
+            size="small"
+            onClick={() => copiarAlPortapapeles(url)}
+          >
+            Copiar
+          </Button>
+        </Space>
       ),
     },
     {
@@ -133,42 +127,51 @@ export default function ListaInvitaciones() {
       title: "Dedicatorias",
       dataIndex: "dedicatorias",
       key: "dedicatorias",
-      render: (dedicatorias: Dedicatoria[]) => (
-        <Collapse>
-          {dedicatorias.length > 0 ? (
-            dedicatorias.map((d) => (
-              <Collapse.Panel
-                header={new Date(d.fecha).toLocaleString()}
+      render: (dedicatorias: Dedicatoria[]) =>
+        dedicatorias.length > 0 ? (
+          <div>
+            {dedicatorias.map((d) => (
+              <div
                 key={d.id}
+                style={{
+                  marginBottom: "0.5rem",
+                  padding: "0.5rem",
+                  background: "#fafafa",
+                  borderRadius: "4px",
+                }}
               >
-                <p style={{ whiteSpace: "pre-wrap" }}>{d.texto}</p>
-              </Collapse.Panel>
-            ))
-          ) : (
-            <p>No hay dedicatorias</p>
-          )}
-        </Collapse>
-      ),
+                <small style={{ color: "#888" }}>
+                  {new Date(d.fecha).toLocaleString()}
+                </small>
+                <p style={{ whiteSpace: "pre-wrap", margin: 0 }}>{d.texto}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No hay dedicatorias</p>
+        ),
     },
   ];
 
   return (
-    <div style={{ maxWidth: 900, margin: "2rem auto" }}>
-      <Typography.Title level={3}>
+    <div style={{ padding: "1rem" }}>
+      <Typography.Title level={3} style={{ textAlign: "center" }}>
         Módulo Administrativo Invitaciones
       </Typography.Title>
-      <Button type="primary" onClick={obtenerDatos} loading={loading}>
-        Obtener Datos
-      </Button>
+      <div style={{ textAlign: "center", marginBottom: "1rem" }}>
+        <Button type="primary" onClick={obtenerDatos} loading={loading}>
+          Obtener Datos
+        </Button>
+      </div>
 
       {datos.length > 0 && (
         <Table
           columns={columnas}
           dataSource={datos}
           rowKey="id"
-          style={{ marginTop: 20 }}
-          pagination={{ pageSize: 5 }}
           loading={loading}
+          pagination={{ pageSize: 5 }}
+          scroll={{ x: "max-content" }}
         />
       )}
     </div>

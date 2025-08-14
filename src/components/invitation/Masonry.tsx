@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import styles from "../styles/Mansory.module.css";
+import styles from "@/styles/Mansory.module.css";
 
 export default function MansoryGallery() {
   const [open, setOpen] = useState(false);

@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import weddingData from "@/data/weddingData.json";
-import styles from "../styles/Welcome.module.css";
+import styles from "@/styles/Welcome.module.css";
 
 const Welcome: React.FC = () => {
   const { slides } = weddingData;

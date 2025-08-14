@@ -3,25 +3,25 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 // Componentes
-import Welcome from "../components/Welcome";
-import TrailAnimation from "../components/TrailAnimation";
-import Masonry from "../components/Masonry";
-import BackgroundSlider from "../components/BackgroundSlider";
-import Viewpages from "../components/Viewpages";
-import Formulario from "../components/FormularioConfirmacion";
-import WeddingEvents from "../components/WeddingEvents";
-import HotelSuggestions from "../components/HotelSuggestions";
-import Spinner from "../components/Spinner";
-import FamilySection from "../components/FamilySection";
-import MusicPlayer from "../components/MusicPlayer";
-import Makeup from "../components/Makeup";
-import RentCars from "../components/RentCars";
-import Itinerary from "../components/Itinerary";
-import Gifts from "../components/Gifts";
-import DressCode from "../components/DressCode";
-import Restrictions from "../components/Restrictions";
-import Slider2 from "../components/Slider2";
-import ImagenFinal from "../components/ImagenFinal";
+import Welcome from "@/components/invitation/Welcome";
+import TrailAnimation from "@/components/invitation/TrailAnimation";
+import Masonry from "@/components/invitation/Masonry";
+import BackgroundSlider from "@/components/invitation/BackgroundSlider";
+import Viewpages from "@/components/invitation/Viewpages";
+import Formulario from "@/components/invitation/FormularioConfirmacion";
+import WeddingEvents from "@/components/invitation/WeddingEvents";
+import HotelSuggestions from "@/components/invitation/HotelSuggestions";
+import Spinner from "@/components/invitation/Spinner";
+import FamilySection from "@/components/invitation/FamilySection";
+import MusicPlayer from "@/components/invitation/MusicPlayer";
+import Makeup from "@/components/invitation/Makeup";
+import RentCars from "@/components/invitation/RentCars";
+import Itinerary from "@/components/invitation/Itinerary";
+import Gifts from "@/components/invitation/Gifts";
+import DressCode from "@/components/invitation/DressCode";
+import Restrictions from "@/components/invitation/Restrictions";
+import Slider2 from "@/components/invitation/Slider2";
+import ImagenFinal from "@/components/invitation/ImagenFinal";
 
 // Tipado
 type DataResponse = {

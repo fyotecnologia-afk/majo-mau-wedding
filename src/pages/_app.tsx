@@ -1,10 +1,10 @@
 // pages/_app.tsx
 import type { AppProps } from "next/app";
-import MetaHead from "@/components/MetaHead";
+import MetaHead from "@/components/invitation/MetaHead";
 
 import { Meow_Script, Manjari } from "next/font/google";
 
-import "../styles/globals.css";
+import "@/styles/globals.css";
 
 // Fuentes
 const meow = Meow_Script({

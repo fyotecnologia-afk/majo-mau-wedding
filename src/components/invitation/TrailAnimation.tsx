@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import weddingData from "@/data/weddingData.json";
-import styles from "../styles/TrailAnimation.module.css";
+import styles from "@/styles/TrailAnimation.module.css";
 import { TypeAnimation } from "react-type-animation";
 
 export default function ParallaxQuote() {
