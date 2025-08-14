@@ -142,9 +142,6 @@ export default function AdminList() {
             title: "Flags",
             render: (_, r) => (
               <Space size="small" wrap>
-                {r.saveTheDate && <Tag>SAVE</Tag>}
-                {r.invitacionEnviada && <Tag>ENVIADA</Tag>}
-                {r.especial && <Tag color="gold">ESPECIAL</Tag>}
                 {typeof r.tanteo === "number" && (
                   <Tag color="blue">Tanteo: {r.tanteo}</Tag>
                 )}
