@@ -72,3 +72,12 @@ model ConfirmacionInvitado {
 
   @@unique([confirmacionId, invitadoId])
 }
+
+// ---------------- Nueva tabla de parámetros globales ----------------
+model ParametrosGlobales {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  fechaLimite        DateTime
+  intentosMaximos    Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
