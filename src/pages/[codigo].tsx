@@ -117,13 +117,9 @@ export default function ConfirmacionPage() {
         <ImagenFinal />
       </div>
 
-      {data.confirmaciones! < 2 && (
-        <div
-          style={{ position: "relative", zIndex: 2, padding: "0 20px 20px" }}
-        >
-          <Formulario numero={numero} />
-        </div>
-      )}
+      <div style={{ position: "relative", zIndex: 2, padding: "0 20px 20px" }}>
+        <Formulario numero={numero} />
+      </div>
     </main>
   );
 }

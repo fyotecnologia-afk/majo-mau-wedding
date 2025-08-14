@@ -1,3 +1,4 @@
+// src/pages/api/invitaciones/confirmar.ts
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db';
 
@@ -9,14 +10,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!numero) return res.status(400).json({ error: 'Falta número de invitación' });
 
   try {
-    // Buscar invitacion y la confirmacion más reciente
+    // Buscar invitacion con confirmaciones
     const invitacion = await db.invitacion.findUnique({
       where: { numero },
       include: {
-        invitados: true, // para poder hacer upsert para todos los invitados
+        invitados: true,
         confirmaciones: {
-          orderBy: { createdAt: 'desc' },
-          take: 1,
+          orderBy: { createdAt: 'asc' }, // asc para contar desde la primera
           include: { confirmacionInvitados: true },
         },
       },
@@ -24,42 +24,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!invitacion) return res.status(404).json({ error: 'Invitación no encontrada' });
 
-    let confirmacionId: string;
+    const totalConfirmaciones = invitacion.confirmaciones.length;
 
-    if (invitacion.confirmaciones.length > 0) {
-      // Existe confirmacion previa
-      const ultimaConfirmacion = invitacion.confirmaciones[0];
-      confirmacionId = ultimaConfirmacion.id;
-
-      // Actualizar dedicatoria
-      await db.confirmacion.update({
-        where: { id: confirmacionId },
-        data: { dedicatoria },
-      });
-    } else {
-      // Crear nueva confirmacion
-      const nuevaConfirmacion = await db.confirmacion.create({
-        data: {
-          dedicatoria,
-          invitacionId: invitacion.id,
-        },
-      });
-      confirmacionId = nuevaConfirmacion.id;
+    if (totalConfirmaciones >= 2) {
+      return res.status(400).json({ error: 'Ya se han realizado las dos oportunidades de confirmación' });
     }
 
-    // Para cada invitado, upsert en ConfirmacionInvitado con respuesta SI/NO según asistentes[]
+    // Crear nueva confirmación
+    const nuevaConfirmacion = await db.confirmacion.create({
+      data: {
+        dedicatoria,
+        invitacionId: invitacion.id,
+      },
+    });
+
+    const confirmacionId = nuevaConfirmacion.id;
+
+    // Crear confirmacionInvitado para cada invitado según asistentes[]
     await Promise.all(
       invitacion.invitados.map((invitado) => {
         const respuesta = asistentes.includes(invitado.id) ? 'SI' : 'NO';
-        return db.confirmacionInvitado.upsert({
-          where: {
-            confirmacionId_invitadoId: {
-              confirmacionId,
-              invitadoId: invitado.id,
-            },
-          },
-          update: { respuesta },
-          create: {
+        return db.confirmacionInvitado.create({
+          data: {
             confirmacionId,
             invitadoId: invitado.id,
             respuesta,
@@ -68,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
     );
 
-    res.status(200).json({ success: true });
+    res.status(200).json({ success: true, oportunidad: totalConfirmaciones + 1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error procesando confirmación' });

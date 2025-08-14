@@ -1,3 +1,4 @@
+// src/components/invitation/FormularioConfirmacion.tsx
 import React, { useState, useEffect } from "react";
 import {
   Form,
@@ -67,8 +68,9 @@ export default function ConfirmInvitation({
   useEffect(() => {
     if (numeroProp) {
       form.setFieldsValue({ numero: numeroProp });
+      buscarInvitacion(numeroProp);
     }
-  }, [numeroProp, form]);
+  }, [numeroProp]);
 
   // Cargar dedicatoria cuando se cambia currentStep y tenemos dedicatoria almacenada en estado
   useEffect(() => {
@@ -77,7 +79,7 @@ export default function ConfirmInvitation({
     }
   }, [currentStep, dedicatoria, form]);
 
-  const buscarInvitacion = async () => {
+  const buscarInvitacion = async (numeroParam?: string) => {
     const numero = form.getFieldValue("numero")?.trim();
     if (!numero) {
       setMensaje({ tipo: "error", texto: "Ingresa un número de invitación" });
@@ -108,16 +110,25 @@ export default function ConfirmInvitation({
       });
 
       setInvitados(invitadosConRespuesta);
-      setConfirmacionesCount(data.confirmaciones.length || 0);
+      const totalConfirmaciones = data.confirmaciones.length || 0;
+      setConfirmacionesCount(totalConfirmaciones);
 
-      // Carga dedicatoria en estado para luego cargar en el form (por useEffect)
+      // Carga dedicatoria en estado
       setDedicatoria(data.dedicatoria || "");
 
       const preSeleccionados = invitadosConRespuesta
         .filter((inv) => inv.respuesta === "SI")
         .map((inv) => inv.id);
       setSeleccionados(preSeleccionados);
-      setCurrentStep(1);
+
+      // Determinar step según confirmaciones existentes
+      if (totalConfirmaciones >= 2) {
+        setCurrentStep(2);
+      } else if (totalConfirmaciones === 1) {
+        setCurrentStep(1);
+      } else {
+        setCurrentStep(0);
+      }
     } catch (error: any) {
       setMensaje({
         tipo: "error",
@@ -160,11 +171,17 @@ export default function ConfirmInvitation({
       }
       setMensaje({ tipo: "success", texto: "¡Confirmado correctamente!" });
 
-      // Actualiza dedicatoria local para persistir la última confirmación hecha
+      // Actualiza dedicatoria local
       setDedicatoria(dedicatoriaForm);
 
       setConfirmacionesCount((c) => c + 1);
-      setCurrentStep(2);
+
+      // Si ya llegó al límite, ir al paso final
+      if (confirmacionesCount + 1 >= 2) {
+        setCurrentStep(2);
+      } else {
+        setCurrentStep(1);
+      }
     } catch (error: any) {
       setMensaje({
         tipo: "error",
@@ -174,20 +191,6 @@ export default function ConfirmInvitation({
       setEnviando(false);
     }
   };
-
-  // Bloquear formulario si ya hay 2 o más confirmaciones
-  if (confirmacionesCount >= 2) {
-    return (
-      <Card style={{ maxWidth: 600, margin: "0 auto" }}>
-        <Alert
-          message="Límite alcanzado"
-          description="Ya no se puede editar. Se alcanzó el límite de confirmaciones."
-          type="warning"
-          showIcon
-        />
-      </Card>
-    );
-  }
 
   return (
     <div style={{ maxWidth: 700, margin: "0 auto" }}>
@@ -207,9 +210,9 @@ export default function ConfirmInvitation({
                 textAlign: "center",
                 fontSize: "clamp(1.2rem, 5vw, 2rem)",
                 margin: "1rem 0 0",
-                wordBreak: "break-word", // 🔑 Evita corte forzado de palabras
-                whiteSpace: "normal", // 🔑 Permite saltos de línea
-                overflowWrap: "break-word", // 🔑 Permite ajuste automático
+                wordBreak: "break-word",
+                whiteSpace: "normal",
+                overflowWrap: "break-word",
               }}
               className="title-decorative"
             >
@@ -242,21 +245,9 @@ export default function ConfirmInvitation({
           size="small"
           style={{ marginBottom: 24 }}
           items={[
-            {
-              title: "Buscar",
-              icon: <MailOutlined />,
-              className: "font-manjari",
-            },
-            {
-              title: "Seleccionar",
-              icon: <UserOutlined />,
-              className: "font-manjari",
-            },
-            {
-              title: "Confirmado",
-              icon: <CheckCircleOutlined />,
-              className: "font-manjari",
-            },
+            { title: "Buscar", icon: <MailOutlined /> },
+            { title: "Seleccionar", icon: <UserOutlined /> },
+            { title: "Confirmado", icon: <CheckCircleOutlined /> },
           ]}
         />
 
@@ -271,16 +262,10 @@ export default function ConfirmInvitation({
                   message: "Por favor ingresa tu número de invitación",
                 },
               ]}
-              className="font-manjari"
             >
               <Input
                 placeholder="Comienza por MM"
-                className="font-manjari"
-                style={{
-                  borderRadius: 8,
-                  padding: 12,
-                  color: "#000000",
-                }}
+                style={{ borderRadius: 8, padding: 12 }}
               />
             </Form.Item>
             <Form.Item>
@@ -292,7 +277,6 @@ export default function ConfirmInvitation({
                   backgroundColor: "#CBB278",
                   borderColor: "#CBB278",
                   borderRadius: 8,
-                  fontWeight: "bold",
                 }}
               >
                 Buscar invitados
@@ -304,7 +288,6 @@ export default function ConfirmInvitation({
                 type={mensaje.tipo}
                 showIcon
                 style={{ marginTop: 5 }}
-                className="font-manjari"
               />
             )}
           </Form>
@@ -318,36 +301,25 @@ export default function ConfirmInvitation({
               type="info"
               showIcon
               style={{ marginBottom: 5 }}
-              className="font-manjari"
             />
-
             <Form form={form} layout="vertical" onFinish={enviarConfirmacion}>
               <Form.Item label="¿Quiénes asistirán?">
                 <Checkbox.Group
-                  style={{ width: "100%" }}
                   value={seleccionados}
                   onChange={setSeleccionados}
-                  className="font-manjari"
+                  style={{ width: "100%" }}
                 >
                   <Space direction="vertical" style={{ width: "100%" }}>
                     {invitados.map(({ id, nombre, respuesta }) => (
                       <Checkbox key={id} value={id}>
                         <span style={{ fontWeight: 500 }}>{nombre}</span>
                         {respuesta === "SI" && (
-                          <Text
-                            type="success"
-                            style={{ marginLeft: 8 }}
-                            className="font-manjari"
-                          >
+                          <Text type="success" style={{ marginLeft: 8 }}>
                             (Confirmado)
                           </Text>
                         )}
                         {respuesta === "NO" && (
-                          <Text
-                            type="danger"
-                            style={{ marginLeft: 8 }}
-                            className="font-manjari"
-                          >
+                          <Text type="danger" style={{ marginLeft: 8 }}>
                             (No asistirá)
                           </Text>
                         )}
@@ -357,16 +329,11 @@ export default function ConfirmInvitation({
                 </Checkbox.Group>
               </Form.Item>
 
-              <Form.Item
-                label="Dedicatoria (opcional)"
-                name="dedicatoria"
-                className="font-manjari"
-              >
+              <Form.Item label="Dedicatoria (opcional)" name="dedicatoria">
                 <TextArea
                   rows={4}
                   placeholder="Escribe unas palabras para nosotros..."
-                  className="font-manjari"
-                  style={{ borderRadius: 8, color: "#000000ff" }}
+                  style={{ borderRadius: 8 }}
                 />
               </Form.Item>
 
@@ -376,7 +343,6 @@ export default function ConfirmInvitation({
                   type={mensaje.tipo}
                   showIcon
                   style={{ marginBottom: 5 }}
-                  className="font-manjari"
                 />
               )}
 
@@ -394,7 +360,6 @@ export default function ConfirmInvitation({
                     backgroundColor: "#c6b687",
                     borderColor: "#c6b687",
                     borderRadius: 8,
-                    fontWeight: "bold",
                   }}
                 >
                   Confirmar
@@ -423,39 +388,45 @@ export default function ConfirmInvitation({
             <CheckCircleOutlined
               style={{ fontSize: 64, color: "#52c41a", marginBottom: 16 }}
             />
-            <Title
-              level={4}
-              style={{ color: "#c6b687" }}
-              className="font-manjari"
-            >
+            <Title level={4} style={{ color: "#c6b687" }}>
               ¡Gracias por confirmar!
             </Title>
-            <Text style={{ color: "#c6b687" }} className="font-manjari">
-              Estamos felices de contar contigo en este evento tan especial.
-            </Text>
-            <Button
-              type="primary"
-              onClick={() => {
-                setCurrentStep(0);
-                setMensaje(null);
-                setInvitados([]);
-                setSeleccionados([]);
-                form.resetFields();
-                setEnviando(false);
-                setConfirmacionesCount(0);
-                setDedicatoria("");
-              }}
-              style={{
-                backgroundColor: "#CBB278",
-                borderColor: "#CBB278",
-                borderRadius: 8,
-                fontWeight: "bold",
-                marginTop: 24,
-              }}
-              block
-            >
-              Confirmar otro número
-            </Button>
+
+            {confirmacionesCount >= 2 ? (
+              <Text style={{ color: "#c6b687" }}>
+                Se ha alcanzado el límite de intentos, ponte en contacto con los
+                novios.
+              </Text>
+            ) : (
+              <Text style={{ color: "#c6b687" }}>
+                Estamos felices de contar contigo en este evento tan especial.
+              </Text>
+            )}
+
+            {confirmacionesCount < 2 && (
+              <Button
+                type="primary"
+                onClick={() => {
+                  setCurrentStep(0);
+                  setMensaje(null);
+                  setInvitados([]);
+                  setSeleccionados([]);
+                  form.resetFields();
+                  setEnviando(false);
+                  setConfirmacionesCount(0);
+                  setDedicatoria("");
+                }}
+                style={{
+                  backgroundColor: "#CBB278",
+                  borderColor: "#CBB278",
+                  borderRadius: 8,
+                  marginTop: 24,
+                }}
+                block
+              >
+                Confirmar otro número
+              </Button>
+            )}
           </div>
         )}
       </Card>

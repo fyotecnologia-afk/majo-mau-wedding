@@ -10,21 +10,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       where: { numero },
       include: {
         invitados: {
-          where: {
-            estado: 'ACTIVO',
-          },
-          select: {
-            id: true,
-            nombre: true,
-          },
+          where: { estado: 'ACTIVO' },
+          select: { id: true, nombre: true },
         },
         confirmaciones: {
+          orderBy: { createdAt: 'asc' }, // Para contar la primera y segunda confirmación
           include: {
             confirmacionInvitados: {
-              select: {
-                invitadoId: true,
-                respuesta: true,
-              },
+              select: { invitadoId: true, respuesta: true },
             },
           },
         },
@@ -35,11 +28,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(404).json({ exists: false });
     }
 
+    // Tomar dedicatoria de la confirmación más reciente
+    const dedicatoria =
+      invitacion.confirmaciones.length > 0
+        ? invitacion.confirmaciones[invitacion.confirmaciones.length - 1].dedicatoria
+        : "";
+
     res.status(200).json({
       exists: true,
       estado: invitacion.estado,
       invitados: invitacion.invitados,
       confirmaciones: invitacion.confirmaciones,
+      dedicatoria,
     });
   } catch (error) {
     console.error("Error en la API de invitaciones:", error);
