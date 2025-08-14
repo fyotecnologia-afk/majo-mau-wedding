@@ -1,9 +1,9 @@
 // /src/pages/api/admin/login.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getIronSession, IronSession } from "iron-session";
-import { sessionOptions, AdminSession } from "../../../../lib/session";
+import { sessionOptions, AdminSession } from "@/lib/session";
 import bcrypt from "bcrypt";
-import { loginSchema, safeParseJson } from "../../../utils/validate";
+import { loginSchema, safeParseJson } from "@/utils/validate";
 
 const RATE = new Map<string, { count: number; ts: number }>();
 const WINDOW_MS = 60_000; // 1 min

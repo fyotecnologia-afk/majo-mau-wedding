@@ -1,6 +1,6 @@
 // src/pages/admin/invitados/[invitacionId].ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../../../../lib/db";
+import { db } from "@/lib/db";
 import { Estado, CategoriaInvitado } from "@prisma/client";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

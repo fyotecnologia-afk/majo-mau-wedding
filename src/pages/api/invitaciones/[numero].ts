@@ -1,6 +1,6 @@
 // pages/api/invitaciones/[numero].ts
 import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '../../../../lib/db';
+import { db } from '@/lib/db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const numero = req.query.numero as string;
