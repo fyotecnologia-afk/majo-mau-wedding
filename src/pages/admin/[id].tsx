@@ -94,18 +94,6 @@ export default function AdminDetail() {
           loading={loading}
           title={<Title level={4}>Editar Invitación</Title>}
         >
-          <Space style={{ marginBottom: 12, flexWrap: "wrap" }}>
-            <Tag color={item.estado === "ACTIVO" ? "green" : "red"}>
-              {item.estado}
-            </Tag>
-            {item.saveTheDate && <Tag>SAVE</Tag>}
-            {item.invitacionEnviada && <Tag>ENVIADA</Tag>}
-            {item.especial && <Tag color="gold">ESPECIAL</Tag>}
-            {typeof item.tanteo === "number" && (
-              <Tag color="blue">Tanteo: {item.tanteo}</Tag>
-            )}
-          </Space>
-
           <InvitationForm
             initialValues={item}
             onSubmit={save}

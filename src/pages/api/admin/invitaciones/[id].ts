@@ -32,10 +32,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         hostedBy,
         tipo,
         familia,
-        saveTheDate,
-        invitacionEnviada,
-        especial,
-        tanteo,
       } = req.body;
 
       const updated = await db.invitacion.update({
@@ -45,10 +41,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           hostedBy: hostedBy ?? null,
           tipo: tipo ?? null,
           familia: familia ?? null,
-          saveTheDate: saveTheDate ?? null,
-          invitacionEnviada: invitacionEnviada ?? null,
-          especial: especial ?? null,
-          tanteo: tanteo ?? null,
         },
       });
 

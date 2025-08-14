@@ -81,10 +81,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         hostedBy,
         tipo,
         familia,
-        saveTheDate,
-        invitacionEnviada,
-        especial,
-        tanteo,
         invitados = [],
       } = req.body;
 
@@ -94,10 +90,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           hostedBy: hostedBy ?? null,
           tipo: tipo ?? null,
           familia: familia ?? null,
-          saveTheDate: saveTheDate ?? null,
-          invitacionEnviada: invitacionEnviada ?? null,
-          especial: especial ?? null,
-          tanteo: tanteo ?? null,
           invitados: {
             create: invitados.map((i: any) => ({
               nombre: i.nombre,

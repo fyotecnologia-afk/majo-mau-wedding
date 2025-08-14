@@ -25,10 +25,6 @@ interface InvitacionData {
   hostedBy: string | null;
   tipo: string | null;
   familia: string | null;
-  saveTheDate: boolean | null;
-  invitacionEnviada: boolean | null;
-  especial: boolean | null;
-  tanteo: number | null;
   invitados: Invitado[];
   dedicatorias: Dedicatoria[];
 }
@@ -46,10 +42,6 @@ export default async function handler(
         hostedBy: true,
         tipo: true,
         familia: true,
-        saveTheDate: true,
-        invitacionEnviada: true,
-        especial: true,
-        tanteo: true,
         invitados: {
           where: { estado: "ACTIVO" },
           include: {
@@ -94,10 +86,6 @@ export default async function handler(
         hostedBy: inv.hostedBy,
         tipo: inv.tipo,
         familia: inv.familia,
-        saveTheDate: inv.saveTheDate,
-        invitacionEnviada: inv.invitacionEnviada,
-        especial: inv.especial,
-        tanteo: inv.tanteo,
         invitados,
         dedicatorias,
       };

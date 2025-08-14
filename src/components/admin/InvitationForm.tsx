@@ -22,9 +22,6 @@ const InvitationForm: React.FC<Props> = ({
       layout="vertical"
       initialValues={{
         estado: "ACTIVO",
-        saveTheDate: false,
-        invitacionEnviada: false,
-        especial: false,
         ...initialValues,
       }}
       onFinish={onSubmit}
@@ -46,26 +43,6 @@ const InvitationForm: React.FC<Props> = ({
       </Space>
 
       <Space size="large" wrap>
-        <Form.Item
-          label="Save the Date"
-          name="saveTheDate"
-          valuePropName="checked"
-        >
-          <Switch />
-        </Form.Item>
-        <Form.Item
-          label="Invitación enviada"
-          name="invitacionEnviada"
-          valuePropName="checked"
-        >
-          <Switch />
-        </Form.Item>
-        <Form.Item label="Especial" name="especial" valuePropName="checked">
-          <Switch />
-        </Form.Item>
-        <Form.Item label="Tanteo" name="tanteo">
-          <InputNumber min={0} />
-        </Form.Item>
         <Form.Item label="Estado" name="estado" rules={[{ required: true }]}>
           <Select
             options={[
