@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           select: { id: true, nombre: true },
         },
         confirmaciones: {
-          orderBy: { createdAt: 'asc' }, // Para contar la primera y segunda confirmación
+          orderBy: { createdAt: 'asc' }, // Se conservan todas, para contar intentos
           include: {
             confirmacionInvitados: {
               select: { invitadoId: true, respuesta: true },
@@ -34,10 +34,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         ? invitacion.confirmaciones[invitacion.confirmaciones.length - 1].dedicatoria
         : "";
 
+    // Construir la lista de invitados con su última respuesta
+    const invitadosConRespuesta = invitacion.invitados.map(inv => {
+      let ultimaRespuesta: "SI" | "NO" | null = null;
+
+      // Recorrer confirmaciones desde la última hacia la primera
+      for (let i = invitacion.confirmaciones.length - 1; i >= 0; i--) {
+        const cInv = invitacion.confirmaciones[i].confirmacionInvitados.find(
+          ci => ci.invitadoId === inv.id
+        );
+        if (cInv) {
+          ultimaRespuesta = cInv.respuesta;
+          break;
+        }
+      }
+
+      return {
+        ...inv,
+        respuesta: ultimaRespuesta,
+      };
+    });
+
     res.status(200).json({
       exists: true,
       estado: invitacion.estado,
-      invitados: invitacion.invitados,
+      invitados: invitadosConRespuesta,
       confirmaciones: invitacion.confirmaciones,
       dedicatoria,
     });
