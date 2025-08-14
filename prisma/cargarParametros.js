@@ -2,20 +2,33 @@ const { db } = require('../src/lib/db.ts'); // Ajusta la ruta según tu proyecto
 
 async function main() {
   try {
+    // Verifica si ya hay algún registro
     const existente = await db.parametrosGlobales.findFirst();
     if (existente) {
-      console.log("Ya existe un registro de parámetros globales.");
+      console.log("Ya existe al menos un registro de parámetros globales.");
       process.exit(0);
     }
 
-    const registro = await db.parametrosGlobales.create({
+    // Crear registro de fecha límite
+    const registroFecha = await db.parametrosGlobales.create({
       data: {
-        fechaLimite: new Date('2025-08-17T23:59:59'),
-        intentosMaximos: 2
+        tipo: "fechaLimite", // campo extra para diferenciar tipo de parámetro
+        valorDate: new Date('2025-10-17T23:59:59')
       }
     });
 
-    console.log("Parámetros globales cargados:", registro);
+    // Crear registro de intentos máximos
+    const registroIntentos = await db.parametrosGlobales.create({
+      data: {
+        tipo: "maxIntentos",
+        valorNumber: 2
+      }
+    });
+
+    console.log("Parámetros globales cargados:");
+    console.log("Fecha límite:", registroFecha);
+    console.log("Intentos máximos:", registroIntentos);
+
     process.exit(0);
   } catch (error) {
     console.error("Error cargando parámetros globales:", error);

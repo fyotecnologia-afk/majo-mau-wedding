@@ -75,9 +75,8 @@ model ConfirmacionInvitado {
 
 // ---------------- Nueva tabla de parámetros globales ----------------
 model ParametrosGlobales {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
-  fechaLimite        DateTime
-  intentosMaximos    Int
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  tipo        String   // "fechaLimite" o "maxIntentos"
+  valorDate   DateTime? // solo se usa para fecha
+  valorNumber Int?      // solo se usa para número de intentos
 }
