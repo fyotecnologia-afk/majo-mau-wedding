@@ -1,7 +1,7 @@
 // /src/pages/api/admin/login.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getIronSession } from "iron-session";
-import { sessionOptions } from "../../../../lib/session";
+import { getIronSession, IronSession } from "iron-session";
+import { sessionOptions, AdminSession } from "../../../../lib/session";
 import bcrypt from "bcrypt";
 import { loginSchema, safeParseJson } from "../../../utils/validate";
 
@@ -51,10 +51,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({ error: "Credenciales incorrectas" });
     }
 
-    const session = await getIronSession(req, res, sessionOptions);
+    // Tipamos correctamente como IronSession<AdminSession>
+    const session: IronSession<AdminSession> = await getIronSession(req, res, sessionOptions);
     session.isLoggedIn = true;
     session.username = username;
-    await session.save();
+    await session.save(); // Ahora sí reconoce save()
 
     res.status(200).json({ success: true });
   } catch (e: any) {
