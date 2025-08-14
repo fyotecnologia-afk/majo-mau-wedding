@@ -22,14 +22,10 @@ model Invitacion {
   numero            String          @unique
   estado            Estado          @default(ACTIVO)
 
-  // Nuevos campos para tus encabezados
+  // Campos generales
   hostedBy          String?         // Hosted By
   tipo              String?         // Tipo
   familia           String?         // Familia
-  saveTheDate       Boolean?        // Save the Date enviado
-  invitacionEnviada Boolean?        // Invitación enviada
-  especial          Boolean?        // Especial
-  tanteo            Int?            // Tanteo
 
   invitados         Invitado[]
   confirmaciones    Confirmacion[]
@@ -40,6 +36,7 @@ model Invitado {
   nombre                String
   principal             Boolean?     // Principal
   categoria             CategoriaInvitado? // Adulto | Niño
+  especial              Boolean?     // Cumpleaños u otra ocasión especial
   estado                Estado       @default(ACTIVO)
   invitacionId          String
   invitacion            Invitacion?  @relation(fields: [invitacionId], references: [id])

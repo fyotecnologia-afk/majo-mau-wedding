@@ -1,3 +1,4 @@
+// convertCsvToSeed.js
 const fs = require("fs");
 const path = require("path");
 
@@ -12,10 +13,7 @@ function parseRow(row) {
     principal,
     nombreInvitado,
     categoria,
-    saveTheDate,
-    invitacion,
-    especial,
-    tanteo,
+    especial, // ahora especial va por invitado
   ] = row.split("\t").map((c) => c.trim());
 
   return {
@@ -26,10 +24,7 @@ function parseRow(row) {
     principal: principal === "1",
     nombreInvitado,
     categoria: categoria === "A" ? "ADULTO" : "NINO",
-    saveTheDate: saveTheDate === "1",
-    invitacionEnviada: invitacion === "1",
     especial: especial === "1",
-    tanteo: tanteo ? Number(tanteo) : null,
   };
 }
 
@@ -43,10 +38,6 @@ function groupByNumero(data) {
         tipo: item.tipo,
         numero: item.numero,
         familia: item.familia,
-        saveTheDate: item.saveTheDate,
-        invitacionEnviada: item.invitacionEnviada,
-        especial: item.especial,
-        tanteo: item.tanteo,
         invitados: [],
       });
     }
@@ -55,6 +46,7 @@ function groupByNumero(data) {
       nombre: item.nombreInvitado,
       principal: item.principal,
       categoria: item.categoria,
+      especial: item.especial,
       estado: "ACTIVO",
     });
   });
@@ -77,7 +69,11 @@ fs.readFile(csvFilePath, "utf8", (err, data) => {
   const parsed = rowsData.map(parseRow);
   const grouped = groupByNumero(parsed);
 
-  // Aquí tienes el arreglo listo para usar en seed
-  fs.writeFileSync(path.resolve(__dirname, "seedData.js"), "const seedData = " + JSON.stringify(grouped, null, 2) + ";\nmodule.exports = { seedData };\n");
-console.log("Archivo seedData.js generado.");
+  // Generar archivo seed listo para usar
+  fs.writeFileSync(
+    path.resolve(__dirname, "seedData.js"),
+    "const seedData = " + JSON.stringify(grouped, null, 2) + ";\nmodule.exports = { seedData };\n"
+  );
+
+  console.log("Archivo seedData.js generado.");
 });

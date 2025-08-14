@@ -1,7 +1,8 @@
+// prisma/seed.js
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const seedData = require("../seedData").seedData; // o la ruta correcta a tu archivo seedData.js
+const seedData = require("../seedData").seedData; // ruta correcta a tu seedData.js
 
 async function main() {
   for (const inv of seedData) {
@@ -11,17 +12,13 @@ async function main() {
         hostedBy: inv.hostedBy,
         tipo: inv.tipo,
         familia: inv.familia,
-        saveTheDate: inv.saveTheDate,
-        invitacionEnviada: inv.invitacionEnviada,
-        especial: inv.especial,
-        tanteo: inv.tanteo,
         invitados: {
           create: inv.invitados.map((i) => ({
             nombre: i.nombre,
             principal: i.principal,
             categoria: i.categoria,
-            estado: i.estado || "ACTIVO", // si quieres poner default
-            // Si quieres relacionar confirmaciones u otros datos aquí también
+            especial: i.especial, // ahora sí
+            estado: i.estado || "ACTIVO",
           })),
         },
       },
@@ -30,6 +27,7 @@ async function main() {
 }
 
 main()
+  .then(() => console.log("Datos insertados correctamente"))
   .catch((e) => {
     console.error(e);
     process.exit(1);
