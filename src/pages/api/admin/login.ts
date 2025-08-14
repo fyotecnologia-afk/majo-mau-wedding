@@ -5,8 +5,9 @@ import { sessionOptions, AdminSession } from "@/lib/session";
 import bcrypt from "bcrypt";
 import { loginSchema, safeParseJson } from "@/utils/validate";
 
+// Rate limiting
 const RATE = new Map<string, { count: number; ts: number }>();
-const WINDOW_MS = 60_000; // 1 min
+const WINDOW_MS = 60_000; // 1 minuto
 const MAX_TRIES = 10;
 
 function rateLimit(ip: string) {
@@ -32,17 +33,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       "unknown";
     rateLimit(ip);
 
+    // Parse body
     const raw = typeof req.body === "string" ? req.body : JSON.stringify(req.body);
     const json = safeParseJson<any>(raw);
     if (!json) return res.status(400).json({ error: "Invalid JSON" });
 
     const parsed = loginSchema.safeParse(json);
-    if (!parsed.success) {
-      return res.status(400).json({ error: "Datos inválidos" });
-    }
+    if (!parsed.success) return res.status(400).json({ error: "Datos inválidos" });
 
     const { username, password } = parsed.data;
 
+    // Validate credentials
     const okUser = username === process.env.ADMIN_USERNAME;
     const hash = process.env.ADMIN_PASSWORD_HASH || "";
     const okPass = hash ? await bcrypt.compare(password, hash) : false;
@@ -51,14 +52,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(401).json({ error: "Credenciales incorrectas" });
     }
 
-    // Tipamos correctamente como IronSession<AdminSession>
+    // Get and save session
     const session: IronSession<AdminSession> = await getIronSession(req, res, sessionOptions);
+    console.log("Session before saving:", session);
+
     session.isLoggedIn = true;
     session.username = username;
-    await session.save(); // Ahora sí reconoce save()
+
+    try {
+      await session.save();
+      console.log("Session saved successfully");
+    } catch (err) {
+      console.error("Error saving session:", err);
+      return res.status(500).json({ error: "Failed to save session" });
+    }
 
     res.status(200).json({ success: true });
   } catch (e: any) {
+    console.error("Login error:", e);
     res.status(429).json({ error: e?.message || "Error" });
   }
 }
