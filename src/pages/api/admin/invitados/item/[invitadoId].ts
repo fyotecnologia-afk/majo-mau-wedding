@@ -2,12 +2,15 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/lib/db";
 import { Estado, CategoriaInvitado } from "@prisma/client";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { invitadoId } = req.query as { invitadoId: string };
 
   try {
     if (req.method === "PUT") {
-      const { nombre, principal, categoria, estado } = req.body;
+      const { nombre, principal, categoria, estado, especial } = req.body;
       const updated = await db.invitado.update({
         where: { id: invitadoId },
         data: {
@@ -15,6 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           principal: principal ?? null,
           categoria: categoria as CategoriaInvitado | null,
           estado: (estado as Estado) ?? "ACTIVO",
+          especial: especial ?? false, // agregamos el campo especial
         },
       });
       res.status(200).json(updated);
@@ -22,10 +26,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === "PATCH") {
-      const { estado } = req.body as { estado: Estado };
+      const { estado, especial } = req.body as {
+        estado?: Estado;
+        especial?: boolean;
+      };
+      const dataToUpdate: any = {};
+      if (estado) dataToUpdate.estado = estado;
+      if (especial !== undefined) dataToUpdate.especial = especial;
+
       const updated = await db.invitado.update({
         where: { id: invitadoId },
-        data: { estado },
+        data: dataToUpdate,
       });
       res.status(200).json(updated);
       return;

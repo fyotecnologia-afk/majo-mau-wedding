@@ -3,7 +3,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/lib/db";
 import { Estado, CategoriaInvitado } from "@prisma/client";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { invitacionId } = req.query as { invitacionId: string };
 
   try {
@@ -14,8 +17,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         include: {
           confirmacionInvitados: {
             select: {
-              respuesta: true,          // Trae si confirmó o rechazó
-              confirmacionId: true,     // ID de la confirmación
+              respuesta: true, // Trae si confirmó o rechazó
+              confirmacionId: true, // ID de la confirmación
             },
           },
         },
@@ -25,13 +28,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === "POST") {
-      const { nombre, principal, categoria, estado } = req.body;
+      const { nombre, principal, categoria, estado, especial } = req.body;
       const created = await db.invitado.create({
         data: {
           nombre,
           principal: principal ?? null,
           categoria: categoria as CategoriaInvitado | null,
           estado: (estado as Estado) ?? "ACTIVO",
+          especial: especial ?? false, // <-- aquí guardamos Especial
           invitacionId,
         },
       });

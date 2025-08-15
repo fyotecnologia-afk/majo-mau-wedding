@@ -10,6 +10,7 @@ import {
   Tag,
   Space,
   Switch,
+  message,
 } from "antd";
 
 type Props = {
@@ -38,7 +39,11 @@ const GuestsTable: React.FC<Props> = ({ invitacionId }) => {
   const openCreate = () => {
     setEdit(null);
     form.resetFields();
-    form.setFieldsValue({ principal: false, estado: "ACTIVO" });
+    form.setFieldsValue({
+      principal: false,
+      especial: false,
+      estado: "ACTIVO",
+    });
     setOpen(true);
   };
 
@@ -47,6 +52,7 @@ const GuestsTable: React.FC<Props> = ({ invitacionId }) => {
     form.setFieldsValue({
       nombre: row.nombre,
       principal: !!row.principal,
+      especial: !!row.especial,
       categoria: row.categoria ?? undefined,
       estado: row.estado,
     });
@@ -80,6 +86,22 @@ const GuestsTable: React.FC<Props> = ({ invitacionId }) => {
     await fetchItems();
   };
 
+  const toggleEspecial = async (row: any) => {
+    try {
+      await fetch(`/api/admin/invitados/item/${row.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          especial: !row.especial,
+        }),
+      });
+      message.success(`Especial actualizado`);
+      await fetchItems();
+    } catch (e: any) {
+      message.error(e.message || "Error al actualizar especial");
+    }
+  };
+
   return (
     <>
       <Space style={{ marginBottom: 12 }}>
@@ -98,6 +120,19 @@ const GuestsTable: React.FC<Props> = ({ invitacionId }) => {
             title: "Principal",
             dataIndex: "principal",
             render: (v) => (v ? <Tag color="blue">Sí</Tag> : <Tag>No</Tag>),
+            responsive: ["md"],
+          },
+          {
+            title: "Especial",
+            dataIndex: "especial",
+            render: (v, row) => (
+              <Switch
+                checked={v}
+                onChange={() => toggleEspecial(row)}
+                checkedChildren="Sí"
+                unCheckedChildren="No"
+              />
+            ),
             responsive: ["md"],
           },
           {
@@ -153,6 +188,9 @@ const GuestsTable: React.FC<Props> = ({ invitacionId }) => {
             <Input />
           </Form.Item>
           <Form.Item label="Principal" name="principal" valuePropName="checked">
+            <Switch />
+          </Form.Item>
+          <Form.Item label="Especial" name="especial" valuePropName="checked">
             <Switch />
           </Form.Item>
           <Form.Item label="Categoría" name="categoria">

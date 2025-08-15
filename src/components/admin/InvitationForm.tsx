@@ -43,18 +43,6 @@ const InvitationForm: React.FC<Props> = ({
         </Form.Item>
       </Space>
 
-      <Space size="large" wrap>
-        <Form.Item label="Estado" name="estado" rules={[{ required: true }]}>
-          <Select
-            options={[
-              { value: "ACTIVO", label: "ACTIVO" },
-              { value: "INACTIVO", label: "INACTIVO" },
-            ]}
-            style={{ minWidth: 160 }}
-          />
-        </Form.Item>
-      </Space>
-
       <Form.Item>
         <Button type="primary" htmlType="submit" loading={loading}>
           {submitText}
