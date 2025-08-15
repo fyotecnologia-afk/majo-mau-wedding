@@ -11,6 +11,7 @@ import {
   Pagination,
   Select,
   Switch,
+  notification,
 } from "antd";
 import { useRouter } from "next/router";
 import { useSpring, animated } from "@react-spring/web";
@@ -23,9 +24,11 @@ export default function AdminList() {
   const [total, setTotal] = useState(0);
   const [q, setQ] = useState("");
   const [estado, setEstado] = useState<string | undefined>(undefined);
+  const [especial, setEspecial] = useState<boolean | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [openCreate, setOpenCreate] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [ultimoNumero, setUltimoNumero] = useState<string>("");
 
   const router = useRouter();
 
@@ -45,13 +48,14 @@ export default function AdminList() {
       page: String(page),
       pageSize: String(PAGE_SIZE),
     });
+
     if (q) params.set("q", q);
     if (estado) params.set("estado", estado);
+    if (especial !== undefined) params.set("especial", String(especial));
 
     const res = await fetch(`/api/admin/invitaciones?${params.toString()}`);
     const json = await res.json();
 
-    // Aseguramos que cada registro tenga _count
     const items = (json.items || []).map((item: any) => ({
       ...item,
       _count: item._count || { invitados: 0, confirmaciones: 0 },
@@ -64,7 +68,7 @@ export default function AdminList() {
 
   useEffect(() => {
     fetchItems();
-  }, [page, estado]);
+  }, [page, estado, especial]);
 
   const onSearch = () => {
     setPage(1);
@@ -98,11 +102,15 @@ export default function AdminList() {
           placeholder="Buscar por número, familia, tipo, hostedBy..."
           allowClear
           enterButton="Buscar"
-          onSearch={onSearch}
+          onSearch={() => {
+            setPage(1);
+            fetchItems();
+          }}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           style={{ minWidth: 260, flex: "1 1 300px" }}
         />
+
         <Select
           placeholder="Estado"
           allowClear
@@ -114,6 +122,25 @@ export default function AdminList() {
             { value: "INACTIVO", label: "INACTIVO" },
           ]}
         />
+
+        <Select
+          placeholder="Especial"
+          allowClear
+          style={{ width: 180 }}
+          value={especial === undefined ? undefined : especial ? "SI" : "NO"}
+          onChange={(val) => {
+            if (val === "SI") setEspecial(true);
+            else if (val === "NO") setEspecial(false);
+            else setEspecial(undefined);
+            setPage(1);
+            fetchItems();
+          }}
+          options={[
+            { value: "SI", label: "Sí" },
+            { value: "NO", label: "No" },
+          ]}
+        />
+
         <Button type="primary" onClick={() => setOpenCreate(true)}>
           Nueva invitación
         </Button>
@@ -203,6 +230,7 @@ export default function AdminList() {
         />
       </div>
 
+      {/* Modal para nueva invitación */}
       <Modal
         title="Nueva invitación"
         open={openCreate}
@@ -210,28 +238,37 @@ export default function AdminList() {
         footer={null}
         destroyOnHidden
       >
-        {React.createElement(
-          require("@/components/admin/InvitationForm").default,
-          {
-            onSubmit: async (values: any) => {
-              const res = await fetch("/api/admin/invitaciones", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(values),
-              });
-              console.log(res);
-              if (!res.ok) {
-                const err = await res.json();
-                message.error(err.error || "Error al crear");
-                return;
-              }
-              message.success("Invitación creada");
-              setOpenCreate(false);
-              fetchItems();
-            },
-            submitText: "Crear",
-          }
-        )}
+        <Space direction="vertical" style={{ width: "100%" }}>
+          {React.createElement(
+            require("@/components/admin/InvitationForm").default,
+            {
+              onSubmit: async (values: any) => {
+                const res = await fetch("/api/admin/invitaciones", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(values),
+                });
+
+                if (!res.ok) {
+                  const err = await res.json();
+                  message.error(err.error || "Error al crear");
+                  return;
+                }
+
+                const created = await res.json();
+                setUltimoNumero(created.numero);
+                notification.success({
+                  message: `Invitación creada`,
+                  description: `Número de invitación: ${created.numero}`,
+                  duration: 0,
+                });
+                setOpenCreate(false);
+                fetchItems();
+              },
+              submitText: "Crear",
+            }
+          )}
+        </Space>
       </Modal>
     </animated.div>
   );

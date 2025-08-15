@@ -1,3 +1,4 @@
+// src/components/admin/InvitationForm.tsx
 import React from "react";
 import { Form, Input, Switch, InputNumber, Select, Button, Space } from "antd";
 
@@ -26,18 +27,18 @@ const InvitationForm: React.FC<Props> = ({
       }}
       onFinish={onSubmit}
     >
-      <Form.Item label="Número" name="numero" rules={[{ required: true }]}>
-        <Input placeholder="MM001" />
-      </Form.Item>
-
       <Space size="large" wrap>
-        <Form.Item label="Hosted By" name="hostedBy">
+        <Form.Item
+          label="Hosted By"
+          name="hostedBy"
+          rules={[{ required: true }]}
+        >
           <Input placeholder="Novio / Novia / Ambos" />
         </Form.Item>
-        <Form.Item label="Tipo" name="tipo">
+        <Form.Item label="Tipo" name="tipo" rules={[{ required: true }]}>
           <Input placeholder="Familiar / Amigos / ..." />
         </Form.Item>
-        <Form.Item label="Familia" name="familia">
+        <Form.Item label="Familia" name="familia" rules={[{ required: true }]}>
           <Input placeholder="Apellido(s) Familia" />
         </Form.Item>
       </Space>
