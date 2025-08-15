@@ -16,6 +16,8 @@ import {
 import { useRouter } from "next/router";
 import { useSpring, animated } from "@react-spring/web";
 import Link from "next/link";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const PAGE_SIZE = 10;
 
@@ -75,6 +77,57 @@ export default function AdminList() {
     fetchItems();
   };
 
+  const exportToExcel = async () => {
+    try {
+      // Traemos todos los datos, sin paginación
+      const params = new URLSearchParams();
+      if (q) params.set("q", q);
+      if (estado) params.set("estado", estado);
+      if (especial !== undefined) params.set("especial", String(especial));
+
+      // pageSize grande para traer todos o usar endpoint especial
+      params.set("page", "1");
+      params.set("pageSize", "10000"); // asumir que 10k cubre todos
+
+      const res = await fetch(`/api/admin/invitaciones?${params.toString()}`);
+      const json = await res.json();
+
+      const rows = (json.items || []).flatMap((inv: any) =>
+        (inv.invitados || []).map((guest: any) => ({
+          Tipo: inv.tipo ?? "",
+          "Numero de invitacion": inv.numero ?? "",
+          Familia: inv.familia ?? "",
+          Principal: guest.principal ? 1 : 0,
+          "Nombre Invitado": guest.nombre ?? "",
+          "Adulto | Niño": guest.categoria ?? "",
+          Especial: guest.especial ? 1 : 0,
+          CONFIRMADO:
+            guest.confirmacionInvitados?.[0]?.respuesta === "SI"
+              ? "CONFIRMADO"
+              : guest.confirmacionInvitados?.[0]?.respuesta === "NO"
+              ? "NO CONFIRMADO"
+              : "SIN RESPUESTA",
+        }))
+      );
+
+      const safeRows =
+        rows.length > 0 ? rows : [{ Tipo: "", "Numero de invitacion": "" }];
+
+      const ws = XLSX.utils.json_to_sheet(safeRows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Invitados");
+
+      if (ws["!ref"]) {
+        (ws as any)["!autofilter"] = { ref: ws["!ref"] };
+      }
+
+      const buf = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+      saveAs(new Blob([buf]), `invitados.xlsx`);
+    } catch (e: any) {
+      message.error("Error al exportar: " + e.message);
+    }
+  };
+
   return (
     <animated.div
       style={{
@@ -94,7 +147,12 @@ export default function AdminList() {
         }}
       >
         <h1>Panel de Invitados</h1>
-        <Button onClick={handleLogout}>Cerrar sesión</Button>
+        <Space>
+          <Button onClick={handleLogout}>Cerrar sesión</Button>
+          <Button onClick={exportToExcel} type="default">
+            Exportar a Excel
+          </Button>
+        </Space>
       </div>
 
       <Space style={{ marginBottom: 12, flexWrap: "wrap" }}>
@@ -102,10 +160,7 @@ export default function AdminList() {
           placeholder="Buscar por número, familia, tipo, hostedBy..."
           allowClear
           enterButton="Buscar"
-          onSearch={() => {
-            setPage(1);
-            fetchItems();
-          }}
+          onSearch={onSearch}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           style={{ minWidth: 260, flex: "1 1 300px" }}

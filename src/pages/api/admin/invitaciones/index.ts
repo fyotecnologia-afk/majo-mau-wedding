@@ -22,38 +22,48 @@ export default async function handler(
         ];
       }
 
+      // Primero filtramos según especial si aplica
+      let invitadosFilter: any = {};
+      if (especial === "true") invitadosFilter.especial = true;
+      else if (especial === "false") invitadosFilter.especial = false;
+
+      // Total de registros filtrados
+      const total = await db.invitacion.count({
+        where: {
+          ...where,
+          ...(especial !== undefined
+            ? {
+                invitados: { some: invitadosFilter },
+              }
+            : {}),
+        },
+      });
+
       const skip = (Number(page) - 1) * Number(pageSize);
 
-      // Traemos invitaciones con invitados y confirmaciones
-      const [items, total] = await Promise.all([
-        db.invitacion.findMany({
-          where,
-          orderBy: { numero: "asc" },
-          skip,
-          take: Number(pageSize),
-          include: {
-            invitados: true,
-            confirmaciones: {
-              include: { confirmacionInvitados: true },
-            },
+      // Traemos la página actual
+      const items = await db.invitacion.findMany({
+        where: {
+          ...where,
+          ...(especial !== undefined
+            ? {
+                invitados: { some: invitadosFilter },
+              }
+            : {}),
+        },
+        orderBy: { numero: "asc" },
+        skip,
+        take: Number(pageSize),
+        include: {
+          invitados: true,
+          confirmaciones: {
+            include: { confirmacionInvitados: true },
           },
-        }),
-        db.invitacion.count({ where }),
-      ]);
+        },
+      });
 
-      // Filtramos por especial si se envió el parámetro
-      let filteredItems = items;
-      if (especial === "true") {
-        filteredItems = items.filter((inv) =>
-          inv.invitados.some((i: any) => i.especial)
-        );
-      } else if (especial === "false") {
-        filteredItems = items.filter(
-          (inv) => !inv.invitados.some((i: any) => i.especial)
-        );
-      }
-
-      const itemsWithCounts = filteredItems.map((inv) => {
+      // Mapear conteos como antes
+      const itemsWithCounts = items.map((inv) => {
         const conteoInvitados = inv.invitados?.length || 0;
 
         const invitadosConfirmadosMap: Record<string, "SI" | "NO"> = {};
@@ -82,9 +92,7 @@ export default async function handler(
         };
       });
 
-      res
-        .status(200)
-        .json({ items: itemsWithCounts, total: filteredItems.length });
+      res.status(200).json({ items: itemsWithCounts, total });
       return;
     }
 
