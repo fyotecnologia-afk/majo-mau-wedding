@@ -1,8 +1,12 @@
+// src/pages/admin/invitaciones/[id].ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/lib/db";
 import { Estado } from "@prisma/client";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const { id } = req.query as { id: string };
 
   try {
@@ -27,12 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (req.method === "PUT") {
-      const {
-        numero,
-        hostedBy,
-        tipo,
-        familia,
-      } = req.body;
+      const { numero, hostedBy, tipo, familia } = req.body;
 
       const updated = await db.invitacion.update({
         where: { id },

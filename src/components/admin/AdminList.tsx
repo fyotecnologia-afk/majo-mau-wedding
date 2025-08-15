@@ -10,6 +10,7 @@ import {
   message,
   Pagination,
   Select,
+  Switch,
 } from "antd";
 import { useRouter } from "next/router";
 import { useSpring, animated } from "@react-spring/web";
@@ -130,20 +131,36 @@ export default function AdminList() {
           {
             title: "Estado",
             dataIndex: "estado",
-            render: (v) =>
-              v === "ACTIVO" ? (
-                <Tag color="green">ACTIVO</Tag>
-              ) : (
-                <Tag color="red">INACTIVO</Tag>
-              ),
+            render: (v, r) => (
+              <Switch
+                checked={v === "ACTIVO"}
+                checkedChildren="ACTIVO"
+                unCheckedChildren="INACTIVO"
+                onChange={async (checked) => {
+                  const nuevoEstado = checked ? "ACTIVO" : "INACTIVO";
+                  try {
+                    const res = await fetch(`/api/admin/invitaciones/${r.id}`, {
+                      method: "PATCH",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ estado: nuevoEstado }),
+                    });
+                    if (!res.ok) throw new Error("Error al actualizar estado");
+                    message.success(`Estado actualizado a ${nuevoEstado}`);
+                    fetchItems();
+                  } catch (e: any) {
+                    message.error(e.message);
+                  }
+                }}
+              />
+            ),
             responsive: ["sm"],
           },
           {
             title: "Flags",
             render: (_, r) => (
               <Space size="small" wrap>
-                {typeof r.tanteo === "number" && (
-                  <Tag color="blue">Tanteo: {r.tanteo}</Tag>
+                {r.invitados?.some((inv: any) => inv.especial) && (
+                  <Tag color="yellow">Especial</Tag>
                 )}
               </Space>
             ),
