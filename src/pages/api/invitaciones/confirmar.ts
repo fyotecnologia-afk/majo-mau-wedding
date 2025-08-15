@@ -1,13 +1,17 @@
 // src/pages/api/invitaciones/confirmar.ts
-import { NextApiRequest, NextApiResponse } from 'next';
-import { db } from '@/lib/db';
+import { NextApiRequest, NextApiResponse } from "next";
+import { db } from "@/lib/db";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') return res.status(405).end();
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "POST") return res.status(405).end();
 
-  const { numero, asistentes = [], dedicatoria = '' } = req.body;
+  const { numero, asistentes = [], dedicatoria = "" } = req.body;
 
-  if (!numero) return res.status(400).json({ error: 'Falta número de invitación' });
+  if (!numero)
+    return res.status(400).json({ error: "Falta número de invitación" });
 
   try {
     // Buscar invitacion con confirmaciones
@@ -16,18 +20,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       include: {
         invitados: true,
         confirmaciones: {
-          orderBy: { createdAt: 'asc' }, // asc para contar desde la primera
+          orderBy: { createdAt: "asc" }, // asc para contar desde la primera
           include: { confirmacionInvitados: true },
         },
       },
     });
 
-    if (!invitacion) return res.status(404).json({ error: 'Invitación no encontrada' });
+    if (!invitacion)
+      return res.status(404).json({ error: "Invitación no encontrada" });
 
     const totalConfirmaciones = invitacion.confirmaciones.length;
 
     if (totalConfirmaciones >= 2) {
-      return res.status(400).json({ error: 'Ya se han realizado las dos oportunidades de confirmación' });
+      return res
+        .status(400)
+        .json({
+          error: "Ya se han realizado las dos oportunidades de confirmación",
+        });
     }
 
     // Crear nueva confirmación
@@ -43,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Crear confirmacionInvitado para cada invitado según asistentes[]
     await Promise.all(
       invitacion.invitados.map((invitado) => {
-        const respuesta = asistentes.includes(invitado.id) ? 'SI' : 'NO';
+        const respuesta = asistentes.includes(invitado.id) ? "SI" : "NO";
         return db.confirmacionInvitado.create({
           data: {
             confirmacionId,
@@ -54,9 +63,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
     );
 
-    res.status(200).json({ success: true, oportunidad: totalConfirmaciones + 1 });
+    res
+      .status(200)
+      .json({ success: true, oportunidad: totalConfirmaciones + 1 });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error procesando confirmación' });
+    res.status(500).json({ error: "Error procesando confirmación" });
   }
 }

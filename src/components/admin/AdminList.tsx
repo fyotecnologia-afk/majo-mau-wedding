@@ -32,13 +32,6 @@ export default function AdminList() {
   const [loading, setLoading] = useState(false);
   const [ultimoNumero, setUltimoNumero] = useState<string>("");
 
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await fetch("/api/admin/logout", { method: "POST" });
-    router.reload();
-  };
-
   const spring = useSpring({
     from: { opacity: 0, y: 10 },
     to: { opacity: 1, y: 0 },
@@ -132,7 +125,6 @@ export default function AdminList() {
     <animated.div
       style={{
         ...spring,
-        padding: 24,
         maxWidth: "100%",
         margin: "0 auto",
         overflowX: "auto",
@@ -148,7 +140,6 @@ export default function AdminList() {
       >
         <h1>Panel de Invitados</h1>
         <Space>
-          <Button onClick={handleLogout}>Cerrar sesión</Button>
           <Button onClick={exportToExcel} type="default">
             Exportar a Excel
           </Button>

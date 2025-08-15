@@ -8,6 +8,11 @@ export default async function handler(
 ) {
   const numero = req.query.numero as string;
 
+  // Evitar que este endpoint maneje rutas como /lista
+  if (!numero || numero.toLowerCase() === "lista") {
+    return res.status(400).json({ error: "Ruta inválida para este endpoint" });
+  }
+
   try {
     const invitacion = await db.invitacion.findUnique({
       where: { numero },

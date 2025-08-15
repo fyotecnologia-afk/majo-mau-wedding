@@ -35,7 +35,7 @@ export default function AdminDetail() {
     setLoading(true);
     const res = await fetch(`/api/admin/invitaciones/${id}`);
     if (!res.ok) {
-      message.error("Invitación no encontrada");
+      message.error("Invitación no encontrada en [id].tsx");
       router.replace("/admin");
       return;
     }

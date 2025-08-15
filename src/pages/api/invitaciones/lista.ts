@@ -1,3 +1,4 @@
+// src/pages/api/invitaciones/lista.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "@/lib/db";
 
@@ -35,7 +36,6 @@ export default async function handler(
 ) {
   try {
     const invitaciones = await db.invitacion.findMany({
-      where: { estado: "ACTIVO" },
       select: {
         id: true,
         numero: true,
@@ -43,14 +43,13 @@ export default async function handler(
         tipo: true,
         familia: true,
         invitados: {
-          where: { estado: "ACTIVO" },
-          include: {
-            confirmacionInvitados: true,
-          },
+          include: { confirmacionInvitados: true },
         },
         confirmaciones: true,
       },
     });
+
+    console.log("Invitaciones encontradas:", invitaciones.length);
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "";
 

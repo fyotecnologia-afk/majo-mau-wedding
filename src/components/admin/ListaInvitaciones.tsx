@@ -1,7 +1,8 @@
+// src/components/admin/ListaInvitaciones.tsx
 "use client";
 
-import React, { useState } from "react";
-import { Button, Table, Typography, message, Space } from "antd";
+import React, { useState, useEffect } from "react";
+import { Table, Typography, message, Space, Button } from "antd";
 import { CopyOutlined } from "@ant-design/icons";
 
 type Respuesta = "SI" | "NO" | null;
@@ -33,18 +34,23 @@ export default function ListaInvitaciones() {
   const [datos, setDatos] = useState<InvitacionData[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const obtenerDatos = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/invitaciones/lista");
-      if (!res.ok) throw new Error("Error al cargar los datos");
-      const json = await res.json();
-      setDatos(json.datos || []);
-    } catch (error) {
-      console.error(error);
-    }
-    setLoading(false);
-  };
+  // Carga automática al montar
+  useEffect(() => {
+    const obtenerDatos = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/invitaciones/lista");
+        if (!res.ok) throw new Error("Error al cargar los datos");
+        const json = await res.json();
+        setDatos(json.datos || []);
+      } catch (error) {
+        console.error(error);
+      }
+      setLoading(false);
+    };
+
+    obtenerDatos();
+  }, []);
 
   const copiarAlPortapapeles = async (url: string) => {
     const textoCompleto = `Estamos muy emocionados por recibirlos en esta celebración tan importante\n${url}`;
@@ -154,15 +160,10 @@ export default function ListaInvitaciones() {
   ];
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <Typography.Title level={3} style={{ textAlign: "center" }}>
-        Módulo Administrativo Invitaciones
+    <div style={{ padding: "0" }}>
+      <Typography.Title level={4} style={{ textAlign: "center" }}>
+        Listado de invitaciones para compartir
       </Typography.Title>
-      <div style={{ textAlign: "center", marginBottom: "1rem" }}>
-        <Button type="primary" onClick={obtenerDatos} loading={loading}>
-          Obtener Datos
-        </Button>
-      </div>
 
       {datos.length > 0 && (
         <Table
