@@ -129,28 +129,20 @@ const GiftTable: React.FC = () => {
                           fontSize: "clamp(1rem, 2vw, 1.2rem)",
                           color: "#7A8B75",
                           marginBottom: 12,
-                          userSelect: "all",
-                          cursor: "pointer",
                         }}
-                        onClick={() =>
-                          option.details.numeroEvento &&
-                          handleCopy(option.details.numeroEvento)
-                        }
-                        title="Click para copiar número de evento"
                       >
-                        {option.details.numeroEvento}
-                        {copiedText === option.details.numeroEvento && (
-                          <span
-                            style={{
-                              marginLeft: 8,
-                              color: "#CBB278",
-                              fontWeight: 500,
-                              fontSize: 12,
-                            }}
-                          >
-                            Copiado!
-                          </span>
-                        )}
+                        <a
+                          href={`https://mesaderegalos.liverpool.com.mx/milistaderegalos/${option.details.numeroEvento}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            color: "#7A8B75",
+                            textDecoration: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {option.details.numeroEvento}
+                        </a>
                       </div>
                     )}
 

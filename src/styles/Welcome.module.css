@@ -14,7 +14,7 @@
   font-family: var(--font-meow);
   font-weight: 200;
   color: rgb(122, 139, 117);
-  font-size: clamp(2.4rem, 4vw, 4rem) !important;
+  font-size: clamp(4rem, 5vw, 5rem) !important;
   margin: 0;
 }
 
@@ -23,9 +23,9 @@
   font-size: 0.7rem;
   font-weight: 100;
   margin: 0;
-  margin-top: clamp(-16px, -3vw, -10px);
-  margin-bottom: clamp(6px, 1vw, 0px);
-  margin-left: clamp(18px, 4vw, 18px);
+  margin-top: clamp(-20px, 5vw, -23px);
+  margin-bottom: clamp(8px, 5vw, 0px);
+  margin-left: clamp(16px, 5vw, 16px);
 }
 
 .imageWrapper {
