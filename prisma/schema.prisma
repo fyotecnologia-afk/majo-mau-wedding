@@ -77,6 +77,6 @@ model ConfirmacionInvitado {
 model ParametrosGlobales {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   tipo        String   // "fechaLimite" o "maxIntentos"
-  valorDate   DateTime? // solo se usa para fecha
+  valorDate   String? // solo se usa para fecha
   valorNumber Int?      // solo se usa para número de intentos
 }

@@ -13,7 +13,7 @@ async function main() {
     const registroFecha = await db.parametrosGlobales.create({
       data: {
         tipo: "fechaLimite", // campo extra para diferenciar tipo de parámetro
-        valorDate: new Date('2025-10-17T23:59:59')
+        valorDate: "2025-10-17"
       }
     });
 

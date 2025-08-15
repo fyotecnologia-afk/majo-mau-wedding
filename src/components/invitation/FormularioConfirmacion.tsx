@@ -47,23 +47,15 @@ type TipoMensaje = "success" | "info" | "warning" | "error";
 
 type ConfirmInvitationProps = {
   numero?: string | null;
+  intentosRealizados?: number; // desde inicio
 };
-
-// --- Fecha límite ---
-const FECHA_LIMITE = "2025-10-17";
-const [yy, mm, dd] = FECHA_LIMITE.split("-").map(Number);
-const fechaFormateada = new Date(yy, mm - 1, dd).toLocaleDateString("es-MX", {
-  day: "numeric",
-  month: "long",
-});
-const fechaCorte = new Date(yy, mm - 1, dd, 23, 59, 59, 999);
 
 export default function ConfirmInvitation({
   numero: numeroProp,
+  intentosRealizados = 0,
 }: ConfirmInvitationProps) {
   const [form] = Form.useForm();
   const [invitados, setInvitados] = useState<Invitado[]>([]);
-  const [confirmacionesCount, setConfirmacionesCount] = useState(0);
   const [seleccionados, setSeleccionados] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [enviando, setEnviando] = useState(false);
@@ -72,19 +64,60 @@ export default function ConfirmInvitation({
     texto: string;
   } | null>(null);
   const [dedicatoria, setDedicatoria] = useState("");
+  const [fechaLimite, setFechaLimite] = useState<Date | null>(null);
+  const [maxIntentos, setMaxIntentos] = useState(2);
+  const [cerradoPorFecha, setCerradoPorFecha] = useState(false);
+  const [cerradoPorIntentos, setCerradoPorIntentos] = useState(false);
+  const [intentosRealizadosState, setIntentosRealizadosState] =
+    useState(intentosRealizados);
 
-  const cerradoPorFecha = new Date().getTime() > fechaCorte.getTime();
-  const maxIntentosAlcanzados = confirmacionesCount >= 2;
+  // Cargar parámetros globales y determinar bloqueos desde inicio
+  useEffect(() => {
+    const fetchParametros = async () => {
+      try {
+        const res = await fetch("/api/parametrosGlobales");
+        if (!res.ok)
+          throw new Error("No se pudieron obtener parámetros globales");
+        const data = await res.json();
+
+        let fechaCorte: Date | null = null;
+        if (data.fechaLimite) {
+          const [year, month, day] = data.fechaLimite.split("-").map(Number);
+          fechaCorte = new Date(year, month - 1, day);
+          fechaCorte.setHours(23, 59, 59, 999);
+        }
+
+        const now = new Date();
+        const bloqueadoFecha = fechaCorte
+          ? now.getTime() > fechaCorte.getTime()
+          : false;
+        const bloqueadoIntentos =
+          intentosRealizadosState >= (data.maxIntentos || 2);
+
+        setFechaLimite(fechaCorte);
+        setMaxIntentos(data.maxIntentos || 2);
+        setCerradoPorFecha(bloqueadoFecha);
+        setCerradoPorIntentos(bloqueadoIntentos);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchParametros();
+  }, []);
 
   // Precargar número si viene por props
   useEffect(() => {
     if (numeroProp) form.setFieldsValue({ numero: numeroProp });
   }, [numeroProp, form]);
 
-  // Cargar dedicatoria al entrar a step 1
+  // Cada vez que cambien los intentos o el máximo, recalcula si está cerrado por intentos
   useEffect(() => {
-    if (currentStep === 1) form.setFieldsValue({ dedicatoria });
-  }, [currentStep, dedicatoria, form]);
+    setCerradoPorIntentos(intentosRealizadosState >= maxIntentos);
+  }, [intentosRealizadosState, maxIntentos]);
+
+  const fechaFormateada = fechaLimite
+    ? fechaLimite.toLocaleDateString("es-MX", { day: "numeric", month: "long" })
+    : "";
 
   const buscarInvitacion = async () => {
     const numero = form.getFieldValue("numero")?.trim();
@@ -116,7 +149,6 @@ export default function ConfirmInvitation({
       });
 
       setInvitados(invitadosConRespuesta);
-      setConfirmacionesCount(data.confirmaciones.length || 0);
       setDedicatoria(data.dedicatoria || "");
 
       const preSeleccionados = invitadosConRespuesta
@@ -124,7 +156,9 @@ export default function ConfirmInvitation({
         .map((inv) => inv.id);
       setSeleccionados(preSeleccionados);
 
-      setCurrentStep(data.confirmaciones.length >= 2 ? 2 : 1);
+      if (!cerradoPorFecha && !cerradoPorIntentos) {
+        setCurrentStep(1);
+      }
     } catch (error: any) {
       setMensaje({
         tipo: "error",
@@ -140,6 +174,7 @@ export default function ConfirmInvitation({
 
   const enviarConfirmacion = async () => {
     const dedicatoriaForm = form.getFieldValue("dedicatoria")?.trim() || "";
+
     if (seleccionados.length === 0 && dedicatoriaForm === "") {
       setMensaje({
         tipo: "error",
@@ -148,11 +183,15 @@ export default function ConfirmInvitation({
       return;
     }
 
-    if (cerradoPorFecha) {
+    // Bloqueos por fecha o intentos
+    if (cerradoPorFecha || cerradoPorIntentos) {
       setMensaje({
         tipo: "warning",
-        texto: `La fecha límite para confirmar (${fechaFormateada}) ya pasó.`,
+        texto: cerradoPorFecha
+          ? `La fecha límite para confirmar (${fechaFormateada}) ya pasó.`
+          : `Ya se alcanzó el máximo de ${maxIntentos} intentos permitidos.`,
       });
+      setCurrentStep(2); // Mostrar paso final con mensaje
       return;
     }
 
@@ -170,6 +209,7 @@ export default function ConfirmInvitation({
           dedicatoria: dedicatoriaForm,
         }),
       });
+
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.error || "Error al confirmar");
@@ -177,7 +217,10 @@ export default function ConfirmInvitation({
 
       setMensaje({ tipo: "success", texto: "¡Confirmado correctamente!" });
       setDedicatoria(dedicatoriaForm);
-      setConfirmacionesCount((c) => c + 1);
+
+      // Incrementar intentos y automáticamente actualizar cerradoPorIntentos por useEffect
+      setIntentosRealizadosState((c) => c + 1);
+
       setCurrentStep(2);
     } catch (error: any) {
       setMensaje({
@@ -201,7 +244,7 @@ export default function ConfirmInvitation({
           borderRadius: 24,
           background: "linear-gradient(180deg, #F6F1EB 0%, #fffef8 100%)",
           boxShadow:
-            "0 12px 24px rgba(122, 139, 117, 0.15), 0 8px 16px rgba(203, 178, 120, 0.3)",
+            "0 12px 24px rgba(122,139,117,0.15),0 8px 16px rgba(203,178,120,0.3)",
           border: `1px solid #CBB278`,
         }}
         title={
@@ -210,11 +253,8 @@ export default function ConfirmInvitation({
               level={2}
               style={{
                 textAlign: "center",
-                fontSize: "clamp(1.2rem, 5vw, 2rem)",
+                fontSize: "clamp(1.2rem,5vw,2rem)",
                 margin: "1rem 0 0",
-                wordBreak: "break-word",
-                whiteSpace: "normal",
-                overflowWrap: "break-word",
               }}
               className="title-decorative"
             >
@@ -225,13 +265,14 @@ export default function ConfirmInvitation({
                 display: "block",
                 textAlign: "center",
                 color: "#c6b687",
-                fontSize: "clamp(0.7rem, 2vw, 1.2rem)",
-                wordBreak: "break-word",
-                whiteSpace: "normal",
+                fontSize: "clamp(1rem,2vw,1.2rem)",
                 margin: "0 auto",
                 lineHeight: 1.5,
                 fontWeight: 100,
+                whiteSpace: "normal",
+                wordBreak: "break-word",
               }}
+              className="font-manjari"
             >
               Nos encantará contar contigo. Por favor confirma tu asistencia
               antes del <strong>{fechaFormateada}</strong> para ayudarnos a
@@ -263,17 +304,18 @@ export default function ConfirmInvitation({
           ]}
         />
 
-        {(cerradoPorFecha || maxIntentosAlcanzados) && (
+        {/* Mostrar alerta si está cerrado por fecha o max intentos */}
+        {(cerradoPorFecha || cerradoPorIntentos) && (
           <Alert
             message={
-              maxIntentosAlcanzados
-                ? "Límite de intentos alcanzado"
-                : "Confirmación cerrada por fecha"
+              cerradoPorIntentos
+                ? `Formulario cerrado por intentos alcanzados`
+                : "Formulario cerrado por fecha"
             }
             description={
-              maxIntentosAlcanzados
-                ? "Ya se han realizado los dos intentos permitidos. Ponte en contacto con los novios."
-                : `La fecha límite para confirmar (${fechaFormateada}) ya pasó.`
+              cerradoPorIntentos
+                ? `Ya se han realizado los ${maxIntentos} intentos permitidos. Ponte en contacto con los novios.`
+                : `La fecha límite para confirmar (${fechaFormateada}) ha terminado. Ponte en contacto con los novios.`
             }
             type="warning"
             showIcon
@@ -282,7 +324,8 @@ export default function ConfirmInvitation({
           />
         )}
 
-        {!cerradoPorFecha && !maxIntentosAlcanzados && currentStep === 0 && (
+        {/* Step 0 */}
+        {currentStep === 0 && !cerradoPorFecha && !cerradoPorIntentos && (
           <Form form={form} layout="vertical" onFinish={buscarInvitacion}>
             <Form.Item
               label="Número de invitación"
@@ -290,7 +333,7 @@ export default function ConfirmInvitation({
               rules={[
                 {
                   required: true,
-                  message: "Por favor ingresa tu número de invitación",
+                  message: "Ingresa tu número de invitación",
                 },
               ]}
               className="font-manjari"
@@ -298,7 +341,7 @@ export default function ConfirmInvitation({
               <Input
                 placeholder="Comienza por MM"
                 className="font-manjari"
-                style={{ borderRadius: 8, padding: 12, color: "#000000" }}
+                style={{ borderRadius: 8, padding: 12, color: "black" }}
               />
             </Form.Item>
             <Form.Item>
@@ -316,19 +359,11 @@ export default function ConfirmInvitation({
                 Buscar invitados
               </Button>
             </Form.Item>
-            {mensaje && (
-              <Alert
-                message={mensaje.texto}
-                type={mensaje.tipo}
-                showIcon
-                style={{ marginTop: 5 }}
-                className="font-manjari"
-              />
-            )}
           </Form>
         )}
 
-        {!cerradoPorFecha && !maxIntentosAlcanzados && currentStep === 1 && (
+        {/* Step 1 */}
+        {!cerradoPorFecha && !cerradoPorIntentos && currentStep === 1 && (
           <>
             <Alert
               message="Selecciona quién asistirá"
@@ -349,22 +384,19 @@ export default function ConfirmInvitation({
                   <Space direction="vertical" style={{ width: "100%" }}>
                     {invitados.map(({ id, nombre, respuesta }) => (
                       <Checkbox key={id} value={id}>
-                        <span style={{ fontWeight: 500 }}>{nombre}</span>
+                        <span
+                          style={{ fontWeight: 500 }}
+                          className="font-manjari"
+                        >
+                          {nombre}
+                        </span>
                         {respuesta === "SI" && (
-                          <Text
-                            type="success"
-                            style={{ marginLeft: 8 }}
-                            className="font-manjari"
-                          >
+                          <Text type="success" style={{ marginLeft: 8 }}>
                             (Confirmado)
                           </Text>
                         )}
                         {respuesta === "NO" && (
-                          <Text
-                            type="danger"
-                            style={{ marginLeft: 8 }}
-                            className="font-manjari"
-                          >
+                          <Text type="danger" style={{ marginLeft: 8 }}>
                             (No asistirá)
                           </Text>
                         )}
@@ -374,28 +406,14 @@ export default function ConfirmInvitation({
                 </Checkbox.Group>
               </Form.Item>
 
-              <Form.Item
-                label="Dedicatoria (opcional)"
-                name="dedicatoria"
-                className="font-manjari"
-              >
+              <Form.Item label="Dedicatoria (opcional)" name="dedicatoria">
                 <TextArea
                   rows={4}
-                  placeholder="Escribe unas palabras para nosotros..."
+                  placeholder="Escribe unas palabras..."
                   className="font-manjari"
-                  style={{ borderRadius: 8, color: "#000000ff" }}
+                  style={{ borderRadius: 8, color: "black" }}
                 />
               </Form.Item>
-
-              {mensaje && (
-                <Alert
-                  message={mensaje.texto}
-                  type={mensaje.tipo}
-                  showIcon
-                  style={{ marginBottom: 5 }}
-                  className="font-manjari"
-                />
-              )}
 
               <Form.Item>
                 <Button
@@ -421,36 +439,50 @@ export default function ConfirmInvitation({
           </>
         )}
 
-        {currentStep === 2 && !cerradoPorFecha && !maxIntentosAlcanzados && (
+        {/* Step 2 */}
+        {currentStep === 2 && !cerradoPorFecha && !cerradoPorIntentos && (
           <div style={{ textAlign: "center", padding: "2rem 1rem" }}>
             <CheckCircleOutlined
               style={{ fontSize: 64, color: "#52c41a", marginBottom: 16 }}
             />
-            <Title
-              level={4}
-              style={{ color: "#c6b687" }}
-              className="font-manjari"
-            >
-              ¡Gracias por confirmar!
+            <Title level={4} style={{ color: "#c6b687" }}>
+              {cerradoPorFecha
+                ? `La fecha límite para confirmar (${fechaFormateada}) ya pasó.`
+                : cerradoPorIntentos
+                ? `Ya se alcanzó el máximo de ${maxIntentos} intentos permitidos.`
+                : "¡Gracias por confirmar!"}
             </Title>
-            <Text style={{ color: "#c6b687" }} className="font-manjari">
-              Estamos felices de contar contigo en este evento tan especial.
-            </Text>
-            <Button
-              type="primary"
-              onClick={editarMiConfirmacion}
-              style={{
-                backgroundColor: "#CBB278",
-                borderColor: "#CBB278",
-                borderRadius: 8,
-                fontWeight: "bold",
-                marginTop: 24,
-              }}
-              block
-            >
-              Editar mi confirmación
-            </Button>
+            {!cerradoPorIntentos && !cerradoPorFecha && (
+              <>
+                <Text style={{ color: "#c6b687" }} className="font-manjari">
+                  Estamos felices de contar contigo en este evento tan especial.
+                </Text>
+                <Button
+                  type="primary"
+                  onClick={editarMiConfirmacion}
+                  style={{
+                    backgroundColor: "#CBB278",
+                    borderColor: "#CBB278",
+                    borderRadius: 8,
+                    fontWeight: "bold",
+                    marginTop: 24,
+                  }}
+                  block
+                >
+                  Editar mi confirmación
+                </Button>
+              </>
+            )}
           </div>
+        )}
+
+        {mensaje && currentStep !== 2 && (
+          <Alert
+            message={mensaje.texto}
+            type={mensaje.tipo}
+            showIcon
+            style={{ marginBottom: 12 }}
+          />
         )}
       </Card>
     </div>

@@ -27,13 +27,14 @@ import ImagenFinal from "@/components/invitation/ImagenFinal";
 type DataResponse = {
   exists: boolean;
   estado?: string;
-  confirmaciones?: number;
+  numIntentos?: number;
 };
 
 export default function ConfirmacionPage() {
   const router = useRouter();
   const { codigo } = router.query;
   const [numero, setNumero] = useState<string | null>(null);
+  const [numIntentos, setNumIntentos] = useState<number>(0);
   const [data, setData] = useState<DataResponse | null>(null);
 
   useEffect(() => {
@@ -44,7 +45,10 @@ export default function ConfirmacionPage() {
 
     fetch(`/api/invitaciones/${encodeURIComponent(decoded)}`)
       .then((res) => res.json())
-      .then(setData)
+      .then((resData: DataResponse) => {
+        setData(resData);
+        setNumIntentos(resData.numIntentos || 0);
+      })
       .catch(() => setData({ exists: false }));
   }, [codigo]);
 
@@ -55,70 +59,58 @@ export default function ConfirmacionPage() {
   return (
     <main style={{ position: "relative", overflow: "hidden" }}>
       <MusicPlayer src="/music/cancion.mp3" />
+
       <div style={{ position: "relative", minHeight: "100vh" }}>
         <Welcome />
       </div>
 
       <TrailAnimation />
-
       <div style={{ position: "relative" }}>
         <Masonry />
       </div>
-
       <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <WeddingEvents />
       </div>
-
       <div style={{ position: "relative" }}>
         <BackgroundSlider />
       </div>
-
       <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <FamilySection />
       </div>
-
       <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <Itinerary />
       </div>
-
       <div style={{ position: "relative" }}>
         <Viewpages />
       </div>
-
       <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <HotelSuggestions />
       </div>
-
       <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <Makeup />
       </div>
-
       <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <RentCars />
       </div>
-
       <div style={{ position: "relative" }}>
         <Slider2 />
       </div>
-
       <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <DressCode />
       </div>
-
       <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <Restrictions />
       </div>
-
       <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <Gifts />
       </div>
-
       <div style={{ position: "relative", padding: "0 20px 20px" }}>
         <ImagenFinal />
       </div>
 
+      {/* Formulario solo recibe lo que necesita */}
       <div style={{ position: "relative", zIndex: 2, padding: "0 20px 20px" }}>
-        <Formulario numero={numero} />
+        <Formulario numero={numero} intentosRealizados={numIntentos} />
       </div>
     </main>
   );
