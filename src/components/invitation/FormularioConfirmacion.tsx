@@ -119,6 +119,13 @@ export default function ConfirmInvitation({
     ? fechaLimite.toLocaleDateString("es-MX", { day: "numeric", month: "long" })
     : "";
 
+  const cancelarSeleccion = () => {
+    setCurrentStep(0); // Regresa al step 0
+    setSeleccionados([]); // Limpia la selección
+    setDedicatoria(""); // Limpia la dedicatoria
+    setMensaje(null); // Limpia mensajes
+  };
+
   const buscarInvitacion = async () => {
     const numero = form.getFieldValue("numero")?.trim();
     if (!numero) {
@@ -150,6 +157,7 @@ export default function ConfirmInvitation({
 
       setInvitados(invitadosConRespuesta);
       setDedicatoria(data.dedicatoria || "");
+      form.setFieldsValue({ dedicatoria: data.dedicatoria || "" });
 
       const preSeleccionados = invitadosConRespuesta
         .filter((inv) => inv.respuesta === "SI")
@@ -412,27 +420,45 @@ export default function ConfirmInvitation({
                   placeholder="Escribe unas palabras..."
                   className="font-manjari"
                   style={{ borderRadius: 8, color: "black" }}
+                  value={dedicatoria} // sincronizado con estado
+                  onChange={(e) => setDedicatoria(e.target.value)}
                 />
               </Form.Item>
 
-              <Form.Item>
+              <Form.Item style={{}}>
                 <Button
                   type="primary"
                   htmlType="submit"
                   loading={enviando}
-                  disabled={
-                    seleccionados.length === 0 &&
-                    !form.getFieldValue("dedicatoria")
-                  }
-                  block
+                  disabled={seleccionados.length === 0 && !dedicatoria}
                   style={{
-                    backgroundColor: "#c6b687",
-                    borderColor: "#c6b687",
+                    backgroundColor: "#CBB278",
+                    borderColor: "#CBB278",
                     borderRadius: 8,
                     fontWeight: "bold",
+                    marginTop: 24,
                   }}
+                  block
                 >
                   Confirmar
+                </Button>
+                <Button
+                  type="default"
+                  onClick={() => {
+                    setCurrentStep(0);
+                    setSeleccionados([]);
+                    setDedicatoria("");
+                    form.setFieldsValue({ dedicatoria: "" });
+                    setMensaje(null);
+                  }}
+                  style={{
+                    borderRadius: 8,
+                    fontWeight: "bold",
+                    marginTop: 12,
+                  }}
+                  block
+                >
+                  Cancelar
                 </Button>
               </Form.Item>
             </Form>
