@@ -1,12 +1,14 @@
 // src/components/admin/AdminLayout.tsx
 import React, { ReactNode, useState } from "react";
-import { Layout, Menu, Avatar, Dropdown, Button, Space } from "antd";
+import { Layout, Menu, Avatar, Button, theme } from "antd";
 import {
   UserOutlined,
   TeamOutlined,
   FileTextOutlined,
   SettingOutlined,
   LogoutOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/router";
 import type { MenuProps } from "antd";
@@ -19,7 +21,10 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const router = useRouter();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true); // 👉 siempre inicia colapsado
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
 
   const handleLogout = async () => {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -38,28 +43,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       label: "Lista Invitaciones",
     },
     {
-      key: "configuracion",
+      key: "/admin/config",
       icon: <SettingOutlined />,
-      label: "Configuración",
-      children: [
-        { key: "/admin/config/perfil", label: "Perfil" },
-        { key: "/admin/config/ajustes", label: "Ajustes" },
-      ],
-    },
-  ];
-
-  const dropdownMenuItems: MenuProps["items"] = [
-    {
-      key: "logout",
-      icon: <LogoutOutlined />,
-      label: "Cerrar sesión",
-      onClick: handleLogout,
+      label: "Configuraciones de Parámetros",
     },
   ];
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
+      {/* Sidebar con colapso */}
+      <Sider trigger={null} collapsible collapsed={collapsed}>
         <div
           style={{
             height: 64,
@@ -72,7 +65,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             fontSize: 18,
           }}
         >
-          {!collapsed && "Admin Panel"}
+          {!collapsed ? "Admin Panel" : "A"}
         </div>
 
         <div style={{ textAlign: "center", margin: "16px 0" }}>
@@ -82,6 +75,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           )}
         </div>
 
+        {/* Menú principal */}
         <Menu
           theme="dark"
           mode="inline"
@@ -90,38 +84,64 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             if (!key.startsWith("config")) router.push(key);
           }}
           items={menuItems}
+          style={{ flex: 1 }}
         />
+
+        {/* Botón de cerrar sesión siempre al fondo */}
+        <div
+          style={{
+            padding: "16px",
+            borderTop: "1px solid rgba(255,255,255,0.2)",
+          }}
+        >
+          <Button
+            type="text"
+            icon={<LogoutOutlined />}
+            onClick={handleLogout}
+            style={{ color: "#fff", width: "100%", textAlign: "left" }}
+          >
+            {!collapsed && "Cerrar sesión"}
+          </Button>
+        </div>
       </Sider>
 
+      {/* Contenido */}
       <Layout>
         <Header
           style={{
-            background: "#fff",
-            padding: "0 16px",
+            padding: 0,
+            background: colorBgContainer,
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          <h2 style={{ margin: 0 }}>
+          <Button
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setCollapsed(!collapsed)}
+            style={{
+              fontSize: "16px",
+              width: 64,
+              height: 64,
+            }}
+          />
+
+          <h2 style={{ margin: "auto" }}>
             {router.pathname === "/admin" && "Invitados"}
             {router.pathname === "/admin/lista" && "Lista de Invitaciones"}
+            {router.pathname === "/admin/config" &&
+              "Configuración Parámetros Globales"}
           </h2>
-          <Dropdown menu={{ items: dropdownMenuItems }}>
-            <Button type="text">
-              <Space>
-                <Avatar icon={<UserOutlined />} size="small" />
-                Admin
-              </Space>
-            </Button>
-          </Dropdown>
         </Header>
 
         <Content
           style={{
-            margin: 16,
-            background: "#fff",
+            margin: "24px 16px",
+            padding: 24,
             minHeight: 360,
+            background: colorBgContainer,
+            borderRadius: borderRadiusLG,
           }}
         >
           {children}
