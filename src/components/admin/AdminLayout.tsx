@@ -128,8 +128,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           />
 
           <h2 style={{ margin: "auto" }}>
-            {router.pathname === "/admin" && "Invitados"}
-            {router.pathname === "/admin/lista" && "Lista de Invitaciones"}
+            {router.pathname === "/admin" &&
+              "Configuración de Invitaciones/Invitados"}
+            {router.pathname === "/admin/lista" && "Listado de Invitaciones"}
             {router.pathname === "/admin/config" &&
               "Configuración Parámetros Globales"}
           </h2>

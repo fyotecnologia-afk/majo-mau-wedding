@@ -74,6 +74,11 @@ const GlobalSettings: React.FC = () => {
       title="Parámetros Globales"
       style={{ maxWidth: 600, margin: "0 auto" }}
     >
+      {/* Nota de advertencia */}
+      <div style={{ marginBottom: 16, color: "#d48806", fontWeight: 500 }}>
+        Nota: tener cuidado con la edición de estos parámetros y modificar con
+        responsabilidad.
+      </div>
       <Form form={form} layout="vertical" onFinish={handleSave}>
         <Form.Item
           label="Fecha Límite de Confirmación"

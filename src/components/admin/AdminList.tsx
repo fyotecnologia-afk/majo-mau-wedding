@@ -130,22 +130,6 @@ export default function AdminList() {
         overflowX: "auto",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          marginBottom: 16,
-        }}
-      >
-        <h1>Panel de Invitados</h1>
-        <Space>
-          <Button onClick={exportToExcel} type="default">
-            Exportar a Excel
-          </Button>
-        </Space>
-      </div>
-
       <Space style={{ marginBottom: 12, flexWrap: "wrap" }}>
         <Input.Search
           placeholder="Buscar por número, familia, tipo, hostedBy..."
@@ -186,9 +170,12 @@ export default function AdminList() {
             { value: "NO", label: "No" },
           ]}
         />
-
         <Button type="primary" onClick={() => setOpenCreate(true)}>
           Nueva invitación
+        </Button>
+
+        <Button onClick={exportToExcel} type="default">
+          Exportar a Excel
         </Button>
       </Space>
 

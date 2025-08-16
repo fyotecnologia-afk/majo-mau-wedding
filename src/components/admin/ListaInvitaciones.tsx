@@ -2,8 +2,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Table, Typography, message, Space, Button } from "antd";
-import { CopyOutlined } from "@ant-design/icons";
+import { Table, Typography, message, Space, Button, Collapse } from "antd";
+import { CopyOutlined, DownloadOutlined } from "@ant-design/icons";
+import * as XLSX from "xlsx";
+
+const { Panel } = Collapse;
 
 type Respuesta = "SI" | "NO" | null;
 
@@ -34,7 +37,6 @@ export default function ListaInvitaciones() {
   const [datos, setDatos] = useState<InvitacionData[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Carga automática al montar
   useEffect(() => {
     const obtenerDatos = async () => {
       setLoading(true);
@@ -53,22 +55,65 @@ export default function ListaInvitaciones() {
   }, []);
 
   const copiarAlPortapapeles = async (url: string) => {
-    const textoCompleto = `Un día nos elegimos sin imaginar todo lo que estaba por venir. Con el tiempo descubrimos que aquella elección fue el inicio de nuestra gran historia.
-Hoy, después de cada risa, cada abrazo y cada reto compartido, decidimos dar un paso más… uno que nos unirá para siempre.
-
-Gracias por acompañarnos siempre con su cariño. Ahora queremos que sean testigos de este capítulo tan especial en nuestras vidas.
-Con todo nuestro amor, les compartimos la invitación para celebrar juntos este día tan esperado.
-
-Será un honor compartirlo con quienes hacen que nuestra historia sea aún más hermosa. Esperamos contar con su presencia.
-
-Con cariño,
-Majo y Mau 🤍\n\n${url}`;
+    const textoCompleto = `Invitación completa:\n\n${url}`;
     try {
       await navigator.clipboard.writeText(textoCompleto);
       message.success("Texto copiado al portapapeles");
     } catch {
       message.error("No se pudo copiar el texto");
     }
+  };
+
+  const exportarExcel = () => {
+    if (datos.length === 0) {
+      message.warning("No hay datos para exportar");
+      return;
+    }
+
+    const rows: any[] = [];
+
+    datos.forEach((inv) => {
+      const invitadosText = inv.invitados
+        .map(
+          (i) =>
+            `${i.nombre} — ${
+              i.respuesta === "SI"
+                ? "Confirmado"
+                : i.respuesta === "NO"
+                ? "No asistirá"
+                : "Sin respuesta"
+            }${i.principal ? " (Principal)" : ""}${
+              i.categoria ? ` [${i.categoria}]` : ""
+            }`
+        )
+        .join("\n");
+
+      // Tomamos hasta 2 dedicatorias por invitación
+      const intento1 = inv.dedicatorias[0]
+        ? `${new Date(inv.dedicatorias[0].fecha).toLocaleDateString()}\n${
+            inv.dedicatorias[0].texto
+          }`
+        : "No hay dedicatorias";
+
+      const intento2 = inv.dedicatorias[1]
+        ? `${new Date(inv.dedicatorias[1].fecha).toLocaleDateString()}\n${
+            inv.dedicatorias[1].texto
+          }`
+        : "No hay dedicatorias";
+
+      rows.push({
+        "Número Invitación": inv.numeroInvitacion,
+        Familia: inv.familia || "",
+        Invitados: invitadosText,
+        "Intento 1": intento1,
+        "Intento 2": intento2,
+      });
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Invitaciones");
+    XLSX.writeFile(workbook, "Invitaciones.xlsx");
   };
 
   const columnas = [
@@ -144,24 +189,18 @@ Majo y Mau 🤍\n\n${url}`;
       key: "dedicatorias",
       render: (dedicatorias: Dedicatoria[]) =>
         dedicatorias.length > 0 ? (
-          <div>
+          <Collapse>
             {dedicatorias.map((d) => (
-              <div
+              <Panel
+                header={`Dedicatoria - ${new Date(
+                  d.fecha
+                ).toLocaleDateString()}`}
                 key={d.id}
-                style={{
-                  marginBottom: "0.5rem",
-                  padding: "0.5rem",
-                  background: "#fafafa",
-                  borderRadius: "4px",
-                }}
               >
-                <small style={{ color: "#888" }}>
-                  {new Date(d.fecha).toLocaleString()}
-                </small>
                 <p style={{ whiteSpace: "pre-wrap", margin: 0 }}>{d.texto}</p>
-              </div>
+              </Panel>
             ))}
-          </div>
+          </Collapse>
         ) : (
           <p>No hay dedicatorias</p>
         ),
@@ -169,11 +208,16 @@ Majo y Mau 🤍\n\n${url}`;
   ];
 
   return (
-    <div style={{ padding: "0" }}>
-      <Typography.Title level={4} style={{ textAlign: "center" }}>
-        Listado de invitaciones para compartir
-      </Typography.Title>
-
+    <div style={{ padding: 0 }}>
+      <Space style={{ marginBottom: 16 }}>
+        <Button
+          type="primary"
+          icon={<DownloadOutlined />}
+          onClick={exportarExcel}
+        >
+          Exportar a Excel
+        </Button>
+      </Space>
       {datos.length > 0 && (
         <Table
           columns={columnas}
