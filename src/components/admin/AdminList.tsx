@@ -1,5 +1,5 @@
 // src/components/admin/AdminList.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Table,
   Button,
@@ -8,84 +8,75 @@ import {
   Space,
   Modal,
   message,
-  Pagination,
   Select,
   Switch,
   notification,
 } from "antd";
-import { useRouter } from "next/router";
 import { useSpring, animated } from "@react-spring/web";
 import Link from "next/link";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
-const PAGE_SIZE = 10;
-
 export default function AdminList() {
   const [data, setData] = useState<any[]>([]);
-  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [q, setQ] = useState("");
   const [estado, setEstado] = useState<string | undefined>(undefined);
   const [especial, setEspecial] = useState<boolean | undefined>(undefined);
-  const [page, setPage] = useState(1);
   const [openCreate, setOpenCreate] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [ultimoNumero, setUltimoNumero] = useState<string>("");
+  const [ultimoNumero, setUltimoNumero] = useState("");
 
   const spring = useSpring({
     from: { opacity: 0, y: 10 },
     to: { opacity: 1, y: 0 },
   });
 
-  const fetchItems = async () => {
+  const fetchAllItems = async () => {
     setLoading(true);
-    const params = new URLSearchParams({
-      page: String(page),
-      pageSize: String(PAGE_SIZE),
-    });
-
-    if (q) params.set("q", q);
-    if (estado) params.set("estado", estado);
-    if (especial !== undefined) params.set("especial", String(especial));
-
-    const res = await fetch(`/api/admin/invitaciones?${params.toString()}`);
-    const json = await res.json();
-
-    const items = (json.items || []).map((item: any) => ({
-      ...item,
-      _count: item._count || { invitados: 0, confirmaciones: 0 },
-    }));
-
-    setData(items);
-    setTotal(json.total || 0);
+    try {
+      const res = await fetch("/api/admin/invitaciones?pageSize=10000"); // traemos todos
+      const json = await res.json();
+      const items = (json.items || []).map((item: any) => ({
+        ...item,
+        _count: item._count || { invitados: 0, confirmaciones: 0 },
+      }));
+      setData(items);
+    } catch (e: any) {
+      message.error("Error al cargar datos: " + e.message);
+    }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchItems();
-  }, [page, estado, especial]);
+    fetchAllItems();
+  }, []);
 
-  const onSearch = () => {
-    setPage(1);
-    fetchItems();
-  };
+  // Filtrado en el cliente
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      const text = q.toLowerCase();
+      const matchesQ =
+        item.numero?.toLowerCase().includes(text) ||
+        item.familia?.toLowerCase().includes(text) ||
+        item.tipo?.toLowerCase().includes(text) ||
+        item.hostedBy?.toLowerCase().includes(text);
+
+      const matchesEstado = estado ? item.estado === estado : true;
+
+      const matchesEspecial =
+        especial === undefined
+          ? true
+          : especial
+          ? item.invitados?.some((inv: any) => inv.especial)
+          : !item.invitados?.some((inv: any) => inv.especial);
+
+      return matchesQ && matchesEstado && matchesEspecial;
+    });
+  }, [data, q, estado, especial]);
 
   const exportToExcel = async () => {
     try {
-      // Traemos todos los datos, sin paginación
-      const params = new URLSearchParams();
-      if (q) params.set("q", q);
-      if (estado) params.set("estado", estado);
-      if (especial !== undefined) params.set("especial", String(especial));
-
-      // pageSize grande para traer todos o usar endpoint especial
-      params.set("page", "1");
-      params.set("pageSize", "10000"); // asumir que 10k cubre todos
-
-      const res = await fetch(`/api/admin/invitaciones?${params.toString()}`);
-      const json = await res.json();
-
-      const rows = (json.items || []).flatMap((inv: any) =>
+      const rows = filteredData.flatMap((inv: any) =>
         (inv.invitados || []).map((guest: any) => ({
           Tipo: inv.tipo ?? "",
           "Numero de invitacion": inv.numero ?? "",
@@ -109,11 +100,7 @@ export default function AdminList() {
       const ws = XLSX.utils.json_to_sheet(safeRows);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, "Invitados");
-
-      if (ws["!ref"]) {
-        (ws as any)["!autofilter"] = { ref: ws["!ref"] };
-      }
-
+      if (ws["!ref"]) (ws as any)["!autofilter"] = { ref: ws["!ref"] };
       const buf = XLSX.write(wb, { bookType: "xlsx", type: "array" });
       saveAs(new Blob([buf]), `invitados.xlsx`);
     } catch (e: any) {
@@ -135,7 +122,6 @@ export default function AdminList() {
           placeholder="Buscar por número, familia, tipo, hostedBy..."
           allowClear
           enterButton="Buscar"
-          onSearch={onSearch}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           style={{ minWidth: 260, flex: "1 1 300px" }}
@@ -162,14 +148,13 @@ export default function AdminList() {
             if (val === "SI") setEspecial(true);
             else if (val === "NO") setEspecial(false);
             else setEspecial(undefined);
-            setPage(1);
-            fetchItems();
           }}
           options={[
             { value: "SI", label: "Sí" },
             { value: "NO", label: "No" },
           ]}
         />
+
         <Button type="primary" onClick={() => setOpenCreate(true)}>
           Nueva invitación
         </Button>
@@ -182,7 +167,7 @@ export default function AdminList() {
       <Table
         rowKey="id"
         loading={loading}
-        dataSource={data}
+        dataSource={filteredData}
         columns={[
           { title: "Número", dataIndex: "numero", responsive: ["sm"] },
           { title: "Familia", dataIndex: "familia", responsive: ["sm"] },
@@ -199,14 +184,13 @@ export default function AdminList() {
                 onChange={async (checked) => {
                   const nuevoEstado = checked ? "ACTIVO" : "INACTIVO";
                   try {
-                    const res = await fetch(`/api/admin/invitaciones/${r.id}`, {
+                    await fetch(`/api/admin/invitaciones/${r.id}`, {
                       method: "PATCH",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ estado: nuevoEstado }),
                     });
-                    if (!res.ok) throw new Error("Error al actualizar estado");
                     message.success(`Estado actualizado a ${nuevoEstado}`);
-                    fetchItems();
+                    fetchAllItems(); // recargamos todos los datos
                   } catch (e: any) {
                     message.error(e.message);
                   }
@@ -249,19 +233,9 @@ export default function AdminList() {
             ),
           },
         ]}
-        pagination={false}
+        pagination={{ pageSize: 10 }}
         scroll={{ x: "max-content" }}
       />
-
-      <div style={{ marginTop: 16, textAlign: "right" }}>
-        <Pagination
-          current={page}
-          pageSize={PAGE_SIZE}
-          total={total}
-          onChange={setPage}
-          showSizeChanger={false}
-        />
-      </div>
 
       {/* Modal para nueva invitación */}
       <Modal
@@ -296,7 +270,7 @@ export default function AdminList() {
                   duration: 0,
                 });
                 setOpenCreate(false);
-                fetchItems();
+                fetchAllItems();
               },
               submitText: "Crear",
             }

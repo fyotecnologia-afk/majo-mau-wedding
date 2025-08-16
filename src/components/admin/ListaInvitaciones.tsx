@@ -2,8 +2,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Table, Typography, message, Space, Button, Collapse } from "antd";
-import { CopyOutlined, DownloadOutlined } from "@ant-design/icons";
+import {
+  Table,
+  Typography,
+  message,
+  Space,
+  Button,
+  Collapse,
+  Input,
+} from "antd";
+import {
+  CopyOutlined,
+  DownloadOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import * as XLSX from "xlsx";
 
 const { Panel } = Collapse;
@@ -36,6 +48,7 @@ interface InvitacionData {
 export default function ListaInvitaciones() {
   const [datos, setDatos] = useState<InvitacionData[]>([]);
   const [loading, setLoading] = useState(false);
+  const [busqueda, setBusqueda] = useState("");
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -88,7 +101,6 @@ export default function ListaInvitaciones() {
         )
         .join("\n");
 
-      // Tomamos hasta 2 dedicatorias por invitación
       const intento1 = inv.dedicatorias[0]
         ? `${new Date(inv.dedicatorias[0].fecha).toLocaleDateString()}\n${
             inv.dedicatorias[0].texto
@@ -207,9 +219,27 @@ export default function ListaInvitaciones() {
     },
   ];
 
+  // Filtrar datos según búsqueda
+  const datosFiltrados = datos.filter((inv) => {
+    const invitadosText = inv.invitados.map((i) => i.nombre).join(" ");
+    return (
+      inv.numeroInvitacion.toLowerCase().includes(busqueda.toLowerCase()) ||
+      (inv.familia || "").toLowerCase().includes(busqueda.toLowerCase()) ||
+      invitadosText.toLowerCase().includes(busqueda.toLowerCase())
+    );
+  });
+
   return (
     <div style={{ padding: 0 }}>
       <Space style={{ marginBottom: 16 }}>
+        <Input
+          placeholder="Buscar por número de invitación, familia o invitados"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          style={{ width: 300 }}
+          allowClear
+          prefix={<SearchOutlined />}
+        />
         <Button
           type="primary"
           icon={<DownloadOutlined />}
@@ -221,7 +251,7 @@ export default function ListaInvitaciones() {
       {datos.length > 0 && (
         <Table
           columns={columnas}
-          dataSource={datos}
+          dataSource={datosFiltrados}
           rowKey="id"
           loading={loading}
           pagination={{ pageSize: 5 }}
