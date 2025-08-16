@@ -9,7 +9,7 @@ interface MetaHeadProps {
 export default function MetaHead({
   title = "Majo & Mau Wedding",
   description = "Nos elegimos una vez… y hoy con más amor, nos elegimos para siempre",
-  image = "/preview.webp", // Recomendado PNG/JPG mínimo 1200x630
+  image = "https://majo-mau-wedding.vercel.app/preview.webp", // Recomendado PNG/JPG mínimo 1200x630
 }: MetaHeadProps) {
   return (
     <Head>
