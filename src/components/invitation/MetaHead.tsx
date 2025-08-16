@@ -4,14 +4,12 @@ interface MetaHeadProps {
   title?: string;
   description?: string;
   image?: string;
-  url?: string;
 }
 
 export default function MetaHead({
-  title = "Majo & Mau Wedding 💍",
-  description = "Nos elegimos una vez… y hoy con más amor, nos elegimos para siempre ✨",
-  image = "https://majo-mau-wedding.vercel.app/preview.jpg", // Usa JPG/PNG de 1200x630px
-  url = "https://majo-mau-wedding.vercel.app/",
+  title = "Majo & Mau Wedding",
+  description = "Nos elegimos una vez… y hoy con más amor, nos elegimos para siempre",
+  image = "https://majo-mau-wedding.vercel.app/preview.webp", // Recomendado PNG/JPG mínimo 1200x630
 }: MetaHeadProps) {
   return (
     <Head>
@@ -25,14 +23,6 @@ export default function MetaHead({
       <meta property="og:image" content={image} />
       <meta property="og:type" content="website" />
       <meta property="og:locale" content="es_MX" />
-      <meta property="og:url" content={url} />
-
-      {/* Twitter Card */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
-      <meta name="twitter:url" content={url} />
 
       {/* Viewport */}
       <meta name="viewport" content="width=device-width, initial-scale=1" />
